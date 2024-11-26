@@ -9,6 +9,17 @@ input("Нажмите ЛУБУЮ КНОПКУ, чтоб НАЧАТЬ играт�
 vars.clear()
 
 
+i = input("Нажмите 1 чтобы получить стартовый набор предметов:")
+vars.clear()
+if i == "1":
+    funks.TakeRandomItem(vars.ItemList)
+    funks.TakeRandomItem(vars.ItemList)
+    funks.TakeRandomItem(vars.ItemList)
+
+vars.clear()
+
+
+
 while vars.HP > 0:
     print(f'step:{vars.step}    act:{vars.actStep}')
     print(f'Жизни:{vars.HP}    Броня:{vars.ARMOR}\n')
@@ -19,7 +30,7 @@ while vars.HP > 0:
         funks.Scene = funks.Elist[randomEvent]
         curAct = vars.actStep
 
-        if randomEvent == 3 or randomEvent == 4: # StartFight or OnFight
+        if randomEvent == funks.Events.StartFight or randomEvent == funks.Events.OnFight:
             vars.clear()
             funks.StartFight()
     
@@ -34,17 +45,17 @@ while vars.HP > 0:
     
 
     try:
-        choiceAction = int(input("действие:"))
+        choiceAction = int(input("Действие:"))
     except ValueError:
         print("неверное действие, введите заново\n")
-        choiceAction = int(input("действие:"))
+        choiceAction = int(input("Действие:"))
 
     vars.clear()
     try:
         callFunc = funks.Scene.curentActions[choiceAction -1].function
     except IndexError:
         print("такого действия нет, введите заново\n")
-        choiceAction = int(input("действие:"))
+        choiceAction = int(input("Действие:"))
         callFunc = funks.Scene.curentActions[choiceAction -1].function
 
     callFunc()

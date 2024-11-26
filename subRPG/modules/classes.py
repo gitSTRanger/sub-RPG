@@ -1,4 +1,4 @@
-from enum import Enum
+
 
 class Item:
     def __init__(self, name, cost, stackCount, damage):
@@ -35,10 +35,3 @@ class Event():
         self.name = name
 
 
-#мб нужно удалить, он не используется, а если и используется то код не работает либо выдает ошибку
-class Events(Enum):
-    Well = 0
-    Forest = 1
-    PossibleFight = 2
-    StartFight = 3
-    OnFight = 4

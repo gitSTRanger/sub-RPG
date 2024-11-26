@@ -1,4 +1,5 @@
 from modules import classes
+from enum import IntEnum
 import os
 
 clear = lambda: os.system('cls')
@@ -12,7 +13,19 @@ classes.Item("Лук", cost = 50, stackCount = 1,damage=15),
 classes.Item("Стрела", cost = 2, stackCount = 20, damage=0),
 classes.Item("Кожаная Броня", cost = 20, stackCount = 1,damage=0),
 classes.Item("Стальной Доспех", cost = 20, stackCount = 1,damage=0),
+classes.Item("Осколок Метеорита", cost = 50, stackCount = 3,damage=0),
     ]
+
+class Items(IntEnum):
+    HealPotion = 0
+    Sword = 1
+    Bow = 2
+    Arrow = 3
+    LeatherArmor = 4
+    SteelArmor = 5
+    MeteorithPiece = 6
+
+
 
 #Все Враги
 Bestiary = [
@@ -26,19 +39,20 @@ Bestiary = [
 
 
 
+
 #Игрок
 HP = 100
 ARMOR = 50
 MONEY = 0
 
 Inventory = [
-    classes.Slot(ItemList[1], count = 1, equip=False),
-    classes.Slot(ItemList[0], count = 2, equip=False),
-    classes.Slot(ItemList[2], count = 1, equip=False),
-    classes.Slot(ItemList[3], count = 20, equip=False),
+    classes.Slot(ItemList[Items.Sword], count = 1, equip=False),
+    classes.Slot(ItemList[Items.HealPotion], count = 2, equip=False),
+    #classes.Slot(ItemList[2], count = 1, equip=False),
+    #classes.Slot(ItemList[3], count = 20, equip=False),
 ]
 
-
+Weapon = Inventory[0]
 
 
 actStep = 1 #1 шаг = 1 игровое событие
@@ -48,5 +62,26 @@ step = 0 #1 шаг = одно действие
 
 
 
+#                        POOLs
 
-Weapon = Inventory[0]
+
+TIER1_WELL_items = [
+    ItemList[Items.Arrow],
+    ItemList[Items.HealPotion],
+    classes.Item("none", cost = 0, stackCount = 1,damage=0),
+    classes.Item("none", cost = 0, stackCount = 1,damage=0),
+    classes.Item("none", cost = 0, stackCount = 1,damage=0),
+]
+
+TIER1_VILLAGE_items = [
+    ItemList[Items.Arrow],
+    ItemList[Items.HealPotion],
+    ItemList[Items.LeatherArmor],
+    ItemList[Items.SteelArmor],
+    ItemList[Items.Sword],
+    ItemList[Items.Bow],
+    classes.Item("none", cost = 0, stackCount = 1,damage=0),
+    classes.Item("none", cost = 0, stackCount = 1,damage=0),
+    classes.Item("none", cost = 0, stackCount = 1,damage=0),
+    classes.Item("none", cost = 0, stackCount = 1,damage=0),
+]

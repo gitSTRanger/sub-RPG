@@ -9,12 +9,13 @@ input("Нажмите ЛУБУЮ КНОПКУ, чтоб НАЧАТЬ играт�
 vars.clear()
 
 
-i = input("Нажмите 1 чтобы получить стартовый набор предметов:")
+i = input("Нажмите 1 чтобы получить стартовый набор предметов:\n")
 vars.clear()
 if i == "1":
-    funks.TakeRandomItem(vars.ItemList)
-    funks.TakeRandomItem(vars.ItemList)
-    funks.TakeRandomItem(vars.ItemList)
+    funks.TakeRandomItem(vars.StarterPack)
+    funks.TakeRandomItem(vars.StarterPack)
+    funks.TakeRandomItem(vars.StarterPack)
+    vars.actStep = 1
 
 vars.clear()
 

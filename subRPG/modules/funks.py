@@ -19,7 +19,10 @@ def ShowInventory():
         print("\n")
         if Islot.equip == True:
             print("[Экипировано]")
-        print(f' {i}: {Islot.item.name}({Islot.count}x)', "цена:", Islot.item.cost, "$")
+        if Islot.item.damage == 0:
+            print(f' {i}: {Islot.item.name}({Islot.count}x)', "цена:", Islot.item.cost, "$")
+        else:
+            print(f' {i}: {Islot.item.name}({Islot.count}x) урон: {Islot.item.damage}', "цена:", Islot.item.cost, "$")
 
     
     a = int(input("\n действие:"))
@@ -34,27 +37,21 @@ def ShowInventory():
     print(f'что вы хотите сделать с {slot.item.name}({slot.count})?')
 
     print("1: Назад")
-    print("2: Продать")
-    print("3: Продать Всё")
+    
+    mayHeal = False
 
-
-    if slot.item.name == "Зелье Лечения":
-        print("4: Использовать (+ 25 здоровья)")
+    if slot.item == vars.ItemList[vars.Items.SmallHealPotion] or slot.item == vars.ItemList[vars.Items.MiddleHealPotion] or slot.item == vars.ItemList[vars.Items.LargeHealPotion]:
+        print("2: Использовать Лечение")
+        mayHeal = True
 
 
     b = int(input("\n действие:"))
 
-    if b == 1:
-        return
-    elif b == 2:
-        Sell(sellCount = 1,slotNumber = a-1)
-    elif b == 3:
-        Sell(sellCount = slot.count,slotNumber = a-1)
-    elif b == 4:
+    if b == 2 and mayHeal == True:
         vars.clear()
-        Heal(healPoints = 25, potionSlot = a-1)
-
-    #input("Далее...")
+        UseHealPotion(potion= slot.item)
+        slot.count -= 1
+        ExamineItemIsZeroCount(a-1)
     
     
 def EquipItem():
@@ -86,29 +83,91 @@ def TakeRandomItem(itemPool):
     rndCount = random.randint(1, item.stackCount)
     TakeItem(item, rndCount)
 
-def Heal(healPoints, potionSlot):
+
+def UseHealPotion(potion = classes.Item):
+    if potion == vars.ItemList[vars.Items.SmallHealPotion]:
+        Heal(15)
+    elif potion == vars.ItemList[vars.Items.MiddleHealPotion]:
+        Heal(25)
+    elif potion == vars.ItemList[vars.Items.LargeHealPotion]:
+        Heal(50)
+        
+
+def Heal(healPoints):
     vars.HP += healPoints
-    vars.Inventory[potionSlot].count -= 1
-    ExamineItemIsZeroCount(potionSlot)
     print(f'Вы полечились на {healPoints} ед здоровья \nТекущее здоровье:{vars.HP}')
     input("Далее...")
 
-
-def Sell(sellCount, slotNumber):
-    i = int(input(f'вы действительно хотите продать {sellCount}x?  \n 1. Да\n 2. Нет\n...'))
-
-    if i == 1:
-        vars.MONEY += vars.Inventory[slotNumber].count * sellCount
-        vars.Inventory[slotNumber].count -= sellCount
-        ExamineItemIsZeroCount(slotNumber)
-        print("вы продали", sellCount)
-
-    input("Далее...")
 
 
 def ExamineItemIsZeroCount(slotNumber):
     if vars.Inventory[slotNumber].count <= 0:
         vars.Inventory.remove(vars.Inventory[slotNumber])
+
+
+def ShowStore():
+    print(f'Деньги:{vars.MONEY}')
+    print("1. Продать\n2. Купить")
+    a = int(input("Действие:"))
+    
+
+    if a == 1:
+        vars.clear()
+        print(f'Деньги:{vars.MONEY}')
+        ShowSellMenu()
+        return
+    if a == 2:
+        vars.clear()
+        print(f'Деньги:{vars.MONEY}')
+        print("Меню Покупок")
+    input("Далее...")
+    
+def ShowSellMenu():
+    print("0: назад")
+    i = 0
+    for Islot in vars.Inventory:
+        i += 1
+        ExamineItemIsZeroCount(i-1)
+        if Islot.equip == True:
+            print("\n[Экипировано]")
+        print(f' {i}: {Islot.item.name}({Islot.count}x)', "цена:", Islot.item.cost, "$")
+
+    a = int(input("\n Действие:"))
+    vars.clear()
+
+    slot = vars.Inventory[a-1]
+
+    print(f'что вы хотите сделать с {slot.item.name}({slot.count})?')
+    print("1: Назад\n2. Продать \n3. Продать всё")
+    
+    b = int(input("\n Действие:"))
+
+    if b == 2:
+        c = int(input(f'Сколько вы хотите продать из {slot.count}?\n...'))
+        
+        if c > slot.count:
+            vars.clear()
+            input("У вас столько нет")
+            ShowSellMenu()
+            return
+        
+        Sell(sellCount = c,slotNumber = a-1, cost = slot.item.cost)
+
+    elif b == 3:
+        Sell(sellCount = slot.count,slotNumber = a-1, cost = slot.item.cost)
+
+
+def Sell(sellCount, slotNumber, cost):
+    #i = int(input(f'вы действительно хотите продать {sellCount}x?  \n 1. Да\n 2. Нет\n...'))
+
+    #if i == 1:
+    saleMoney = cost * sellCount
+    vars.MONEY += saleMoney
+    vars.Inventory[slotNumber].count -= sellCount
+    ExamineItemIsZeroCount(slotNumber)
+    print("вы продали", sellCount)
+
+    input("Далее...")
 
 
 def MoveOn():
@@ -120,21 +179,17 @@ def MoveOn():
     vars.actStep += 1
 
 
-def ShowStore():
-
-    print("Магазин")
-    input("Далее...")
 
 
 def Attack():
 
-    print("вы атаковали", f'{vars.Bestiary[0].name} на {vars.Weapon.item.damage} ед. урона')
+    print("вы атаковали", f'{vars.curEnemy.name} на {vars.Weapon.item.damage} ед. урона')
     global Scene
     Scene = Elist[Events.OnFight]
 
-    vars.Bestiary[0].HP -= vars.Weapon.item.damage
+    vars.curEnemy.HP -= vars.Weapon.item.damage
 
-    if vars.Bestiary[0].HP <= 0:
+    if vars.curEnemy.HP <= 0:
         print("враг мертв, на сей раз вы победили")
         MoveOn()
         return
@@ -142,19 +197,19 @@ def Attack():
 
     hitChance = random.randint(0, 100)
 
-    if hitChance > vars.Bestiary[0].missChance:
-        print(f'\n{vars.Bestiary[0].name} атакует вас')
-        TakeDamage(hit= vars.Bestiary[0].damage)
+    if hitChance > vars.curEnemy.missChance:
+        print(f'\n{vars.curEnemy.name} атакует вас')
+        TakeDamage(hit= vars.curEnemy.damage)
         return
     else:
-        print(f'\n{vars.Bestiary[0].name} пытается атаковать, но промахивается')
+        print(f'\n{vars.curEnemy.name} пытается атаковать, но промахивается')
 
     input("Далее...")
 
 
 def ShowEnemyStats():
     
-    print(vars.Bestiary[0].name, f'жизни: {vars.Bestiary[0].HP}')
+    print(vars.curEnemy.name, f'жизни: {vars.curEnemy.HP}')
     input("Далее...")
 
 
@@ -163,7 +218,7 @@ def TryRunAway():
 
     chance = random.randint(0, 100)
 
-    if chance <= vars.Bestiary[0].missChance:
+    if chance <= vars.curEnemy.missChance:
         vars.actStep += 1
         global Scene
         Scene = ZeroScene
@@ -171,8 +226,8 @@ def TryRunAway():
     else:
         Scene = Elist[Events.OnFight]
         print("вам не удалось сбежать\n")
-        print(f'\n{vars.Bestiary[0].name} атакует вас')
-        TakeDamage(hit= vars.Bestiary[0].damage)
+        print(f'\n{vars.curEnemy.name} атакует вас')
+        TakeDamage(hit= vars.curEnemy.damage)
         return
     
     input("Далее...")
@@ -191,7 +246,7 @@ def StartFight():
     global Scene
     Scene = Elist[Events.StartFight]
     rndEnemy = random.randint(1, len(vars.Bestiary) -1)
-    vars.Bestiary[0] = deepcopy(vars.Bestiary[rndEnemy])
+    vars.curEnemy = deepcopy(vars.Bestiary[rndEnemy])
 
 
 def TakeDamage(hit):
@@ -209,15 +264,14 @@ def TakeDamage(hit):
 
 
 
-#Logic
-ZeroScene = classes.Event("нулевой евент", curentActions=[classes.Action(" ", function = ShowInventory),]) #нулевая сцена (null)
-Scene = ZeroScene
+
 
 
 #Все События (Сцены)
 Elist = [
     classes.Event("вы набрели на разрушенный пустой колодец, сдесь спокойно и можно передохнуть", curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
+    classes.Action("Осмотреть", function = lambda: input("Колодец настолько стар, что едва можно разлечить его руины поросшие мхом, сомневаюсь что внутри есть вода\nДалее...")),
     classes.Action("Посмотреть в колодец", function = lambda: TakeRandomItem(vars.TIER1_WELL_items)),
     classes.Action("Идти дальше", function = MoveOn),
     classes.Action("Пойти в другую сторону", function = GoOtherWay),
@@ -239,7 +293,7 @@ Elist = [
     classes.Action("Статы врага", function = ShowEnemyStats),
     classes.Action("Сбежать", function = TryRunAway),
     ]),
-    classes.Event("враг готовится нанести удар", curentActions=[
+    classes.Event(f'враг готовится нанести удар', curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
     classes.Action("Атаковать врага", function = Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
@@ -265,7 +319,7 @@ Elist = [
     ]),
     classes.Event("земля бурлит от дыма, приглядевшись вы замечаете что стоите на упавшем метеорите", curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
-    classes.Action("Взять остывший камень под ногами", function = lambda: TakeItem(vars.ItemList[vars.Items.MeteorithPiece], 1)),
+    classes.Action("Взять остывший камень под ногами", function = lambda: TakeItem(vars.ItemList[vars.Items.MeteoritePiece], 1)),
     classes.Action("Потрогать землю", function = lambda: TakeDamage(100)),
     classes.Action("Идти дальше", function = MoveOn),
     classes.Action("Пойти в другую сторону", function = GoOtherWay),
@@ -283,3 +337,9 @@ class Events(IntEnum):
     Trap = 6
     BearTrap = 7
     MeteorPlace = 8
+
+
+
+    #Logic
+ZeroScene = Elist[Events.Forest]
+Scene = ZeroScene

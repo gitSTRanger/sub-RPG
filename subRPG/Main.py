@@ -1,5 +1,11 @@
 from modules import funks
 from modules import vars
+<<<<<<< Updated upstream
+=======
+from modules import locvars
+from modules import classes
+from copy import deepcopy
+>>>>>>> Stashed changes
 import random
 
 print("\nДОБРО ПОЖАЛОВАТЬ В subRPG (1.1)\n")
@@ -20,8 +26,55 @@ if i == "1":
 vars.clear()
 
 
+<<<<<<< Updated upstream
+=======
+locvars.ZeroScene = funks.Elist[funks.EventID.Forest]
+locvars.Scene = locvars.ZeroScene
 
-while vars.HP > 0:
+
+
+
+def CheckLocation():
+
+    if locvars.LOCATION == locvars.Locations.Forest:
+        vars.StoreAssortment = vars.ASSORTMENT_DEFAULT
+        if vars.actStep % 15 == 0:
+            funks.SetLocation(events = funks.WILD_FOREST_EVENTS, locInt = locvars.Locations.WildForest)
+
+    elif locvars.LOCATION == locvars.Locations.WildForest:
+        vars.StoreAssortment = vars.ASSORTMENT_DEFAULT
+        
+        if vars.actStep % 15 == 0:
+            funks.Elist = funks.FOREST_BOSS_EVENTS
+            locvars.Scene = funks.Elist[funks.EventID.PossibleFight]
+            vars.curEnemy = deepcopy(vars.Bosses[vars.BossID.GiantTroll])
+
+        if vars.actStep == 32:
+                funks.Elist = funks.FORK_EVENTS
+
+    elif locvars.LOCATION == locvars.Locations.Castle:
+        vars.StoreAssortment = vars.ASSORTMENT_CASTLE
+
+        if vars.actStep % 15 == 0:
+            funks.Elist = funks.CASTLE_BOSS_EVENTS
+            locvars.Scene = funks.Elist[funks.EventID.PossibleFight]
+            vars.curEnemy = deepcopy(vars.Bosses[vars.BossID.KingTalung])
+
+        if vars.actStep == 47:
+            vars.WIN = True
+            vars.END_KingKiller = True
+            locvars.Scene = classes.Event("Вы прошли игру. Концовка - Убийца Королей", themeColor = classes.Colors.GREEN , curentActions=[
+                classes.Action("Завершить", function = lambda: input("Спастбо за игру"))])
+            
+
+
+#funks.SetLocation(funks.CASTLE_EVENTS, locvars.Locations.Castle)
+#vars.actStep = 45
+
+
+>>>>>>> Stashed changes
+
+while vars.HP > 0 and vars.WIN == False:
     print(f'step:{vars.step}    act:{vars.actStep}')
     print(f'Жизни:{vars.HP}    Броня:{vars.ARMOR}\n')
 
@@ -64,6 +117,8 @@ while vars.HP > 0:
     vars.step += 1
 
 
-vars.clear()
-print("Игра Окончена \n")
-print("Ваше здоровье =", vars.HP)
+
+if vars.HP <= 0:
+    vars.clear()
+    print(f'{classes.Colors.RED}Игра Окончена \n{classes.Colors.WHITE}')
+    print("Ваше здоровье =", vars.HP)

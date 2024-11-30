@@ -88,15 +88,6 @@ classes.Item("Ожерелье с Эфиром(Драгоценность)", cos
 
     ]
 
-<<<<<<< Updated upstream
-class Items(IntEnum):
-    SmallHealPotion = 0
-    MiddleHealPotion = 1
-    LargeHealPotion = 2
-    SmallRegenPotion = 3
-    MiddleRegenPotion = 4
-    LargeRegenPotion = 5
-=======
 class ItemID(IntEnum):
     Empty = 0
     SmallHealPotion = 1
@@ -105,7 +96,6 @@ class ItemID(IntEnum):
     SmallRegenPotion = 4
     MiddleRegenPotion = 5
     LargeRegenPotion = 6
->>>>>>> Stashed changes
 
     MySword = 7
     Sword = 8
@@ -137,23 +127,6 @@ class ItemID(IntEnum):
     IceArmor = 33
     EtherealArmor = 34
 
-<<<<<<< Updated upstream
-    EmeraldRing = 34
-    EmeraldNecklace = 35
-    GlodBar = 36
-    MeteoritePiece = 37
-    TopazRing = 38
-    TopazNecklace = 39
-    RubyRing = 40
-    RubyNecklace = 41
-    IceCrystal = 42
-    SapphireRing = 43
-    SapphireNecklace = 44
-    DiamondRing = 45
-    DiamondNecklace = 46
-    EtherealClot = 47
-    EtherealNecklace = 48
-=======
     Diamond = 35
     EmeraldRing = 36
     EmeraldNecklace = 37
@@ -170,29 +143,29 @@ class ItemID(IntEnum):
     DiamondNecklace = 48
     EtherealClot = 49
     EtherealNecklace = 50
->>>>>>> Stashed changes
 
 
 
 #Все Враги
-Bestiary = [
-    classes.Enemy("текущий враг(может быть любым из списка далее)", HP = 1, damage = 0, missChance = 0),
-    classes.Enemy("Скелет", HP = 20, damage = 5, missChance = 15),
-    classes.Enemy("Скелет в броне", HP = 30, damage = 5, missChance = 15),
-    classes.Enemy("Орк", HP = 40, damage = 10, missChance = 20),
-    classes.Enemy("Вурдолак", HP = 35, damage = 5, missChance = 30),
-    classes.Enemy("Слепой Гуль", HP = 40, damage = 20, missChance = 50),
+#Все Враги
+Enemies = [
+    classes.Enemy("Скелет", HP = 20, damage = 5, missChance = 15), # 0
+    classes.Enemy("Скелет в броне", HP = 30, damage = 5, missChance = 15), # 1
+    classes.Enemy("Орк", HP = 40, damage = 10, missChance = 20), # 2
+    classes.Enemy("Вурдолак", HP = 35, damage = 5, missChance = 30), # 3
+    classes.Enemy("Слепой Гуль", HP = 40, damage = 20, missChance = 50), # 4
+    classes.Enemy("Тролль", HP = 100, damage = 20, missChance = 30), # 5
+    # Замок
+    classes.Enemy("Скелет Рыцарь", HP = 50, damage = 10, missChance = 20), # 6
+    classes.Enemy("Рыцарь Герой", HP = 50, damage = 20, missChance = 15), # 7
+    classes.Enemy("Бронированный Скелет Рыцарь", HP = 65, damage = 10, missChance = 25), # 8
+    classes.Enemy("Одержимый Королевский Страж", HP = 40, damage = 30, missChance = 10), # 9
+    classes.Enemy("Каменная Горгулья", HP = 80, damage = 30, missChance = 40), # 10
+    # Огонь
+    # Лед
+    # Эфир
 ]
 
-<<<<<<< Updated upstream
-curEnemy = classes.Enemy
-
-
-#Игрок
-HP = 100
-ARMOR = 50
-MONEY = 0
-=======
 Bosses = [
     classes.Enemy("Гигантский Троль Людоед", HP = 120, damage = 35, missChance = 20),
     classes.Enemy("Король Талунг", HP = 300, damage = 30, missChance = 10),
@@ -216,6 +189,7 @@ class BossID(IntEnum):
     GiantTroll = 0
     KingTalung = 1
 
+
 curEnemy = classes.Enemy
 
 
@@ -223,7 +197,6 @@ curEnemy = classes.Enemy
 HP = 100
 ARMOR = 50
 MONEY = 50
->>>>>>> Stashed changes
 
 BUFF_regeneration = 0
 BUFF_warm = 0 # согревание от брони
@@ -253,11 +226,12 @@ Endings = [
 
 
 Inventory = [
-    classes.Slot(ItemList[Items.Sword], count = 1, equip=False),
-    classes.Slot(ItemList[Items.SmallHealPotion], count = 2, equip=False),
+    classes.Slot(ItemList[ItemID.Sword], count = 1, equip=False),
+    classes.Slot(ItemList[ItemID.SmallHealPotion], count = 2, equip=False),
 ]
 
 StoreAssortment = [ classes.Item,]
+
 
 Weapon = Inventory[0]
 
@@ -275,27 +249,18 @@ step = 0 #1 шаг = одно действие
 # Starter Pack
 
 StarterPack = [
-    ItemList[Items.SmallHealPotion],
-    ItemList[Items.MiddleHealPotion],
-    ItemList[Items.SmallRegenPotion],
-    ItemList[Items.Bow],
-    ItemList[Items.Arrow],
-    ItemList[Items.LeatherArmor],
-    ItemList[Items.SteelArmor],
+    ItemList[ItemID.SmallHealPotion],
+    ItemList[ItemID.MiddleHealPotion],
+    ItemList[ItemID.SmallRegenPotion],
+    ItemList[ItemID.Bow],
+    ItemList[ItemID.Arrow],
+    ItemList[ItemID.LeatherArmor],
+    ItemList[ItemID.SteelArmor],
 ]
 
 #   S T O R E :
 ASSORTMENT_DEFAULT = [
 
-<<<<<<< Updated upstream
-STORE_DEFAULT = [
-    ItemList[Items.SmallHealPotion],
-    ItemList[Items.Bow],
-    ItemList[Items.Arrow],
-    ItemList[Items.Sword],
-    ItemList[Items.LeatherArmor],
-    ItemList[Items.SteelArmor],
-=======
     ItemList[ItemID.Arrow],
 
     ItemList[ItemID.SmallHealPotion],
@@ -317,7 +282,6 @@ STORE_DEFAULT = [
 
     ItemList[ItemID.LeatherArmor],
     ItemList[ItemID.SteelArmor],
->>>>>>> Stashed changes
 ]
 
 ASSORTMENT_CASTLE = [
@@ -352,27 +316,6 @@ ASSORTMENT_CASTLE = [
 #   L O O T
 
 TIER1_WELL_items = [
-<<<<<<< Updated upstream
-    ItemList[Items.Arrow],
-    ItemList[Items.SmallHealPotion],
-    classes.Item("none", cost = 0, stackCount = 1,damage=0),
-    classes.Item("none", cost = 0, stackCount = 1,damage=0),
-    classes.Item("none", cost = 0, stackCount = 1,damage=0),
-]
-
-TIER1_VILLAGE_items = [
-    ItemList[Items.Arrow],
-    ItemList[Items.SmallHealPotion],
-    ItemList[Items.MiddleHealPotion],
-    ItemList[Items.LeatherArmor],
-    ItemList[Items.SteelArmor],
-    ItemList[Items.Sword],
-    ItemList[Items.Bow],
-    classes.Item("none", cost = 0, stackCount = 1,damage=0),
-    classes.Item("none", cost = 0, stackCount = 1,damage=0),
-    classes.Item("none", cost = 0, stackCount = 1,damage=0),
-    classes.Item("none", cost = 0, stackCount = 1,damage=0),
-=======
     ItemList[ItemID.Arrow],
     ItemList[ItemID.SmallHealPotion],
     ItemList[ItemID.MiddleHealPotion],
@@ -394,5 +337,20 @@ TIER1_VILLAGE_items = [
     ItemList[ItemID.Bow],
 
     ItemList[ItemID.Empty],
->>>>>>> Stashed changes
+]
+
+
+TIER2_ARMOR_STAND = [
+ItemList[ItemID.SteelArmor],
+ItemList[ItemID.SteelArmor],
+ItemList[ItemID.SilverArmor],
+ItemList[ItemID.SilverArmor],
+ItemList[ItemID.MeteoriteArmor],
+]
+
+TIER2_CHEST = [
+    ItemList[ItemID.GoldBar],
+    ItemList[ItemID.GoldBar],
+    ItemList[ItemID.RubyRing],
+    ItemList[ItemID.RubyNecklace],
 ]

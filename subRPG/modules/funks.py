@@ -1,5 +1,6 @@
 from modules import vars
 from modules import classes
+from modules import locvars
 from copy import deepcopy
 from enum import IntEnum
 import random
@@ -41,7 +42,7 @@ def ShowInventory():
     mayHeal = False
     mayEquip = False
 
-    if slot.item == vars.ItemList[vars.Items.SmallHealPotion] or slot.item == vars.ItemList[vars.Items.MiddleHealPotion] or slot.item == vars.ItemList[vars.Items.LargeHealPotion]:
+    if slot.item == vars.ItemList[vars.ItemID.SmallHealPotion] or slot.item == vars.ItemList[vars.ItemID.MiddleHealPotion] or slot.item == vars.ItemList[vars.ItemID.LargeHealPotion]:
         print("2: Использовать Лечение")
         mayHeal = True
 
@@ -54,11 +55,6 @@ def ShowInventory():
 
     if b == 2:
         vars.clear()
-<<<<<<< Updated upstream
-        UseHealPotion(potion= slot.item)
-        slot.count -= 1
-        ExamineItemIsZeroCount(a-1)
-=======
         if mayHeal == True:
             UseHealPotion(potion= slot.item)
             slot.count -= 1
@@ -69,24 +65,16 @@ def ShowInventory():
             input(f'Вы экипировали {slot.item.name}')
         vars.clear()
         ShowInventory()
->>>>>>> Stashed changes
     
     
-def EquipItem():
-    pass
-
-
-def UnEquipItem():
-    pass
 
 
 
 def TakeItem(item = classes.Item, count = int):
-    global Scene
-    Scene = ZeroScene
+    locvars.Scene = locvars.ZeroScene
     vars.actStep += 1
 
-    if item == vars.ItemID.Empty:
+    if item == vars.ItemList[vars.ItemID.Empty]:
         input("Пусто...")
         return
 
@@ -103,11 +91,11 @@ def TakeRandomItem(itemPool):
 
 
 def UseHealPotion(potion = classes.Item):
-    if potion == vars.ItemList[vars.Items.SmallHealPotion]:
+    if potion == vars.ItemList[vars.ItemID.SmallHealPotion]:
         Heal(15)
-    elif potion == vars.ItemList[vars.Items.MiddleHealPotion]:
+    elif potion == vars.ItemList[vars.ItemID.MiddleHealPotion]:
         Heal(25)
-    elif potion == vars.ItemList[vars.Items.LargeHealPotion]:
+    elif potion == vars.ItemList[vars.ItemID.LargeHealPotion]:
         Heal(50)
         
 
@@ -152,13 +140,9 @@ def ShowSellMenu():
 
         i += 1
         if Islot.equip == True:
-<<<<<<< Updated upstream
-            print("\n[Экипировано]")
-=======
             print(f'\n {i}: {Islot.item.name} товар экипирован (нельзя продать)\n')
             continue
         
->>>>>>> Stashed changes
         print(f' {i}: {Islot.item.name}({Islot.count}x)', "цена:", Islot.item.cost, "$")
 
     a = int(input("\n Действие:"))
@@ -219,7 +203,7 @@ def ShowShoppingMenu():
             continue
 
         i += 1
-
+        
         if Iitem.damage == 0:
             print(f' {i}: {Iitem.name}', "цена:", Iitem.cost, "$")
         else:
@@ -274,12 +258,7 @@ def MoveOn():
 
     print("вы пошли дальше")
     input("Далее...")
-<<<<<<< Updated upstream
-    global Scene
-    Scene = ZeroScene
-=======
     locvars.Scene = locvars.ZeroScene
->>>>>>> Stashed changes
     vars.actStep += 1
 
 
@@ -288,8 +267,7 @@ def MoveOn():
 def Attack():
 
     print("вы атаковали", f'{vars.curEnemy.name} на {vars.Weapon.item.damage} ед. урона')
-    global Scene
-    Scene = Elist[Events.OnFight]
+    locvars.Scene = Elist[EventID.OnFight]
 
     vars.curEnemy.HP -= vars.Weapon.item.damage
 
@@ -326,11 +304,10 @@ def TryRunAway():
 
     if chance <= vars.curEnemy.missChance:
         vars.actStep += 1
-        global Scene
-        Scene = ZeroScene
+        locvars.Scene = locvars.ZeroScene
         print("вы удачно сбежали!")
     else:
-        Scene = Elist[Events.OnFight]
+        locvars.Scene = Elist[EventID.OnFight]
         print("вам не удалось сбежать\n")
         print(f'\n{vars.curEnemy.name} атакует вас')
         TakeDamage(hit= vars.curEnemy.damage)
@@ -343,18 +320,29 @@ def GoOtherWay():
     print("вы пошли другой дорогой")
     vars.actStep += 1
     rndPeacefulPlace = random.randint(0,2)
-    global Scene
-    Scene = Elist[rndPeacefulPlace]
+    locvars.Scene = Elist[rndPeacefulPlace]
     input("Далее...")
 
 
 def StartFight():
-    global Scene
-    Scene = Elist[Events.StartFight]
-    rndEnemy = random.randint(1, len(vars.Bestiary) -1)
-    vars.curEnemy = deepcopy(vars.Bestiary[rndEnemy])
+    locvars.Scene = Elist[EventID.StartFight]
+
+    startRange = 0
+    endRange = 0
+
+    if locvars.LOCATION == locvars.Locations.Forest:
+        startRange = 0
+        endRange = vars.EnemyID.Ork
+    elif locvars.LOCATION == locvars.Locations.WildForest:
+        startRange = 0
+        endRange = vars.EnemyID.Troll
+    elif locvars.LOCATION == locvars.Locations.Castle:
+        startRange = vars.EnemyID.SkeletonKnight
+        endRange = vars.EnemyID.StoneGargoyle
 
 
+    rndEnemy = random.randint(startRange, endRange)
+    vars.curEnemy = deepcopy(vars.Enemies[rndEnemy])
 
 
 def TakeDamage(hit):
@@ -364,7 +352,20 @@ def TakeDamage(hit):
 
 
 
+def SetEvent(eventID):
+    locvars.Scene = Elist[eventID]
+    vars.actStep += 1
 
+
+
+def SetLocation(events, locInt):
+    global Elist
+    Elist = events
+    locvars.Scene = Elist[3]
+    locvars.LOCATION = locInt
+    input(f'вы пошли в {locvars.stringLocation[locvars.LOCATION]}')
+    locvars.Scene = locvars.ZeroScene
+    vars.actStep += 1
 
 
 
@@ -376,10 +377,6 @@ def TakeDamage(hit):
 
 
 #Все События (Сцены)
-<<<<<<< Updated upstream
-Elist = [
-    classes.Event("вы набрели на разрушенный пустой колодец, сдесь спокойно и можно передохнуть", curentActions=[
-=======
 
 class EventID(IntEnum):
     PossibleFight = 0
@@ -435,93 +432,86 @@ FOREST_EVENTS = [
     classes.Action("Пойти в другую сторону", function = GoOtherWay),
     ]),
     classes.Event("вы набрели на разрушенный пустой колодец, сдесь спокойно и можно передохнуть", themeColor = classes.Colors.GREEN, curentActions=[
->>>>>>> Stashed changes
     classes.Action("Инвентарь", function = ShowInventory),
     classes.Action("Осмотреть", function = lambda: input("Колодец настолько стар, что едва можно разлечить его руины поросшие мхом, сомневаюсь что внутри есть вода\nДалее...")),
     classes.Action("Посмотреть в колодец", function = lambda: TakeRandomItem(vars.TIER1_WELL_items)),
     classes.Action("Идти дальше", function = MoveOn),
     classes.Action("Пойти в другую сторону", function = GoOtherWay),
     ]),
-    classes.Event("скитаясь вы пришли к лесу", curentActions=[
+    classes.Event("скитаясь вы пришли к лесу", themeColor = classes.Colors.GREEN, curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Идти дальше", function = MoveOn),
     classes.Action("Пойти в другую сторону", function = GoOtherWay),
     ]),
-    classes.Event("на вашем пути появился чей то силуэт", curentActions=[
+    classes.Event("на вашем пути появился чей то силуэт",themeColor = classes.Colors.GREEN, curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
     classes.Action("Идти дальше", function = StartFight),
     classes.Action("Пойти в другую сторону", function = GoOtherWay),
     ]),
-    classes.Event("вы слышите чье-то рычание впереди, осмотревшись вы видите врага", curentActions=[
+    classes.Event("вы слышите чье-то рычание впереди, осмотревшись вы видите врага",themeColor = classes.Colors.GREEN, curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
     classes.Action("Атаковать врага", function = Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     classes.Action("Сбежать", function = TryRunAway),
     ]),
-    classes.Event(f'враг готовится нанести удар', curentActions=[
+    classes.Event(f'враг готовится нанести удар',themeColor = classes.Colors.GREEN, curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
     classes.Action("Атаковать врага", function = Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     classes.Action("Сбежать", function = TryRunAway),
     ]),
-    classes.Event("скитаясь вы пришли в заброшенную деревню", curentActions=[
+    classes.Event("скитаясь вы пришли в заброшенную деревню",themeColor = classes.Colors.GREEN, curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
     classes.Action("Осмотреть дома", function = lambda: TakeRandomItem(vars.TIER1_VILLAGE_items)),
     classes.Action("Идти дальше", function = MoveOn),
     classes.Action("Пойти в другую сторону", function = GoOtherWay),
     ]),
-<<<<<<< Updated upstream
-    classes.Event("вы замечаете растяжку", curentActions=[
-=======
 ]
 
 WILD_FOREST_EVENTS = [
-    classes.Event("на вашем пути появился чей то силуэт",themeColor = classes.Colors.GREEN , curentActions=[
+    classes.Event("на вашем пути появился чей то силуэт",themeColor = classes.Colors.RED , curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
     classes.Action("Идти дальше", function = StartFight),
     classes.Action("Пойти в другую сторону", function = GoOtherWay),
     ]),
-    classes.Event("вы слышите чье-то рычание впереди, осмотревшись вы видите врага",themeColor = classes.Colors.GREEN , curentActions=[
+    classes.Event("вы слышите чье-то рычание впереди, осмотревшись вы видите врага",themeColor = classes.Colors.RED , curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
     classes.Action(f'Атаковать врага ({vars.Weapon.item.name} {vars.Weapon.item.damage} урона)', function = Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     classes.Action("Сбежать", function = TryRunAway),
     ]),
-    classes.Event(f'враг готовится нанести удар',themeColor = classes.Colors.GREEN , curentActions=[
+    classes.Event(f'враг готовится нанести удар',themeColor = classes.Colors.RED, curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
     classes.Action(f'Атаковать врага ({vars.Weapon.item.name} {vars.Weapon.item.damage} урона)', function = Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     classes.Action("Сбежать", function = TryRunAway),
     ]),
-    classes.Event("скитаясь вы пришли к лесу", themeColor = classes.Colors.GREEN , curentActions=[
+    classes.Event("скитаясь вы пришли к лесу", themeColor = classes.Colors.GREEN, curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Идти дальше", function = MoveOn),
     classes.Action("Пойти в другую сторону", function = GoOtherWay),
     ]),
-    classes.Event("вы замечаете растяжку",themeColor = classes.Colors.GREEN , curentActions=[
->>>>>>> Stashed changes
+    classes.Event("вы замечаете растяжку", themeColor = classes.Colors.GREEN, curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Идти дальше", function = lambda: TakeDamage(hit=15)),
     classes.Action("обойти", function = GoOtherWay),
     ]),
-    classes.Event("вы резко остановились впереди в прелой листве блестает капкан", curentActions=[
+    classes.Event("вы резко остановились впереди в прелой листве блестает капкан",themeColor = classes.Colors.GREEN, curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Идти дальше", function = lambda: TakeDamage(hit=25)),
     classes.Action("Пойти в другую сторону", function = GoOtherWay),
     ]),
-    classes.Event("земля бурлит от дыма, приглядевшись вы замечаете что стоите на упавшем метеорите", curentActions=[
+    classes.Event("земля бурлит от дыма, приглядевшись вы замечаете что стоите на упавшем метеорите",themeColor = classes.Colors.GREEN, curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
-    classes.Action("Взять остывший камень под ногами", function = lambda: TakeItem(vars.ItemList[vars.Items.MeteoritePiece], 1)),
+    classes.Action("Взять остывший камень под ногами", function = lambda: TakeItem(vars.ItemList[vars.ItemID.MeteoritePiece], 1)),
     classes.Action("Потрогать землю", function = lambda: TakeDamage(100)),
     classes.Action("Идти дальше", function = MoveOn),
     classes.Action("Пойти в другую сторону", function = GoOtherWay),
     ]),
-<<<<<<< Updated upstream
-=======
     classes.Event("вы замечаете чью-то протоптанную тропинку", themeColor = classes.Colors.GREEN , curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
     classes.Action("Магазин", function = ShowStore),
@@ -637,7 +627,6 @@ CASTLE_EVENTS = [
     classes.Action("Пойти в назад", function = GoOtherWay),
     ]),
     
->>>>>>> Stashed changes
 ]
 
 CASTLE_BOSS_EVENTS =[
@@ -657,28 +646,12 @@ CASTLE_BOSS_EVENTS =[
     ]),
 ] 
 
-class Events(IntEnum):
-    Well = 0
-    Forest = 1
-    PossibleFight = 2
-    StartFight = 3
-    OnFight = 4
-    Village = 5
-    Trap = 6
-    BearTrap = 7
-    MeteorPlace = 8
+Elist = deepcopy(FOREST_EVENTS) # текущие события (сцены)
 
 
-<<<<<<< Updated upstream
-
-    #Logic
-ZeroScene = Elist[Events.Forest]
-Scene = ZeroScene
-=======
 FORK_EVENTS = [classes.Event("вы пришли к тому что охраняло чудовище к табличке с направлениями",themeColor = classes.Colors.YELLOW , curentActions=[
     classes.Action(f'{classes.Colors.YELLOW}Идти в (Замок){classes.Colors.WHITE}', function = lambda: SetLocation(events = CASTLE_EVENTS, locInt = locvars.Locations.Castle)),
     classes.Action(f'{classes.Colors.RED}Идти в (Расплавленную долину){classes.Colors.WHITE}', function = lambda: SetLocation(events = WILD_FOREST_EVENTS, locInt = locvars.Locations.MoltenValley)),
     classes.Action(f'{classes.Colors.CYAN}Идти в (Ледяное Озеро){classes.Colors.WHITE}', function = lambda: SetLocation(events = WILD_FOREST_EVENTS, locInt = locvars.Locations.IceLake)),
     classes.Action(f'{classes.Colors.PINK}Идти в (Эфирные Берега){classes.Colors.WHITE}', function = lambda: SetLocation(events = WILD_FOREST_EVENTS, locInt = locvars.Locations.EtherealShores)),
     ])]
->>>>>>> Stashed changes

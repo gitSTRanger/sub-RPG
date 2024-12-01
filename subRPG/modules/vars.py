@@ -9,20 +9,20 @@ clear = lambda: os.system('cls')
 ItemList = [
 # Лечение
 classes.Item("none", cost = 0, stackCount = 1,damage=0), #0
-classes.Item("Мал. Зелье Лечения (15 ед.)", cost = 20, stackCount = 5, damage= 0), # 1
+classes.Item("Мал. Зелье Лечения (15 ед.)", cost = 30, stackCount = 5, damage= 0), # 1
 classes.Item("Сред. Зелье Лечения (25 ед.)", cost = 50, stackCount = 5, damage=0), # 2
-classes.Item("Бол. Зелье Лечения (50 ед.)", cost = 100, stackCount = 5, damage=0), # 3
+classes.Item("Бол. Зелье Лечения (50 ед.)", cost = 80, stackCount = 5, damage=0), # 3
 
 classes.Item("Мал. Зелье Регенерации (15 ед. 3 акта)", cost = 30, stackCount = 5, damage=0), # 4
-classes.Item("Сред. Зелье Регенерации (25 ед. 6 актов)", cost = 60, stackCount = 5, damage=0), # 5
-classes.Item("Бол. Зелье Регенерации (45 ед. 12 актов)", cost = 150, stackCount = 5, damage=0), # 6
+classes.Item("Сред. Зелье Регенерации (25 ед.) (15 ед. 6 актов)", cost = 60, stackCount = 5, damage=0), # 5
+classes.Item("Бол. Зелье Регенерации (45 ед.) (15 ед. 12 актов)", cost = 130, stackCount = 5, damage=0), # 6
 # М Е Ч И
 classes.Item("Именной Меч", cost = 30, stackCount = 1, damage=11), # 7
 classes.Item("Меч", cost = 30, stackCount = 1, damage=10), # 8
-classes.Item("Меч Героя", cost = 45, stackCount = 1, damage=20), # 9
+classes.Item("Меч Героя", cost = 100, stackCount = 1, damage=20), # 9
 #Замок
-classes.Item("Стальной меч", cost = 150, stackCount = 1, damage= 30), # 10
-classes.Item("Серебрянный меч", cost = 410, stackCount = 1, damage=48), # 11
+classes.Item("Стальной меч", cost = 350, stackCount = 1, damage= 30), # 10
+classes.Item("Серебрянный меч", cost = 510, stackCount = 1, damage=48), # 11
 # Огонь
 classes.Item('Меч "Ярость"', cost = 350, stackCount = 1, damage= 30), # 12
 classes.Item("Метеоритовый Меч", cost = 830, stackCount = 1, damage=50), # 13
@@ -53,10 +53,10 @@ classes.Item("Эфирный Лук", cost = 2250, stackCount = 1, damage= 199),
 
 # Б Р О Н Я
 classes.Item("Кожаная Броня (20 ед. +защита от холода 10 актов)", cost = 20, stackCount = 1,damage=0), # 29
-classes.Item("Стальной Доспех (50 ед.)", cost = 80, stackCount = 1,damage=0), # 30
+classes.Item("Стальной Доспех (50 ед.)", cost = 80, stackCount = 1,damage= 0), # 30
 classes.Item("Серебрянные Латы (65 ед.)", cost = 120, stackCount = 1,damage=0), # 31
 classes.Item("Метеоритный Доспех (75 ед.)", cost = 250, stackCount = 1,damage=0), # 32
-classes.Item("Ледяная Кольчуга (85 ед.)", cost = 300, stackCount = 1,damage=0), # 33
+classes.Item("Ледяная Кольчуга (85 ед. обморожение 10 актов)", cost = 300, stackCount = 1,damage=0), # 33
 classes.Item("Эфирные Латы (100 ед.)", cost = 500, stackCount = 1,damage=0), # 34
 
 # Д Р А Г О Ц Е Н Н О С Т И
@@ -190,17 +190,17 @@ class BossID(IntEnum):
     KingTalung = 1
 
 
-curEnemy = classes.Enemy
+curEnemy: classes.Enemy = Enemies[EnemyID.Skeleton]
 
 
 # Игрок
 HP = 100
-ARMOR = 50
-MONEY = 50
+ARMOR = 0
+MONEY = 0
 
 BUFF_regeneration = 0
 BUFF_warm = 0 # согревание от брони
-deBUFF_frostbite = 0 # обморожение от брони
+deBUFF_frostbite = 0 # обморожение от ледяной брони
 isFrost = False # холод в ледяной локации
 
 
@@ -233,7 +233,7 @@ Inventory = [
 StoreAssortment = [ classes.Item,]
 
 
-Weapon = Inventory[0]
+Weapon: classes.Slot = Inventory[0]
 
 
 actStep = 1 #1 шаг = 1 игровое событие
@@ -314,6 +314,21 @@ ASSORTMENT_CASTLE = [
 ]
 
 #   L O O T
+
+TIER1_MONSTER_DROP = [
+    ItemList[ItemID.SmallHealPotion],
+    ItemList[ItemID.Arrow],
+
+    ItemList[ItemID.EmeraldNecklace],
+    ItemList[ItemID.EmeraldRing],
+
+    ItemList[ItemID.LeatherArmor],
+    ItemList[ItemID.SteelArmor],
+
+    ItemList[ItemID.Empty],
+    ItemList[ItemID.Empty],
+    ItemList[ItemID.Empty],
+]
 
 TIER1_WELL_items = [
     ItemList[ItemID.Arrow],

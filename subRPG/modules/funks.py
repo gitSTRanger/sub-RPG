@@ -41,14 +41,22 @@ def ShowInventory():
     
     mayHeal = False
     mayEquip = False
+    mayWearArmor = False
 
     if slot.item == vars.ItemList[vars.ItemID.SmallHealPotion] or slot.item == vars.ItemList[vars.ItemID.MiddleHealPotion] or slot.item == vars.ItemList[vars.ItemID.LargeHealPotion]:
         print("2: Использовать Лечение")
+        mayHeal = True
+    if slot.item == vars.ItemList[vars.ItemID.SmallRegenPotion] or slot.item == vars.ItemList[vars.ItemID.MiddleRegenPotion] or slot.item == vars.ItemList[vars.ItemID.LargeRegenPotion]:
+        print("2: Использовать Регенерацию")
         mayHeal = True
 
     if slot.item.damage != 0 and slot.equip == False:
             print("2: Экипировать")
             mayEquip = True
+
+    if slot.item == vars.ItemList[vars.ItemID.LeatherArmor] or slot.item == vars.ItemList[vars.ItemID.SteelArmor] or slot.item == vars.ItemList[vars.ItemID.MeteoriteArmor] or slot.item == vars.ItemList[vars.ItemID.IceArmor] or slot.item == vars.ItemList[vars.ItemID.EtherealArmor]:
+        print("2: Надеть Броню")
+        mayWearArmor = True
 
 
     b = int(input("\n действие:"))
@@ -63,6 +71,10 @@ def ShowInventory():
             vars.Weapon.equip = False
             vars.Weapon = vars.Inventory[a-1]
             input(f'Вы экипировали {slot.item.name}')
+        if mayWearArmor == True:
+            TakeArmor(slot.item)
+            slot.count -= 1
+            ExamineItemIsZeroCount(a-1)
         vars.clear()
         ShowInventory()
     
@@ -78,7 +90,7 @@ def TakeItem(item = classes.Item, count = int):
         input("Пусто...")
         return
 
-    print(f'\nПолучено > {item.name} ({count})')
+    print(f'\n{classes.Colors.YELLOW}Получено > {item.name}{classes.Colors.WHITE} ({count})')
     vars.Inventory.append(classes.Slot(item, count, False))
     input("Далее...")
 
@@ -97,12 +109,52 @@ def UseHealPotion(potion = classes.Item):
         Heal(25)
     elif potion == vars.ItemList[vars.ItemID.LargeHealPotion]:
         Heal(50)
+
+    
+    if potion == vars.ItemList[vars.ItemID.SmallRegenPotion]:
+        vars.BUFF_regeneration += 3
+        Heal(15)
+    elif potion == vars.ItemList[vars.ItemID.MiddleRegenPotion]:
+        vars.BUFF_regeneration += 6
+        Heal(25)
+    elif potion == vars.ItemList[vars.ItemID.LargeRegenPotion]:
+        vars.BUFF_regeneration += 12
+        Heal(45)
         
 
 def Heal(healPoints):
     vars.HP += healPoints
-    print(f'Вы полечились на {healPoints} ед здоровья \nТекущее здоровье:{vars.HP}')
+    print(f'\nВы полечились на {healPoints} ед здоровья \nТекущее здоровье:{vars.HP}')
     input("Далее...")
+
+
+def TakeArmor(item: classes.Item):
+    armorPoint = 0
+
+
+    if item == vars.ItemList[vars.ItemID.LeatherArmor]:
+        vars.BUFF_warm += 10
+        armorPoint = 20
+
+    if item == vars.ItemList[vars.ItemID.SteelArmor]:
+        armorPoint = 50
+
+    if item == vars.ItemList[vars.ItemID.SilverArmor]:
+        armorPoint = 65
+
+    if item == vars.ItemList[vars.ItemID.MeteoriteArmor]:
+        armorPoint = 75
+
+    if item == vars.ItemList[vars.ItemID.IceArmor]:
+        vars.BUFF_warm += 10
+        armorPoint = 85
+
+    if item == vars.ItemList[vars.ItemID.EtherealArmor]:
+        armorPoint = 100
+
+    vars.ARMOR += armorPoint
+    print(f'Вы надели {item.name}')
+    input(f'Получено {armorPoint} ед. брони \nТекущая Броня:{vars.ARMOR}\n')
 
 
 
@@ -273,7 +325,9 @@ def Attack():
 
     if vars.curEnemy.HP <= 0:
         print("враг мертв, на сей раз вы победили")
-        MoveOn()
+        print(f'\nВы осматриваете врага')
+        TakeRandomItem(vars.TIER1_MONSTER_DROP)
+        #MoveOn()
         return
 
 
@@ -281,7 +335,10 @@ def Attack():
 
     if hitChance > vars.curEnemy.missChance:
         print(f'\n{vars.curEnemy.name} атакует вас')
-        TakeDamage(hit= vars.curEnemy.damage)
+
+        damage = int(vars.curEnemy.damage * (vars.ARMOR * 0.005))
+        vars.ARMOR -= int(vars.curEnemy.damage - damage)
+        TakeDamage(hit= damage)
         return
     else:
         print(f'\n{vars.curEnemy.name} пытается атаковать, но промахивается')
@@ -310,7 +367,9 @@ def TryRunAway():
         locvars.Scene = Elist[EventID.OnFight]
         print("вам не удалось сбежать\n")
         print(f'\n{vars.curEnemy.name} атакует вас')
-        TakeDamage(hit= vars.curEnemy.damage)
+        damage = int(vars.curEnemy.damage * (vars.ARMOR * 0.005))
+        vars.ARMOR -= int(vars.curEnemy.damage - damage)
+        TakeDamage(hit= damage)
         return
     
     input("Далее...")
@@ -319,7 +378,7 @@ def TryRunAway():
 def GoOtherWay():
     print("вы пошли другой дорогой")
     vars.actStep += 1
-    rndPeacefulPlace = random.randint(0,2)
+    rndPeacefulPlace = random.randint(3, len(Elist) - 1)
     locvars.Scene = Elist[rndPeacefulPlace]
     input("Далее...")
 
@@ -413,15 +472,15 @@ FOREST_EVENTS = [
     classes.Action("Идти дальше", function = StartFight),
     classes.Action("Пойти в другую сторону", function = GoOtherWay),
     ]),
-    classes.Event("вы слышите чье-то рычание впереди, осмотревшись вы видите врага",themeColor = classes.Colors.GREEN , curentActions=[
+    classes.Event("вы слышите чье-то рычание впереди, осмотревшись вы видите врага",themeColor = classes.Colors.RED , curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
-    classes.Action(f'Атаковать врага ({vars.Weapon.item.name} {vars.Weapon.item.damage} урона)', function = Attack),
+    classes.Action(f'Атаковать врага', function = Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     classes.Action("Сбежать", function = TryRunAway),
     ]),
-    classes.Event(f'враг готовится нанести удар',themeColor = classes.Colors.GREEN , curentActions=[
+    classes.Event(f'враг готовится нанести удар',themeColor = classes.Colors.RED , curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
-    classes.Action(f'Атаковать врага ({vars.Weapon.item.name} {vars.Weapon.item.damage} урона)', function = Attack),
+    classes.Action(f'Атаковать врага', function = Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     classes.Action("Сбежать", function = TryRunAway),
     ]),
@@ -431,7 +490,7 @@ FOREST_EVENTS = [
     classes.Action("Идти дальше", function = MoveOn),
     classes.Action("Пойти в другую сторону", function = GoOtherWay),
     ]),
-    classes.Event("вы набрели на разрушенный пустой колодец, сдесь спокойно и можно передохнуть", themeColor = classes.Colors.GREEN, curentActions=[
+    classes.Event("вы набрели на разрушенный пустой колодец. здесь спокойно и можно передохнуть", themeColor = classes.Colors.GREEN, curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
     classes.Action("Осмотреть", function = lambda: input("Колодец настолько стар, что едва можно разлечить его руины поросшие мхом, сомневаюсь что внутри есть вода\nДалее...")),
     classes.Action("Посмотреть в колодец", function = lambda: TakeRandomItem(vars.TIER1_WELL_items)),
@@ -443,23 +502,6 @@ FOREST_EVENTS = [
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Идти дальше", function = MoveOn),
     classes.Action("Пойти в другую сторону", function = GoOtherWay),
-    ]),
-    classes.Event("на вашем пути появился чей то силуэт",themeColor = classes.Colors.GREEN, curentActions=[
-    classes.Action("Инвентарь", function = ShowInventory),
-    classes.Action("Идти дальше", function = StartFight),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
-    ]),
-    classes.Event("вы слышите чье-то рычание впереди, осмотревшись вы видите врага",themeColor = classes.Colors.GREEN, curentActions=[
-    classes.Action("Инвентарь", function = ShowInventory),
-    classes.Action("Атаковать врага", function = Attack),
-    classes.Action("Статы врага", function = ShowEnemyStats),
-    classes.Action("Сбежать", function = TryRunAway),
-    ]),
-    classes.Event(f'враг готовится нанести удар',themeColor = classes.Colors.GREEN, curentActions=[
-    classes.Action("Инвентарь", function = ShowInventory),
-    classes.Action("Атаковать врага", function = Attack),
-    classes.Action("Статы врага", function = ShowEnemyStats),
-    classes.Action("Сбежать", function = TryRunAway),
     ]),
     classes.Event("скитаясь вы пришли в заброшенную деревню",themeColor = classes.Colors.GREEN, curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
@@ -477,13 +519,13 @@ WILD_FOREST_EVENTS = [
     ]),
     classes.Event("вы слышите чье-то рычание впереди, осмотревшись вы видите врага",themeColor = classes.Colors.RED , curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
-    classes.Action(f'Атаковать врага ({vars.Weapon.item.name} {vars.Weapon.item.damage} урона)', function = Attack),
+    classes.Action(f'Атаковать врага', function = Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     classes.Action("Сбежать", function = TryRunAway),
     ]),
     classes.Event(f'враг готовится нанести удар',themeColor = classes.Colors.RED, curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
-    classes.Action(f'Атаковать врага ({vars.Weapon.item.name} {vars.Weapon.item.damage} урона)', function = Attack),
+    classes.Action(f'Атаковать врага', function = Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     classes.Action("Сбежать", function = TryRunAway),
     ]),
@@ -527,12 +569,12 @@ FOREST_BOSS_EVENTS =[
     ]),
     classes.Event("вы слышите оглушающий рев, осмотревшись вы видите его",themeColor = classes.Colors.RED , curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
-    classes.Action(f'Атаковать врага ({vars.Weapon.item.name} {vars.Weapon.item.damage} урона)', function = Attack),
+    classes.Action(f'Атаковать врага', function = Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     ]),
     classes.Event(f'Босс готовится нанести удар',themeColor = classes.Colors.RED , curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
-    classes.Action(f'Атаковать врага ({vars.Weapon.item.name} {vars.Weapon.item.damage} урона)', function = Attack),
+    classes.Action(f'Атаковать врага', function = Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     ]),
 ] 
@@ -543,15 +585,15 @@ CASTLE_EVENTS = [
     classes.Action("Идти дальше", function = StartFight),
     classes.Action("Пойти в другую сторону", function = GoOtherWay),
     ]),
-    classes.Event("вы слышите чье-то рычание впереди, осмотревшись вы видите врага",themeColor = classes.Colors.YELLOW , curentActions=[
+    classes.Event("вы слышите чье-то рычание впереди, осмотревшись вы видите врага",themeColor = classes.Colors.RED , curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
-    classes.Action(f'Атаковать врага ({vars.Weapon.item.name} {vars.Weapon.item.damage} урона)', function = Attack),
+    classes.Action(f'Атаковать врага', function = Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     classes.Action("Сбежать", function = TryRunAway),
     ]),
-    classes.Event(f'враг готовится нанести удар',themeColor = classes.Colors.YELLOW , curentActions=[
+    classes.Event(f'враг готовится нанести удар',themeColor = classes.Colors.RED , curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
-    classes.Action(f'Атаковать врага ({vars.Weapon.item.name} {vars.Weapon.item.damage} урона)', function = Attack),
+    classes.Action(f'Атаковать врага', function = Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     classes.Action("Сбежать", function = TryRunAway),
     ]),
@@ -636,17 +678,17 @@ CASTLE_BOSS_EVENTS =[
     ]),
     classes.Event("Вы видите как из спины короля торчат щупальца, а глаза его черны.Опоздали его уже не спасти",themeColor = classes.Colors.RED , curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
-    classes.Action(f'Атаковать врага ({vars.Weapon.item.name} {vars.Weapon.item.damage} урона)', function = Attack),
+    classes.Action(f'Атаковать врага', function = Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     ]),
     classes.Event(f'Король готовится нанести удар',themeColor = classes.Colors.RED , curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
-    classes.Action(f'Атаковать врага ({vars.Weapon.item.name} {vars.Weapon.item.damage} урона)', function = Attack),
+    classes.Action(f'Атаковать врага', function = Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     ]),
 ] 
 
-Elist = deepcopy(FOREST_EVENTS) # текущие события (сцены)
+Elist: list[classes.Event] = deepcopy(FOREST_EVENTS) # текущие события (сцены)
 
 
 FORK_EVENTS = [classes.Event("вы пришли к тому что охраняло чудовище к табличке с направлениями",themeColor = classes.Colors.YELLOW , curentActions=[

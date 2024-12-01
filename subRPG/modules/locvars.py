@@ -4,7 +4,7 @@ from enum import IntEnum
 
 #Logic
 ZeroScene = classes.Event
-Scene = ZeroScene
+Scene: classes.Event = ZeroScene
 
 
 class Locations(IntEnum):

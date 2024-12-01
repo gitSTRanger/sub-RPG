@@ -24,8 +24,8 @@ classes.Item("Меч Героя", cost = 100, stackCount = 1, damage=20), # 9
 classes.Item("Стальной меч", cost = 350, stackCount = 1, damage= 30), # 10
 classes.Item("Серебрянный меч", cost = 510, stackCount = 1, damage=48), # 11
 # Огонь
-classes.Item('Меч "Ярость"', cost = 350, stackCount = 1, damage= 30), # 12
-classes.Item("Метеоритовый Меч", cost = 830, stackCount = 1, damage=50), # 13
+classes.Item('Меч "Ярость"', cost = 350, stackCount = 1, damage= 35), # 12
+classes.Item("Метеоритовый Меч", cost = 630, stackCount = 1, damage=50), # 13
 # Лед
 classes.Item('Меч "Метель"', cost = 180, stackCount = 1, damage= 35), # 14
 classes.Item('Меч "Осколок Льда"', cost = 445, stackCount = 1, damage= 45), # 15
@@ -39,10 +39,10 @@ classes.Item("Стрела", cost = 2, stackCount = 20, damage=0), # 18
 classes.Item("Лук", cost = 50, stackCount = 1,damage=16), # 19
 classes.Item("Лук Героя", cost = 200, stackCount = 1,damage=30), # 20
 # Замок
-classes.Item("Бесконечный Лук", cost = 350, stackCount = 1,damage=35), # 21
+classes.Item("Бесконечный Лук (стрелы не нужны)", cost = 350, stackCount = 1,damage=35), # 21
 classes.Item("Посох Чародея", cost = 510, stackCount = 1,damage=60), # 22
 # Огонь
-classes.Item('Лук "Вспышка"', cost = 510, stackCount = 1, damage= 50), # 23
+classes.Item('Лук "Вспышка"', cost = 550, stackCount = 1, damage= 50), # 23
 classes.Item('Посох "Метеора"', cost = 900, stackCount = 1, damage= 75), # 24
 # Лед
 classes.Item("Посох Ледянного Выстрела", cost = 510, stackCount = 1,damage=60), # 25
@@ -162,13 +162,25 @@ Enemies = [
     classes.Enemy("Одержимый Королевский Страж", HP = 40, damage = 30, missChance = 10), # 9
     classes.Enemy("Каменная Горгулья", HP = 80, damage = 30, missChance = 40), # 10
     # Огонь
+    classes.Enemy("Огненная Бестия", HP = 65, damage = 10, missChance = 20), # 11
+    classes.Enemy("Пламенная Елементаль", HP = 60, damage = 20, missChance = 15), # 12
+    classes.Enemy("Расплавленный Рыцарь", HP = 70, damage = 10, missChance = 30), # 13
+    classes.Enemy("Обсидиановый Страж", HP = 70, damage = 10, missChance = 30), # 14
     # Лед
     # Эфир
 ]
 
 Bosses = [
-    classes.Enemy("Гигантский Троль Людоед", HP = 120, damage = 35, missChance = 20),
-    classes.Enemy("Король Талунг", HP = 300, damage = 30, missChance = 10),
+    classes.Enemy("Гигантский Троль Людоед", HP = 120, damage = 35, missChance = 20), # 0
+
+    classes.Enemy("Король Талунг", HP = 300, damage = 30, missChance = 10), # 1
+
+    classes.Enemy("Дракон Пустошей", HP = 200, damage = 45, missChance = 10), # 2
+
+    classes.Enemy("Ледяной Страж", HP = 180, damage = 35, missChance = 20), # 3
+    classes.Enemy("Ледяной Граф", HP = 400, damage = 30, missChance = 30), # 4
+
+    classes.Enemy("Зрек Перерожденный", HP = 1000, damage = 30, missChance = 20), # 5
 ]
 
 class EnemyID(IntEnum):
@@ -185,10 +197,21 @@ class EnemyID(IntEnum):
     PossessedRoyalGuard = 9
     StoneGargoyle = 10
 
+    FireBeast = 11
+    FlameElemental = 12
+    MoltenKnight = 13
+    ObsidianGuard = 14
+
+
+
 class BossID(IntEnum):
     GiantTroll = 0
     KingTalung = 1
-
+    WastelandDragon = 2
+    IceGuardian = 3
+    IceBaron = 4
+    Zrek = 5
+    
 
 curEnemy: classes.Enemy = Enemies[EnemyID.Skeleton]
 
@@ -226,7 +249,7 @@ Endings = [
 
 
 Inventory = [
-    classes.Slot(ItemList[ItemID.Sword], count = 1, equip=False),
+    classes.Slot(ItemList[ItemID.MySword], count = 1, equip=False),
     classes.Slot(ItemList[ItemID.SmallHealPotion], count = 2, equip=False),
 ]
 
@@ -265,13 +288,16 @@ ASSORTMENT_DEFAULT = [
 
     ItemList[ItemID.SmallHealPotion],
     ItemList[ItemID.MiddleHealPotion],
+
+    ItemList[ItemID.Empty], # пробел
+
     ItemList[ItemID.SmallRegenPotion],
 
     ItemList[ItemID.Empty], # пробел
 
     ItemList[ItemID.Sword],
     ItemList[ItemID.HeroSword],
-    ItemList[ItemID.MeteoriteSword],
+    ItemList[ItemID.FurySword],
 
     ItemList[ItemID.Empty], # пробел
 
@@ -291,6 +317,9 @@ ASSORTMENT_CASTLE = [
     ItemList[ItemID.SmallHealPotion],
     ItemList[ItemID.MiddleHealPotion],
     ItemList[ItemID.LargeHealPotion],
+
+    ItemList[ItemID.Empty], # пробел
+
     ItemList[ItemID.SmallRegenPotion],
     ItemList[ItemID.MiddleRegenPotion],
 
@@ -310,6 +339,38 @@ ASSORTMENT_CASTLE = [
 
     ItemList[ItemID.SteelArmor],
     ItemList[ItemID.SilverArmor],
+    ItemList[ItemID.MeteoriteArmor],
+]
+
+
+ASSORTMENT_MOLTEN_VALLEY = [
+
+    ItemList[ItemID.Arrow],
+
+    ItemList[ItemID.MiddleHealPotion],
+    ItemList[ItemID.LargeHealPotion],
+    ItemList[ItemID.LargeHealPotion],
+
+    ItemList[ItemID.Empty], # пробел
+
+    ItemList[ItemID.SmallRegenPotion],
+    ItemList[ItemID.MiddleRegenPotion],
+    ItemList[ItemID.LargeRegenPotion],
+
+    ItemList[ItemID.Empty], # пробел
+
+    ItemList[ItemID.FurySword],
+    ItemList[ItemID.MeteoriteSword],
+
+    ItemList[ItemID.Empty], # пробел
+
+    ItemList[ItemID.InfinityBow],
+    ItemList[ItemID.BowFlash],
+    ItemList[ItemID.MeteoraStaff],
+
+    ItemList[ItemID.Empty], # пробел
+
+    ItemList[ItemID.SteelArmor],
     ItemList[ItemID.MeteoriteArmor],
 ]
 

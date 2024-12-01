@@ -82,6 +82,20 @@ def CheckLocation():
             locvars.Scene = classes.Event("Вы прошли игру. Концовка - Убийца Королей", themeColor = classes.Colors.GREEN , curentActions=[
                 classes.Action("Завершить", function = lambda: input("Спасибо за игру!\n"))])
             
+    elif locvars.LOCATION == locvars.Locations.MoltenValley:
+            vars.StoreAssortment = vars.ASSORTMENT_MOLTEN_VALLEY
+
+            if vars.actStep % 15 == 0:
+                funks.Elist = funks.MOLTEN_VALLEY_BOSS_EVENTS
+                locvars.Scene = funks.Elist[funks.EventID.PossibleFight]
+                vars.curEnemy = deepcopy(vars.Bosses[vars.BossID.WastelandDragon])
+
+            if vars.actStep == 47:
+                vars.WIN = True
+                vars.END_KingKiller = True
+                locvars.Scene = classes.Event("Вы прошли игру. Концовка - Драконоборец", themeColor = classes.Colors.GREEN , curentActions=[
+                classes.Action("Завершить", function = lambda: input("Спасибо за игру!\n"))])
+            
 
 def PrintStats():
     vars.clear()
@@ -104,8 +118,8 @@ def PrintStats():
 
       
 
-#funks.SetLocation(funks.CASTLE_EVENTS, locvars.Locations.Castle)
-#vars.actStep = 45
+#funks.SetLocation(funks.CASTLE_EVENTS, locvars.Locations.WildForest)
+#vars.actStep = 32
 
 
 while vars.HP > 0 and vars.WIN == False:

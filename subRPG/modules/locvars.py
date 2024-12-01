@@ -13,7 +13,7 @@ class Locations(IntEnum):
     Castle = 2
     MoltenValley = 3
     IceLake = 4
-    IceCastle = 5
+    IceStronghold = 5
     EtherealShores = 6
 
 LOCATION = Locations.Forest
@@ -23,8 +23,8 @@ stringLocation =[
     f'{classes.Colors.GREEN}Дикий Лес{classes.Colors.WHITE}',
     f'{classes.Colors.YELLOW}Замок{classes.Colors.WHITE}',
     f'{classes.Colors.RED}Расплавленная долина{classes.Colors.WHITE}',
-    f'{classes.Colors.CYAN}Ледяное Озеро{classes.Colors.WHITE}',
-    f'{classes.Colors.BLUE}Ледяной Замок{classes.Colors.WHITE}',
+    f'{classes.Colors.CYAN}Замороженное Озеро{classes.Colors.WHITE}',
+    f'{classes.Colors.BLUE}Ледяная Крепость{classes.Colors.WHITE}',
     f'{classes.Colors.PINK}Эфирные Берега{classes.Colors.WHITE}',
     
 ]

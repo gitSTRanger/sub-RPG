@@ -56,7 +56,7 @@ classes.Item("Кожаная Броня (20 ед. +защита от холод�
 classes.Item("Стальной Доспех (50 ед.)", cost = 80, stackCount = 1,damage= 0), # 30
 classes.Item("Серебрянные Латы (65 ед.)", cost = 120, stackCount = 1,damage=0), # 31
 classes.Item("Метеоритный Доспех (75 ед.)", cost = 250, stackCount = 1,damage=0), # 32
-classes.Item("Ледяная Кольчуга (85 ед. обморожение 10 актов)", cost = 300, stackCount = 1,damage=0), # 33
+classes.Item("Ледяная Кольчуга (150 ед. обморожение 5 актов)", cost = 300, stackCount = 1,damage=0), # 33
 classes.Item("Эфирные Латы (100 ед.)", cost = 500, stackCount = 1,damage=0), # 34
 
 # Д Р А Г О Ц Е Н Н О С Т И
@@ -74,7 +74,7 @@ classes.Item("Ожерелье с топазом(Драгоценность)", c
 classes.Item("Кольцо с рубином(Драгоценность)", cost = 90, stackCount = 1,damage=0), # 42
 classes.Item("Ожерелье с рубином(Драгоценность)", cost = 120, stackCount = 1,damage=0), # 43
 # Лед
-classes.Item("Кристал Льда (Драгоценность)", cost = 40, stackCount = 3,damage=0), # 44
+classes.Item("Кристал Льда (Драгоценность)", cost = 40, stackCount = 6,damage=0), # 44
 
 classes.Item("Кольцо с сапфиром(Драгоценность)", cost = 110, stackCount = 1,damage=0), # 45
 classes.Item("Ожерелье с сапфиром(Драгоценность)", cost = 100, stackCount = 1,damage=0), # 46
@@ -85,6 +85,9 @@ classes.Item("Ожерелье с алмазом(Драгоценность)", c
 classes.Item("Эфирный Сгусток (Драгоценность)", cost = 100, stackCount = 3,damage=0), # 49
 
 classes.Item("Ожерелье с Эфиром(Драгоценность)", cost = 160, stackCount = 1,damage=0), # 50
+
+# если использовать на боссе Ледяной Граф можно исцелить его
+classes.Item(f'{classes.Colors.CYAN}Зелье незамерзайка{classes.Colors.WHITE}', cost = 160, stackCount = 1,damage=0), # 51
 
     ]
 
@@ -144,6 +147,8 @@ class ItemID(IntEnum):
     EtherealClot = 49
     EtherealNecklace = 50
 
+    antiFreezePotion = 51
+
 
 
 #Все Враги
@@ -162,11 +167,15 @@ Enemies = [
     classes.Enemy("Одержимый Королевский Страж", HP = 40, damage = 30, missChance = 10), # 9
     classes.Enemy("Каменная Горгулья", HP = 80, damage = 30, missChance = 40), # 10
     # Огонь
-    classes.Enemy("Огненная Бестия", HP = 65, damage = 10, missChance = 20), # 11
+    classes.Enemy("Огненная Бестия", HP = 65, damage = 25, missChance = 20), # 11
     classes.Enemy("Пламенная Елементаль", HP = 60, damage = 20, missChance = 15), # 12
-    classes.Enemy("Расплавленный Рыцарь", HP = 70, damage = 10, missChance = 30), # 13
-    classes.Enemy("Обсидиановый Страж", HP = 70, damage = 10, missChance = 30), # 14
+    classes.Enemy("Расплавленный Рыцарь", HP = 70, damage = 30, missChance = 30), # 13
+    classes.Enemy("Обсидиановый Страж", HP = 70, damage = 30, missChance = 30), # 14
     # Лед
+    classes.Enemy("Замороженный скелет", HP = 40, damage = 15, missChance = 20), # 15
+    classes.Enemy("Ледяной Елементаль", HP = 60, damage = 40, missChance = 60), # 16
+    classes.Enemy("Снеговик", HP = 30, damage = 15, missChance = 15), # 17
+    classes.Enemy("Ледовик", HP = 50, damage = 20, missChance = 20), # 18
     # Эфир
 ]
 
@@ -177,7 +186,7 @@ Bosses = [
 
     classes.Enemy("Дракон Пустошей", HP = 200, damage = 45, missChance = 10), # 2
 
-    classes.Enemy("Ледяной Страж", HP = 180, damage = 35, missChance = 20), # 3
+    classes.Enemy("Ледяной Страж", HP = 180, damage = 35, missChance = 30), # 3
     classes.Enemy("Ледяной Граф", HP = 400, damage = 30, missChance = 30), # 4
 
     classes.Enemy("Зрек Перерожденный", HP = 1000, damage = 30, missChance = 20), # 5
@@ -202,6 +211,10 @@ class EnemyID(IntEnum):
     MoltenKnight = 13
     ObsidianGuard = 14
 
+    FrostSkeleton = 15
+    IceElemental = 16
+    Snowman = 17
+    Iceman = 18
 
 
 class BossID(IntEnum):
@@ -219,7 +232,7 @@ curEnemy: classes.Enemy = Enemies[EnemyID.Skeleton]
 # Игрок
 HP = 100
 ARMOR = 0
-MONEY = 0
+MONEY = 9999
 
 BUFF_regeneration = 0
 BUFF_warm = 0 # согревание от брони
@@ -374,6 +387,37 @@ ASSORTMENT_MOLTEN_VALLEY = [
     ItemList[ItemID.MeteoriteArmor],
 ]
 
+ASSORTMENT_ICE = [
+
+    ItemList[ItemID.Arrow],
+
+    ItemList[ItemID.MiddleHealPotion],
+    ItemList[ItemID.LargeHealPotion],
+    ItemList[ItemID.LargeHealPotion],
+
+    ItemList[ItemID.Empty], # пробел
+
+    ItemList[ItemID.SmallRegenPotion],
+    ItemList[ItemID.MiddleRegenPotion],
+    ItemList[ItemID.LargeRegenPotion],
+
+    ItemList[ItemID.Empty], # пробел
+
+    ItemList[ItemID.MetelSword],
+    ItemList[ItemID.IceSharpSword],
+
+    ItemList[ItemID.Empty], # пробел
+
+    ItemList[ItemID.InfinityBow],
+    ItemList[ItemID.IceShotStaff],
+    ItemList[ItemID.BowTaiga],
+
+    ItemList[ItemID.Empty], # пробел
+
+    ItemList[ItemID.LeatherArmor],
+    ItemList[ItemID.IceArmor],
+]
+
 #   L O O T
 
 TIER1_MONSTER_DROP = [
@@ -429,4 +473,56 @@ TIER2_CHEST = [
     ItemList[ItemID.GoldBar],
     ItemList[ItemID.RubyRing],
     ItemList[ItemID.RubyNecklace],
+    ItemList[ItemID.Diamond],
+]
+
+TIER2_MOLTEN_CORPSE = [
+    ItemList[ItemID.TopazRing],
+    ItemList[ItemID.TopazNecklace],
+    ItemList[ItemID.RubyRing],
+    ItemList[ItemID.RubyNecklace],
+    ItemList[ItemID.Diamond],
+]
+
+TIER2_FROZEN_CORPSE = [
+    ItemList[ItemID.SapphireRing],
+    ItemList[ItemID.SapphireNecklace],
+    ItemList[ItemID.DiamondRing],
+    ItemList[ItemID.DiamondNecklace],
+    ItemList[ItemID.Diamond],
+    ItemList[ItemID.IceCrystal],
+
+    ItemList[ItemID.MiddleHealPotion],
+    ItemList[ItemID.LargeHealPotion],
+    ItemList[ItemID.MiddleRegenPotion],
+    ItemList[ItemID.LeatherArmor],
+    ItemList[ItemID.LeatherArmor],
+
+    ItemList[ItemID.Empty],
+    ItemList[ItemID.Empty],
+    ItemList[ItemID.Empty],
+]
+
+TIER3_FROZEN_CHEST = [
+    ItemList[ItemID.GoldBar],
+    ItemList[ItemID.GoldBar],
+    ItemList[ItemID.GoldBar],
+    ItemList[ItemID.SapphireRing],
+    ItemList[ItemID.SapphireNecklace],
+    ItemList[ItemID.DiamondRing],
+    ItemList[ItemID.DiamondNecklace],
+    ItemList[ItemID.Diamond],
+    ItemList[ItemID.IceCrystal],
+]
+
+TIER3_FROZEN_ARMORY = [
+    ItemList[ItemID.LeatherArmor],
+    ItemList[ItemID.LeatherArmor],
+    ItemList[ItemID.LeatherArmor],
+    ItemList[ItemID.SteelArmor],
+    ItemList[ItemID.MeteoriteArmor],
+
+    ItemList[ItemID.IceArmor],
+    ItemList[ItemID.IceArmor],
+
 ]

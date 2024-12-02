@@ -27,7 +27,7 @@ classes.Item("Серебрянный меч", cost = 510, stackCount = 1, damage
 classes.Item('Меч "Ярость"', cost = 350, stackCount = 1, damage= 35), # 12
 classes.Item("Метеоритовый Меч", cost = 630, stackCount = 1, damage=50), # 13
 # Лед
-classes.Item('Меч "Метель"', cost = 180, stackCount = 1, damage= 35), # 14
+classes.Item('Меч "Метель"', cost = 180, stackCount = 1, damage= 32), # 14
 classes.Item('Меч "Осколок Льда"', cost = 445, stackCount = 1, damage= 45), # 15
 # Эфир
 classes.Item("Эфирный Меч", cost = 500, stackCount = 1, damage= 65), # 16
@@ -82,9 +82,9 @@ classes.Item("Ожерелье с сапфиром(Драгоценность)",
 classes.Item("Кольцо с алмазом(Драгоценность)", cost = 130, stackCount = 1,damage=0), # 47
 classes.Item("Ожерелье с алмазом(Драгоценность)", cost = 140, stackCount = 1,damage=0), # 48
 # Эфир
-classes.Item("Эфирный Сгусток (Драгоценность)", cost = 100, stackCount = 3,damage=0), # 49
+classes.Item("Эфирный Сгусток (Драгоценность)", cost = 100, stackCount = 4,damage=0), # 49
 
-classes.Item("Ожерелье с Эфиром(Драгоценность)", cost = 160, stackCount = 1,damage=0), # 50
+classes.Item("Ожерелье с Эфиром(Драгоценность)", cost = 300, stackCount = 1,damage=0), # 50
 
 # если использовать на боссе Ледяной Граф можно исцелить его
 classes.Item(f'{classes.Colors.CYAN}Зелье незамерзайка{classes.Colors.WHITE}', cost = 160, stackCount = 1,damage=0), # 51
@@ -177,6 +177,11 @@ Enemies = [
     classes.Enemy("Снеговик", HP = 30, damage = 15, missChance = 15), # 17
     classes.Enemy("Ледовик", HP = 50, damage = 20, missChance = 20), # 18
     # Эфир
+    classes.Enemy("Жидкая слизь", HP = 100, damage = 35, missChance = 20), # 19
+    classes.Enemy("Эфирная Елементаль", HP = 90, damage = 40, missChance = 60), # 20
+    classes.Enemy("Эфирная фея", HP = 85, damage = 30, missChance = 15), # 21
+    classes.Enemy("Эфирная Хватайка", HP = 100, damage = 60, missChance = 60), # 22
+    classes.Enemy("Радужная Хватайка", HP = 120, damage = 80, missChance = 70), # 23
 ]
 
 Bosses = [
@@ -215,7 +220,12 @@ class EnemyID(IntEnum):
     IceElemental = 16
     Snowman = 17
     Iceman = 18
-
+    
+    LiquidSlime = 19
+    EtherealElemental = 20
+    EtherealFairy = 21
+    EtherealGrabber = 22
+    RainbowGrabber = 23
 
 class BossID(IntEnum):
     GiantTroll = 0
@@ -231,7 +241,7 @@ curEnemy: classes.Enemy = Enemies[EnemyID.Skeleton]
 
 # Игрок
 HP = 100
-ARMOR = 0
+ARMOR = 50
 MONEY = 9999
 
 BUFF_regeneration = 0
@@ -418,6 +428,40 @@ ASSORTMENT_ICE = [
     ItemList[ItemID.IceArmor],
 ]
 
+ASSORTMENT_ETHERIAL = [
+
+    ItemList[ItemID.Arrow],
+
+    ItemList[ItemID.MiddleHealPotion],
+    ItemList[ItemID.LargeHealPotion],
+    ItemList[ItemID.LargeHealPotion],
+
+    ItemList[ItemID.Empty], # пробел
+
+    ItemList[ItemID.SmallRegenPotion],
+    ItemList[ItemID.MiddleRegenPotion],
+    ItemList[ItemID.LargeRegenPotion],
+
+    ItemList[ItemID.Empty], # пробел
+
+    ItemList[ItemID.EtherealSword],
+    ItemList[ItemID.EtherealDoomSword],
+
+    ItemList[ItemID.Empty], # пробел
+
+    ItemList[ItemID.EtherealStaff],
+    ItemList[ItemID.EtherealBow],
+    ItemList[ItemID.BowTaiga],
+
+    ItemList[ItemID.Empty], # пробел
+
+    ItemList[ItemID.SteelArmor],
+    ItemList[ItemID.MeteoriteArmor],
+    ItemList[ItemID.EtherealArmor],
+]
+
+
+
 #   L O O T
 
 TIER1_MONSTER_DROP = [
@@ -525,4 +569,30 @@ TIER3_FROZEN_ARMORY = [
     ItemList[ItemID.IceArmor],
     ItemList[ItemID.IceArmor],
 
+]
+
+
+TIER4_ETHERIAL_BAG = [
+    ItemList[ItemID.EtherealClot],
+    ItemList[ItemID.EtherealClot],
+    ItemList[ItemID.EtherealClot],
+    ItemList[ItemID.EtherealNecklace],
+    ItemList[ItemID.EtherealNecklace],
+
+    ItemList[ItemID.DiamondNecklace],
+    ItemList[ItemID.Diamond],
+]
+
+
+TIER4_ETHERIAL_COMBAT_BAG = [
+    ItemList[ItemID.EtherealClot],
+    ItemList[ItemID.EtherealNecklace],
+
+    ItemList[ItemID.SilverSword],
+    ItemList[ItemID.MetelSword],
+
+    ItemList[ItemID.SilverArmor],
+    ItemList[ItemID.IceArmor],
+    ItemList[ItemID.EtherealArmor],
+    ItemList[ItemID.EtherealArmor],
 ]

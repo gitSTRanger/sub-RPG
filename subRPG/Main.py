@@ -82,7 +82,7 @@ def CheckLocation():
         if vars.actStep == 47:
             vars.WIN = True
             vars.END_KingKiller = True
-            locvars.Scene = classes.Event("Вы прошли игру. Концовка - Убийца Королей", themeColor = classes.Colors.GREEN , curentActions=[
+            locvars.Scene = classes.Event("Вы прошли игру. Концовка - Убийца Королей", themeColor = classes.Colors.YELLOW , curentActions=[
                 classes.Action("Завершить", function = lambda: input("Спасибо за игру!\n"))])
     # Р А С П Л А В Л Е Н Н А Я   Д А Л И Н А   
     elif locvars.LOCATION == locvars.Locations.MoltenValley:
@@ -97,7 +97,7 @@ def CheckLocation():
             if vars.actStep == 47:
                 vars.WIN = True
                 vars.END_DragoSlayer = True
-                locvars.Scene = classes.Event("Вы прошли игру. Концовка - Драконоборец", themeColor = classes.Colors.GREEN , curentActions=[
+                locvars.Scene = classes.Event("Вы прошли игру. Концовка - Драконоборец", themeColor = classes.Colors.YELLOW , curentActions=[
                 classes.Action("Завершить", function = lambda: input("Спасибо за игру!\n"))])
     # З А М О Р О Ж Е Н Н О Е   О З Е Р О       
     elif locvars.LOCATION == locvars.Locations.IceLake:
@@ -119,14 +119,32 @@ def CheckLocation():
             vars.StoreAssortment = vars.ASSORTMENT_ICE
 
             if vars.actStep % 15 == 0:
+                vars.curEnemy = deepcopy(vars.Bosses[vars.BossID.IceBaron])
                 funks.Elist = funks.ICE_STRONGHOLD_BOSS_EVENTS
                 locvars.Scene = funks.Elist[funks.EventID.PossibleFight]
-                vars.curEnemy = deepcopy(vars.Bosses[vars.BossID.IceBaron])
+                
 
             if vars.actStep == 62:
                 vars.WIN = True
                 vars.END_ColdBlooded = True
-                locvars.Scene = classes.Event("Вы прошли игру. Концовка - Холоднокровный", themeColor = classes.Colors.GREEN , curentActions=[
+                locvars.Scene = classes.Event("Вы прошли игру. Концовка - Хладнокровный", themeColor = classes.Colors.YELLOW , curentActions=[
+                classes.Action("Завершить", function = lambda: input("Спасибо за игру!\n"))])
+    # Э Ф И Р Н Ы Е   Б Е Р Е Г А  
+    elif locvars.LOCATION == locvars.Locations.EtherealShores:
+            vars.StoreAssortment = vars.ASSORTMENT_ETHERIAL
+
+            if vars.actStep % 15 == 0:
+                vars.curEnemy = deepcopy(vars.Bosses[vars.BossID.Zrek])
+                funks.Elist = funks.ETHERIAL_SHORES_BOSS_EVENTS
+                locvars.Scene = funks.Elist[funks.EventID.PossibleFight]
+                
+
+            if vars.actStep == 47:
+                locvars.Scene = funks.Elist[3] # эфирное сердце
+            if vars.actStep == 48:
+                vars.WIN = True
+                vars.END_Zrek = True
+                locvars.Scene = classes.Event("Вы перерезали Сплетения сердца, земля начинает очищаться\n Вы прошли игру. Концовка - Срубил под Корень Проблемы", themeColor = classes.Colors.GREEN , curentActions=[
                 classes.Action("Завершить", function = lambda: input("Спасибо за игру!\n"))])
 
 
@@ -154,9 +172,8 @@ def PrintStats():
 
 
 
-funks.SetLocation(funks.WILD_FOREST_EVENTS, locvars.Locations.WildForest)
-vars.actStep = 32
-
+#funks.SetLocation(funks.WILD_FOREST_EVENTS, locvars.Locations.WildForest)
+#vars.actStep = 32
 
 
 

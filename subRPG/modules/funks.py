@@ -399,6 +399,9 @@ def StartFight():
     elif locvars.LOCATION == locvars.Locations.IceLake or locvars.LOCATION == locvars.Locations.IceStronghold:
         startRange = vars.EnemyID.FrostSkeleton
         endRange = vars.EnemyID.Iceman
+    elif locvars.LOCATION == locvars.Locations.EtherealShores:
+        startRange = vars.EnemyID.LiquidSlime
+        endRange = vars.EnemyID.RainbowGrabber
 
     rndEnemy = random.randint(startRange, endRange)
     vars.curEnemy = deepcopy(vars.Enemies[rndEnemy])
@@ -407,7 +410,7 @@ def StartFight():
 def TakeDamage(hit):
     damage = hit
     if vars.ARMOR > 0:
-        damage = int(hit * (vars.ARMOR * 0.005))
+        damage = int(hit * 0.5)
         vars.ARMOR -= int(vars.curEnemy.damage - damage)
         
     vars.HP -= damage
@@ -501,6 +504,9 @@ class EventID(IntEnum):
     FrozenChest = 6
 
     # Эфир
+    EtherialBag = 7
+    EtherialCombatBag = 8
+    CoruptedCorpse = 9
 
 FOREST_EVENTS = [
     classes.Event("на вашем пути появился чей то силуэт",themeColor = classes.Colors.GREEN , curentActions=[
@@ -616,6 +622,7 @@ FOREST_BOSS_EVENTS =[
 ] 
 
 
+
 CASTLE_EVENTS = [
     classes.Event("в глубине коридора виден чей то силуэт",themeColor = classes.Colors.YELLOW , curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
@@ -726,6 +733,7 @@ CASTLE_BOSS_EVENTS =[
 ] 
 
 
+
 MOLTEN_VALLEY_EVENTS = [
     classes.Event("на в дыму виднеется чей то силуэт",themeColor = classes.Colors.RED , curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
@@ -805,6 +813,7 @@ MOLTEN_VALLEY_BOSS_EVENTS =[
 ] 
 
 
+
 ICE_LAKE_EVENTS = [
     classes.Event("впереди в снежном тумане виднеется чей-то силуэт",themeColor = classes.Colors.CYAN , curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
@@ -859,7 +868,7 @@ ICE_LAKE_EVENTS = [
     classes.Action("Инвентарь", function = ShowInventory),
     classes.Action("Осмотреть", function = lambda: TakeRandomItem(vars.TIER2_FROZEN_CORPSE)),
     classes.Action("Идти дальше", function = MoveOn),
-    classes.Action("Пойти в другую сторону", function = lambda: SetEvent(EventID.ObsidianPath)),
+    classes.Action("Пойти в другую сторону", function = GoOtherWay),
     ]),
     classes.Event("вы нашли чей то горящий костер", themeColor = classes.Colors.YELLOW, curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
@@ -952,7 +961,7 @@ ICE_STRONGHOLD_EVENTS = [
     classes.Action("Инвентарь", function = ShowInventory),
     classes.Action("Осмотреть", function = lambda: TakeRandomItem(vars.TIER2_FROZEN_CORPSE)),
     classes.Action("Идти дальше", function = MoveOn),
-    classes.Action("Пойти в другую сторону", function = lambda: SetEvent(EventID.ObsidianPath)),
+    classes.Action("Пойти в другую сторону", function = GoOtherWay),
     ]),
     classes.Event("вы нашли чей то горящий костер", themeColor = classes.Colors.YELLOW, curentActions=[
     classes.Action("Инвентарь", function = ShowInventory),
@@ -990,6 +999,102 @@ ICE_STRONGHOLD_BOSS_EVENTS =[
 ] 
 
 
+
+ETHERIAL_SHORES_EVENTS = [
+    classes.Event("впереди в пузырчатой дымке виднеется чей-то силуэт",themeColor = classes.Colors.PINK , curentActions=[
+    classes.Action("Инвентарь", function = ShowInventory),
+    classes.Action("Идти дальше", function = StartFight),
+    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    ]),
+    classes.Event("вы слышите чье-то рычание впереди, осмотревшись вы видите врага",themeColor = classes.Colors.RED , curentActions=[
+    classes.Action("Инвентарь", function = ShowInventory),
+    classes.Action(f'Атаковать врага', function = Attack),
+    classes.Action("Статы врага", function = ShowEnemyStats),
+    classes.Action("Сбежать", function = TryRunAway),
+    ]),
+    classes.Event(f'враг готовится нанести удар',themeColor = classes.Colors.RED, curentActions=[
+    classes.Action("Инвентарь", function = ShowInventory),
+    classes.Action(f'Атаковать врага', function = Attack),
+    classes.Action("Статы врага", function = ShowEnemyStats),
+    classes.Action("Сбежать", function = TryRunAway),
+    ]),
+    classes.Event("вы пришли в очень странное место, как в сказках. все какое то... волшебное", themeColor = classes.Colors.PINK, curentActions=[
+    classes.Action("Инвентарь", function = ShowInventory),
+    classes.Action("Магазин", function = ShowStore),
+    classes.Action("Идти дальше", function = MoveOn),
+    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    ]),
+    classes.Event("впереди вы замечаете нору в земле из которой торчат щупальца", themeColor = classes.Colors.PINK, curentActions=[
+    classes.Action("Инвентарь", function = ShowInventory),
+    classes.Action("Магазин", function = ShowStore),
+    classes.Action("Осмотреться", function = lambda: input("из норы в большом кол-ве летят пузырьки, щупальца извиваясь лопают их")),
+    classes.Action("Идти дальше", function = lambda: TakeDamage(hit=80)),
+    classes.Action("обойти", function = GoOtherWay),
+    ]),
+    classes.Event("вы видете перед собой искаженное эфирное дерево", themeColor = classes.Colors.PINK , curentActions=[
+    classes.Action("Инвентарь", function = ShowInventory),
+    classes.Action("Магазин", function = ShowStore),
+    classes.Action("Осмотреться", function = lambda: input("дерево очень странное, растет верх корнями и кроной уходит в густую эфирную почву")),
+    classes.Action("Сорвать кору", function = lambda: TakeItem(vars.ItemList[vars.ItemID.EtherealClot], 4)),
+    classes.Action("Идти дальше", function = MoveOn),
+    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    ]),
+    classes.Event("вы остановились. Вокруг вас летают сгустки эфира", themeColor = classes.Colors.PINK , curentActions=[
+    classes.Action("Инвентарь", function = ShowInventory),
+    classes.Action("Магазин", function = ShowStore),
+    classes.Action("Осмотреться", function = lambda: input("все вокруг в пузырчетой розовой пене")),
+    classes.Action("Собрать все", function = lambda: TakeItem(vars.ItemList[vars.ItemID.EtherealClot], 4)),
+    classes.Action("Идти дальше", function = MoveOn),
+    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    ]),
+    classes.Event("вы остановились. Под ногами из земли появляется слизистый мешочек", themeColor = classes.Colors.PINK , curentActions=[
+    classes.Action("Инвентарь", function = ShowInventory),
+    classes.Action("Магазин", function = ShowStore),
+    classes.Action("Осмотреться", function = lambda: input("Он не выглядит опасным, судя по всему он полон эфирной пеной")),
+    classes.Action("Потрогать", function = lambda: TakeRandomItem(vars.TIER4_ETHERIAL_BAG)),
+    classes.Action("Идти дальше", function = MoveOn),
+    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    ]),
+    classes.Event("вы остановились. Под ногами из земли появляется слизистый мешочек", themeColor = classes.Colors.PINK , curentActions=[
+    classes.Action("Инвентарь", function = ShowInventory),
+    classes.Action("Магазин", function = ShowStore),
+    classes.Action("Осмотреться", function = lambda: input("Он не выглядит опасным, судя по всему внутри что-то есть")),
+    classes.Action("Потрогать", function = lambda: TakeRandomItem(vars.TIER4_ETHERIAL_COMBAT_BAG)),
+    classes.Action("Идти дальше", function = MoveOn),
+    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    ]),
+    classes.Event("перед вами лежит искаженный труп путника",themeColor = classes.Colors.PINK, curentActions=[
+    classes.Action("Инвентарь", function = ShowInventory),
+    classes.Action("Осмотреть", function = lambda: SetEvent(EventID.EtherialCombatBag)),
+    classes.Action("Идти дальше", function = MoveOn),
+    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    ]),
+
+]
+
+ETHERIAL_SHORES_BOSS_EVENTS =[
+    classes.Event("Вы пришли к эфирному холму с огромной норой",themeColor = classes.Colors.PINK , curentActions=[
+    classes.Action("Инвентарь", function = ShowInventory),
+    classes.Action("Осмотреть это", function = lambda: input("Похпже на вход в пещеру")),
+    classes.Action("Идти в нору", function = lambda: SetEvent(EventID.StartFight)),
+    ]),
+    classes.Event("перед вами стоит старик",themeColor = classes.Colors.PINK , curentActions=[
+    classes.Action("Инвентарь", function = ShowInventory),
+    classes.Action(f'Атаковать врага', function = Attack),
+    classes.Action("Статы врага", function = ShowEnemyStats),
+    ]),
+    classes.Event(f'Старик использует магию и из пола выползают щупальца корней',themeColor = classes.Colors.RED , curentActions=[
+    classes.Action("Инвентарь", function = ShowInventory),
+    classes.Action(f'Атаковать врага', function = Attack),
+    classes.Action("Статы врага", function = ShowEnemyStats),
+    ]),
+    classes.Event("После победы вы видите проход в эфирные пещеры \nСпустившись вы видите что охранял Зрек",themeColor = classes.Colors.PINK , curentActions=[
+    classes.Action("Осмотреть это", function = lambda: input("Переплетение корней в один узел - Сердце Эфира, перерезав их Эфирные земли исчезнут!")),
+    classes.Action("подойти и уничтожить", function = MoveOn),
+    ]),
+] 
+
+
 Elist: list[classes.Event] = deepcopy(FOREST_EVENTS) # текущие события (сцены)
 
 
@@ -1013,5 +1118,5 @@ FORK_EVENTS = [classes.Event("вы пришли к тому что охраня�
     classes.Action(f'{classes.Colors.YELLOW}Идти в (Замок){classes.Colors.WHITE}', function = lambda: SetLocation(events = CASTLE_EVENTS, locInt = locvars.Locations.Castle)),
     classes.Action(f'{classes.Colors.RED}Идти в (Расплавленную долину){classes.Colors.WHITE}', function = lambda: SetLocation(events = MOLTEN_VALLEY_EVENTS, locInt = locvars.Locations.MoltenValley)),
     classes.Action(f'{classes.Colors.CYAN}Идти в (Замороженное Озеро){classes.Colors.WHITE}', function = lambda: SetLocation(events = ICE_LAKE_EVENTS, locInt = locvars.Locations.IceLake)),
-    classes.Action(f'{classes.Colors.PINK}Идти в (Эфирные Берега){classes.Colors.WHITE}', function = lambda: SetLocation(events = WILD_FOREST_EVENTS, locInt = locvars.Locations.EtherealShores)),
+    classes.Action(f'{classes.Colors.PINK}Идти в (Эфирные Берега){classes.Colors.WHITE}', function = lambda: SetLocation(events = ETHERIAL_SHORES_EVENTS, locInt = locvars.Locations.EtherealShores)),
     ])]

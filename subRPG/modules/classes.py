@@ -35,9 +35,9 @@ class Event():
         self.name = name
 
 class TkScene():
-    def __init__(self, label = Label, curentActionsBar = list[Button]):
+    def __init__(self, textArea = Label, curentActionsBar: list[Button] = Button ):
         self.curentActionsBar = curentActionsBar
-        self.label = label
+        self.textArea = textArea
         
         
 

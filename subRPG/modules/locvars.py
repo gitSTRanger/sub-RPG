@@ -5,7 +5,7 @@ from enum import IntEnum
 ZeroScene = classes.Event
 Scene: classes.Event = ZeroScene
 
-
+curEventId = 0
 
 class Locations(IntEnum):
     Forest = 0

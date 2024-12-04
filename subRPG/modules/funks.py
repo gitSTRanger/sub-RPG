@@ -314,7 +314,7 @@ def MoveOn():
     input("Далее...")
     locvars.Scene = locvars.ZeroScene
     vars.actStep += 1
-
+    locvars.curEventId = SetNewScene()
 
 
 
@@ -610,6 +610,17 @@ def PrintStats():
 
 
 
+def SetNewScene():
+    randomEvent = random.randint(0, len(Elist)-1)
+
+    locvars.Scene = Elist[randomEvent]
+
+    if randomEvent == EventID.StartFight or randomEvent == EventID.OnFight:
+        vars.clear()
+        StartFight()
+                    
+    CheckBuffs()
+    return randomEvent 
 
 
 

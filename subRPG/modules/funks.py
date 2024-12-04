@@ -3,6 +3,8 @@ from modules import classes
 from modules import locvars
 from copy import deepcopy
 from enum import IntEnum
+from tkinter import *
+import sqlite3
 import random
 
 
@@ -463,6 +465,158 @@ def CheckBuffs():
         vars.deBUFF_frostbite -= 1
         print("\nу вас обморожение")
         TakeDamage(20)  
+
+
+
+
+#недписано (пока не работает)
+def Save():
+    data = sqlite3.connect('SavedScene.db')
+    cursor = data.cursor()
+
+    cursor.execute("""CREATE TABLE IF NOT EXISTS playerData (
+                Hp integer, 
+                Armor integer,
+                Money integer,
+                Buff_warm integer,
+                BuffRegeneration integer,
+                deBuff_frostbite integer
+                )""")
+    
+    cursor.execute(f'INSERT INTO playerData VALUES ({vars.HP}, {vars.ARMOR}, {vars.BUFF_warm}, {vars.BUFF_regeneration}, {vars.deBUFF_frostbite})')
+    
+    data.commit()
+
+    data.close()
+
+
+def CheckLocation():
+    # Л Е С
+    if locvars.LOCATION == locvars.Locations.Forest:
+        vars.StoreAssortment = vars.ASSORTMENT_DEFAULT
+        if vars.actStep % 15 == 0:
+            SetLocation(events = WILD_FOREST_EVENTS, locInt = locvars.Locations.WildForest)
+    # Д И К И Й   Л Е С
+    elif locvars.LOCATION == locvars.Locations.WildForest:
+        vars.StoreAssortment = vars.ASSORTMENT_DEFAULT
+        
+        if vars.actStep % 15 == 0:
+            vars.curEnemy = deepcopy(vars.Bosses[vars.BossID.GiantTroll])
+            Elist = FOREST_BOSS_EVENTS
+            locvars.Scene = Elist[EventID.PossibleFight]
+            
+
+        if vars.actStep == 32:
+                TakeItem(vars.ItemList[vars.ItemID.antiFreezePotion], 1)
+                Elist = FORK_EVENTS
+    # З А М О К
+    elif locvars.LOCATION == locvars.Locations.Castle:
+        vars.StoreAssortment = vars.ASSORTMENT_CASTLE
+
+        if vars.actStep % 15 == 0:
+            vars.curEnemy = deepcopy(vars.Bosses[vars.BossID.KingTalung])
+            Elist = CASTLE_BOSS_EVENTS
+            locvars.Scene = Elist[EventID.PossibleFight]
+            
+
+        if vars.actStep == 47:
+            vars.WIN = True
+            vars.END_KingKiller = True
+            locvars.Scene = classes.Event("Вы прошли игру. Концовка - Убийца Королей", themeColor = classes.Colors.YELLOW , curentActions=[
+                classes.Action("Завершить", function = lambda: input("Спасибо за игру!\n"))])
+    # Р А С П Л А В Л Е Н Н А Я   Д А Л И Н А   
+    elif locvars.LOCATION == locvars.Locations.MoltenValley:
+            vars.StoreAssortment = vars.ASSORTMENT_MOLTEN_VALLEY
+
+            if vars.actStep % 15 == 0:
+                vars.curEnemy = deepcopy(vars.Bosses[vars.BossID.WastelandDragon])
+                Elist = MOLTEN_VALLEY_BOSS_EVENTS
+                locvars.Scene = Elist[EventID.PossibleFight]
+                
+
+            if vars.actStep == 47:
+                vars.WIN = True
+                vars.END_DragoSlayer = True
+                locvars.Scene = classes.Event("Вы прошли игру. Концовка - Драконоборец", themeColor = classes.Colors.YELLOW , curentActions=[
+                classes.Action("Завершить", function = lambda: input("Спасибо за игру!\n"))])
+    # З А М О Р О Ж Е Н Н О Е   О З Е Р О       
+    elif locvars.LOCATION == locvars.Locations.IceLake:
+            vars.isFrost = True
+            vars.StoreAssortment = vars.ASSORTMENT_ICE
+            
+
+            if vars.actStep % 15 == 0:
+                vars.curEnemy = deepcopy(vars.Bosses[vars.BossID.IceGuardian])
+                Elist = ICE_LAKE_BOSS_EVENTS
+                locvars.Scene = Elist[EventID.PossibleFight]
+                
+
+            if vars.actStep == 47:
+                SetLocation(ICE_STRONGHOLD_EVENTS, locvars.Locations.IceStronghold)
+    # Л Е Д Я Н А Я    К Р Е П О С Т Ь     
+    elif locvars.LOCATION == locvars.Locations.IceStronghold:
+            vars.isFrost = True
+            vars.StoreAssortment = vars.ASSORTMENT_ICE
+
+            if vars.actStep % 15 == 0:
+                vars.curEnemy = deepcopy(vars.Bosses[vars.BossID.IceBaron])
+                Elist = ICE_STRONGHOLD_BOSS_EVENTS
+                locvars.Scene = Elist[EventID.PossibleFight]
+                
+
+            if vars.actStep == 62:
+                vars.WIN = True
+                vars.END_ColdBlooded = True
+                locvars.Scene = classes.Event("Вы прошли игру. Концовка - Хладнокровный", themeColor = classes.Colors.YELLOW , curentActions=[
+                classes.Action("Завершить", function = lambda: input("Спасибо за игру!\n"))])
+    # Э Ф И Р Н Ы Е   Б Е Р Е Г А  
+    elif locvars.LOCATION == locvars.Locations.EtherealShores:
+            vars.StoreAssortment = vars.ASSORTMENT_ETHERIAL
+
+            if vars.actStep % 15 == 0:
+                vars.curEnemy = deepcopy(vars.Bosses[vars.BossID.Zrek])
+                Elist = ETHERIAL_SHORES_BOSS_EVENTS
+                locvars.Scene = Elist[EventID.PossibleFight]
+                
+
+            if vars.actStep == 47:
+                locvars.Scene = Elist[3] # эфирное сердце
+            if vars.actStep == 48:
+                vars.WIN = True
+                vars.END_Zrek = True
+                locvars.Scene = classes.Event("Вы перерезали Сплетения сердца, земля начинает очищаться\n Вы прошли игру. Концовка - Срубил под Корень Проблемы", themeColor = classes.Colors.GREEN , curentActions=[
+                classes.Action("Завершить", function = lambda: input("Спасибо за игру!\n"))])
+
+
+
+def PrintStats():
+    vars.clear()
+    print(f'step:{vars.step}    act:{vars.actStep}')
+    print(f'Локация: {locvars.stringLocation[locvars.LOCATION]}')
+    print(f'Жизни:{vars.HP}    Броня:{vars.ARMOR}    Деньги:{vars.MONEY}\n')
+
+    if vars.isFrost == True:
+        print(f'{classes.Colors.BLUE}[Дебафф: Холод]{classes.Colors.WHITE}')
+
+    if vars.deBUFF_frostbite != 0:
+        print(f'[Дебафф: обморожение на {classes.Colors.CYAN}{vars.deBUFF_frostbite}{classes.Colors.WHITE} актов]')
+
+    if vars.BUFF_warm != 0 and vars.isFrost == True:
+        print(f'[Бафф:вы согреты на {classes.Colors.YELLOW}{vars.BUFF_warm}{classes.Colors.WHITE} актов]')
+
+    if vars.BUFF_regeneration != 0:
+        print(f'[Бафф:Регенерация на {classes.Colors.GREEN}{vars.BUFF_regeneration}{classes.Colors.WHITE} актов]')
+    print("\n")
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1097,15 +1251,16 @@ ETHERIAL_SHORES_BOSS_EVENTS =[
 
 Elist: list[classes.Event] = deepcopy(FOREST_EVENTS) # текущие события (сцены)
 
+"""
 
-FORK_EVENTS = [classes.Event("вы пришли к тому что охраняло чудовище к табличке с направлениями",themeColor = classes.Colors.YELLOW , curentActions=[
-    classes.Action(f'{classes.Colors.YELLOW}Идти в (Замок){classes.Colors.WHITE}', function = lambda: SetLocation(events = CASTLE_EVENTS, locInt = locvars.Locations.Castle)),
-    classes.Action(f'{classes.Colors.RED}Идти в (Расплавленную долину){classes.Colors.WHITE}', function = lambda: SetLocation(events = WILD_FOREST_EVENTS, locInt = locvars.Locations.MoltenValley)),
-    classes.Action(f'{classes.Colors.CYAN}Идти в (Ледяное Озеро){classes.Colors.WHITE}', function = lambda: SetLocation(events = WILD_FOREST_EVENTS, locInt = locvars.Locations.IceLake)),
-    classes.Action(f'{classes.Colors.PINK}Идти в (Эфирные Берега){classes.Colors.WHITE}', function = lambda: SetLocation(events = WILD_FOREST_EVENTS, locInt = locvars.Locations.EtherealShores)),
+FORK_EVENTS = [classes.Event(Label(text="Вы пришли к тому что охраняло чудовище к табличке с направлениями",font = ('ImesNewRoman',25,'bold'),bg = '#000',fg = '#fff'), curentActions=[
+    Button(text="Идти в (Замок)",bg='#F5DEB3',font =('ImesNewRoman',21,'bold'),fg = '#FFD700', command= lambda: SetLocation(events = CASTLE_EVENTS, locInt = locvars.Locations.Castle)),
+    Button(text="Идти в (Расплавленную долину)",bg='#8B0000',font =('ImesNewRoman',21,'bold'),fg = '#FFD700', command= lambda: SetLocation(events = MOLTEN_VALLEY_EVENTS, locInt = locvars.Locations.MoltenValley)),
+    Button(text="Идти в (Замороженное Озеро)",bg='#87CEEB',font =('ImesNewRoman',21,'bold'),fg = '#AFEEEE', command= lambda: SetLocation(events = MOLTEN_VALLEY_EVENTS, locInt = locvars.Locations.MoltenValley)),
+    Button(text="Идти в (Эфирные Берега)",bg='#BA55D3',font =('ImesNewRoman',21,'bold'),fg = '#FF1493', command= lambda: SetLocation(events = MOLTEN_VALLEY_EVENTS, locInt = locvars.Locations.MoltenValley)),
     ])]
 
-
+"""
 
 
 

@@ -1,3 +1,5 @@
+from tkinter import *
+
 class Item:
     def __init__(self, name, cost, stackCount, damage):
         self.name = name
@@ -20,7 +22,6 @@ class Enemy:
         self.damage = damage
         self.missChance = missChance
 
-
 class Action():
     def __init__(self, name, function):
         self.name = name
@@ -32,6 +33,12 @@ class Event():
         self.curentActions = curentActions
         self.themeColor = themeColor
         self.name = name
+
+class TkScene():
+    def __init__(self, label = Label, curentActionsBar = list[Button]):
+        self.curentActionsBar = curentActionsBar
+        self.label = label
+        
         
 
 

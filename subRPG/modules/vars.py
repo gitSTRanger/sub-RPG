@@ -1,5 +1,6 @@
 from modules import classes
 from enum import IntEnum
+from tkinter import *
 import os
 
 clear = lambda: os.system('cls')
@@ -238,6 +239,13 @@ class BossID(IntEnum):
 
 curEnemy: classes.Enemy = Enemies[EnemyID.Skeleton]
 
+# Tkinter
+
+GUI_text_area = Label
+
+GUI_ActionBar = [
+    Button
+]
 
 # Игрок
 HP = 100

@@ -1,10 +1,10 @@
 from modules import classes
 from enum import IntEnum
 
-
 #Logic
 ZeroScene = classes.Event
 Scene: classes.Event = ZeroScene
+
 
 
 class Locations(IntEnum):

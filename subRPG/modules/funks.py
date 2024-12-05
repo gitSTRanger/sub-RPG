@@ -13,6 +13,7 @@ def ShowInventory():
     vars.Weapon.equip = True
     i = 0
     print("0: назад")
+
     for Islot in vars.Inventory:
 
         i += 1
@@ -26,6 +27,9 @@ def ShowInventory():
             print(f' {i}: {Islot.item.name}({Islot.count}x)', "цена:", Islot.item.cost, "$")
         else:
             print(f' {i}: {Islot.item.name}({Islot.count}x) урон: {Islot.item.damage}', "цена:", Islot.item.cost, "$")
+
+    MinorEvent("Инвентарь:", "Далее", ReturnToJourney)
+    vars.step += 1
 
     
     
@@ -282,7 +286,7 @@ def Attack():
     else:
         print(f'\n{vars.curEnemy.name} пытается атаковать, но промахивается')
 
-    input("Далее...")
+    #input("Далее...")
 
 
 
@@ -314,6 +318,7 @@ def GoOtherWay():
     vars.actStep += 1
     rndPeacefulPlace = random.randint(3, len(Elist) - 1)
     locvars.Scene = Elist[rndPeacefulPlace]
+    locvars.curEventId = rndPeacefulPlace
     MinorEvent(f'вы пошли другой дорогой', "Далее", ReturnToJourney)
 
 
@@ -354,7 +359,7 @@ def TakeDamage(hit):
         
     vars.HP -= damage
     MinorEvent(f'вы получили {damage} урона', "Далее", ReturnToJourney)
-    input("Далее...")
+    #input("Далее...")
 
 
 
@@ -547,13 +552,14 @@ def PrintStats():
 def SetNewScene():
     randomEvent = random.randint(0, len(Elist)-1)
     locvars.Scene = Elist[randomEvent]
+    locvars.curEventId = randomEvent
 
     if randomEvent == EventID.StartFight or randomEvent == EventID.OnFight:
         vars.clear()
+        locvars.curEventId = EventID.StartFight
         StartFight()
                     
     CheckBuffs()
-    locvars.curEventId = randomEvent
     vars.step += 1
 
 
@@ -643,7 +649,7 @@ FOREST_EVENTS = [
     ]),
     classes.Event("вы набрели на разрушенный пустой колодец. здесь спокойно и можно передохнуть", themeColor = classes.Colors.GREEN, curentActions=[
     classes.Action("Инвентарь", function = lambda: ShowInventory),
-    classes.Action("Осмотреть", function = lambda: input("Колодец настолько стар, что едва можно разлечить его руины поросшие мхом, сомневаюсь что внутри есть вода\nДалее...")),
+    classes.Action("Осмотреть", function = lambda: MinorEvent("Колодец настолько стар, что едва можно разлечить\n его руины поросшие мхом, сомневаюсь что внутри\n есть вода\nДалее...", "Назад", ReturnToJourney)),
     classes.Action("Посмотреть в колодец", function = lambda: TakeRandomItem(vars.TIER1_WELL_items)),
     classes.Action("Идти дальше", function = MoveOn),
     classes.Action("Пойти в другую сторону", function = lambda: GoOtherWay),

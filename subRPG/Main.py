@@ -23,6 +23,8 @@ class Game(Frame):
         self.TK_Scene.textArea = Label(text=f'Event Name Text Area',font = ('ImesNewRoman',20,'bold'),bg = '#000',fg = '#fff')
         self.TK_Scene.textArea.pack(anchor="w", fill= X) #padx, pady
 
+        self.UpdateBtn = Button(text= f'Update',bg='#FFFACD',font =('ImesNewRoman',21,'bold'),fg = '#000', command= self.UpdateWindow)
+        self.UpdateBtn.pack()
         self.StartScreen()
         
         #Развилка
@@ -77,31 +79,31 @@ class Game(Frame):
 
         self.ClearActionBar()
         
-        id = 0
         for action in locvars.Scene.curentActions:
+            print(action.name)
+            
             btn = Button(text= f'{action.name}',bg='#FFFACD',font =('ImesNewRoman',21,'bold'),fg = '#000', command= action.function())
             self.TK_Scene.curentActionsBar.append(btn)
             btn.pack(anchor="w")
-            id += 1
+
     
 
 
 
     def GameLoop(self):
+        funks.SetNewScene()
 
-        while vars.HP > 0 and vars.WIN == False:
+            #funks.CheckLocation()
 
-            funks.CheckLocation()
-
-            if vars.ARMOR <= 0:
+        if vars.ARMOR <= 0:
                         vars.ARMOR = 0
 
             
-            locvars.curEventId = funks.SetNewScene()
+            
 
-            if vars.curStep != vars.step:
-                vars.curStep = vars.step
-                self.UpdateWindow()
+        if vars.curStep != vars.step:
+            vars.curStep = vars.step
+            self.UpdateWindow()
 
             #vars.step += 1
 
@@ -120,6 +122,6 @@ tk ['bg']='#D2B48C'
 tk.resizable(False,False)
 tk.geometry ('1200x720+200+200')
 tk.title('sub_RPG')
-app = Game(tk)
-app.pack()
+window = Game(tk)
+window.pack()
 tk.mainloop()

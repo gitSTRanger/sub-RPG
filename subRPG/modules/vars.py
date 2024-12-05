@@ -250,7 +250,7 @@ GUI_ActionBar = [
 # Игрок
 HP = 100
 ARMOR = 50
-MONEY = 9999
+MONEY = 0
 
 statsLine: StringVar
 
@@ -294,7 +294,7 @@ Weapon: classes.Slot = Inventory[0]
 
 actStep = 1 #1 шаг = 1 игровое событие
 step = 0 #1 шаг = одно действие
-curStep = 0
+curStep = -1
 
 
 

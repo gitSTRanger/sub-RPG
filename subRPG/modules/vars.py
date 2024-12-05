@@ -252,6 +252,8 @@ HP = 100
 ARMOR = 50
 MONEY = 9999
 
+statsLine: StringVar
+
 BUFF_regeneration = 0
 BUFF_warm = 0 # согревание от брони
 deBUFF_frostbite = 0 # обморожение от ледяной брони
@@ -291,9 +293,8 @@ Weapon: classes.Slot = Inventory[0]
 
 
 actStep = 1 #1 шаг = 1 игровое событие
-curAct = 1
 step = 0 #1 шаг = одно действие
-
+curStep = 0
 
 
 

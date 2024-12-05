@@ -19,12 +19,12 @@ class Locations(IntEnum):
 LOCATION = Locations.Forest
 
 stringLocation =[
-    f'{classes.Colors.GREEN}Лес{classes.Colors.WHITE}',
-    f'{classes.Colors.GREEN}Дикий Лес{classes.Colors.WHITE}',
-    f'{classes.Colors.YELLOW}Замок{classes.Colors.WHITE}',
-    f'{classes.Colors.RED}Расплавленная долина{classes.Colors.WHITE}',
-    f'{classes.Colors.CYAN}Замороженное Озеро{classes.Colors.WHITE}',
-    f'{classes.Colors.BLUE}Ледяная Крепость{classes.Colors.WHITE}',
-    f'{classes.Colors.PINK}Эфирные Берега{classes.Colors.WHITE}',
+    f'Лес',
+    f'Дикий Лес',
+    f'Замок',
+    f'Расплавленная долина',
+    f'Замороженное Озеро',
+    f'Ледяная Крепость',
+    f'Эфирные Берега',
     
 ]

@@ -14,18 +14,22 @@ class Game(Frame):
         #vars.GUI_text_area.pack(side=LEFT) #padx, pady
 
         self.TK_Scene: classes.TkScene = classes.TkScene(Label(text="Вы пришли к тому что охраняло чудовище к табличке с направлениями",font = ('ImesNewRoman',25,'bold'),bg = '#000',fg = '#fff'), curentActionsBar=[
-            Button(text="Идти в (Замок)",bg='#F5DEB3',font =('ImesNewRoman',21,'bold'),fg = '#FFD700', command= lambda: print("пустое действие")),
+            Button(text="Идти в (Замок)",bg='#F5DEB3',font =('ImesNewRoman',18,'bold'),fg = '#FFD700', command= lambda: print("пустое действие")),
             ])
         
-        self.TK_Scene.textArea = Label(text=f'Event Name Text Area',font = ('ImesNewRoman',25,'bold'),bg = '#000',fg = '#fff')
+        self.Stats_Area = Label(text=f'stats ',font = ('ImesNewRoman',20,'bold'),bg = '#000',fg = '#fff')
+        self.Stats_Area.pack(anchor="w", fill= X) #padx, pady
+
+        self.TK_Scene.textArea = Label(text=f'Event Name Text Area',font = ('ImesNewRoman',20,'bold'),bg = '#000',fg = '#fff')
         self.TK_Scene.textArea.pack(anchor="w", fill= X) #padx, pady
 
         self.StartScreen()
         
-        funks.SetLocation(funks.WILD_FOREST_EVENTS, locvars.Locations.WildForest)
-        vars.actStep = 32
+        #Развилка
+        #funks.SetLocation(funks.WILD_FOREST_EVENTS, locvars.Locations.WildForest)
+        #vars.actStep = 32
     
-        
+
     def StartScreen(self):
         #del funks.Elist[:]
 
@@ -64,9 +68,13 @@ class Game(Frame):
             btn.destroy()
         del self.TK_Scene.curentActionsBar[:]
 
+
+
     def UpdateWindow(self):
-        self.TK_Scene.textArea.config(text=f'{locvars.Scene.name}') #padx, pady
-        
+        self.TK_Scene.textArea.config(text=locvars.Scene.name) #padx, pady
+        funks.PrintStats()
+        self.Stats_Area.config(text= vars.statsLine)
+
         self.ClearActionBar()
         
         id = 0
@@ -77,9 +85,11 @@ class Game(Frame):
             id += 1
     
 
+
+
     def GameLoop(self):
-        curstep = vars.step
-        while vars.HP > 0 and vars.WIN == False and curstep == vars.step:
+
+        while vars.HP > 0 and vars.WIN == False:
 
             funks.CheckLocation()
 
@@ -88,9 +98,12 @@ class Game(Frame):
 
             
             locvars.curEventId = funks.SetNewScene()
-            self.UpdateWindow()
 
-            vars.step += 1
+            if vars.curStep != vars.step:
+                vars.curStep = vars.step
+                self.UpdateWindow()
+
+            #vars.step += 1
 
 
 
@@ -105,7 +118,7 @@ class Game(Frame):
 tk = Tk()
 tk ['bg']='#D2B48C'
 tk.resizable(False,False)
-tk.geometry ('1020x720+200+200')
+tk.geometry ('1200x720+200+200')
 tk.title('sub_RPG')
 app = Game(tk)
 app.pack()

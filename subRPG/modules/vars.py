@@ -88,7 +88,7 @@ classes.Item("Эфирный Сгусток (Драгоценность)", cost 
 classes.Item("Ожерелье с Эфиром(Драгоценность)", cost = 300, stackCount = 1,damage=0), # 50
 
 # если использовать на боссе Ледяной Граф можно исцелить его
-classes.Item(f'{classes.Colors.CYAN}Зелье незамерзайка{classes.Colors.WHITE}', cost = 160, stackCount = 1,damage=0), # 51
+classes.Item(f'Зелье незамерзайка', cost = 160, stackCount = 1,damage=0), # 51
 
     ]
 

@@ -29,7 +29,7 @@ class Action():
 
 
 class Event():
-    def __init__(self, name, themeColor, curentActions = Action):
+    def __init__(self, name, themeColor, curentActions: list[Action] = Action):
         self.curentActions = curentActions
         self.themeColor = themeColor
         self.name = name

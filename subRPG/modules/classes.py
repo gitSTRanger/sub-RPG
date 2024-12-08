@@ -23,8 +23,9 @@ class Enemy:
         self.missChance = missChance
 
 class Action():
-    def __init__(self, name, backColor, textColor, function):
+    def __init__(self, name, icon, backColor, textColor, function):
         self.name = name
+        self.icon = icon
         self.backColor = backColor
         self.textColor = textColor
         self.function = function
@@ -38,7 +39,7 @@ class Event():
         self.name = name
 
 class TkScene():
-    def __init__(self, textArea = Label, curentActionsBar: list[Button] = Button ):
+    def __init__(self, textArea = Label, curentActionsBar: list[Button] = Button):
         self.curentActionsBar = curentActionsBar
         self.textArea = textArea
         

@@ -1,12 +1,15 @@
 from modules import vars
 from modules import classes
 from modules import locvars
+from modules import imgs
 from copy import deepcopy
 from enum import IntEnum
 from tkinter import *
 import sqlite3
 import random
 import time
+
+
 
 
 class Colors:
@@ -53,7 +56,7 @@ def ShowInventory():
     
     locvars.Scene.name = "Инвентарь:"
     del locvars.Scene.curentActions[:]
-    locvars.Scene.curentActions.append(classes.Action(f'<- Назад',backColor= Colors.PEACH, textColor = Colors.BROWN, function=lambda: ReturnToJourney))
+    locvars.Scene.curentActions.append(classes.Action(f'<- Назад',icon= imgs.ring, backColor= Colors.PEACH, textColor = Colors.BROWN, function=lambda: ReturnToJourney))
 
     i = 0
     for Islot in vars.Inventory:
@@ -63,12 +66,12 @@ def ShowInventory():
         ExamineItemIsZeroCount(i-1)
 
         if Islot.equip == True:
-            locvars.Scene.curentActions.append(classes.Action(f'(Экирировано)\n{Islot.item.name}({Islot.count}x) урон:{Islot.item.damage} цена: {Islot.item.cost}$',backColor= Colors.YELLOW, textColor = Colors.DARK_GOLDEN, function= lambda: ReturnToJourney))
+            locvars.Scene.curentActions.append(classes.Action(f'(Экирировано)\n{Islot.item.name}({Islot.count}x) урон:{Islot.item.damage} цена: {Islot.item.cost}$',icon= imgs.circle, backColor= Colors.OLIVE, textColor = Colors.WHITE, function= lambda: ReturnToJourney))
             continue
         if Islot.item.damage == 0:
-            locvars.Scene.curentActions.append(classes.Action(f'{Islot.item.name}({Islot.count}x) цена: {Islot.item.cost}$',backColor= Colors.KHAKI, textColor = Colors.BROWN, function= lambda: ReturnToJourney))
+            locvars.Scene.curentActions.append(classes.Action(f'{Islot.item.name}({Islot.count}x) цена: {Islot.item.cost}$',icon= imgs.circle, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function= lambda: ReturnToJourney))
         else:
-            locvars.Scene.curentActions.append(classes.Action(f'{Islot.item.name}({Islot.count}x) урон:{Islot.item.damage} цена: {Islot.item.cost}$',backColor= Colors.KHAKI, textColor = Colors.BROWN, function=lambda: ReturnToJourney))
+            locvars.Scene.curentActions.append(classes.Action(f'{Islot.item.name}({Islot.count}x) урон:{Islot.item.damage} цена: {Islot.item.cost}$',icon= imgs.circle, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=lambda: ReturnToJourney))
 
     window.UpdateScneneGUI("n")
 
@@ -587,7 +590,7 @@ def SetNewScene():
 
 def MinorEvent(eventName, actionName, funcion):
     locvars.Scene = classes.Event(f'{eventName}',backColor= Colors.BLACK, textColor = Colors.WHITE , curentActions=[
-                classes.Action(f'{actionName}',backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: funcion),
+                classes.Action(f'{actionName}',icon= imgs.ring, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: funcion),
                 ])
     vars.step += 1
     window.UpdateAll()
@@ -654,64 +657,64 @@ FOREST_EVENTS = [
                 backColor=Colors.BLACK,
                 textColor = Colors.GREEN ,
                 curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action("Идти дальше",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: StartFight),
-    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function =lambda: GoOtherWay),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: StartFight),
+    classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function =lambda: GoOtherWay),
     ]),
     classes.Event("вы слышите чье-то рычание впереди, осмотревшись вы видите врага",
                 backColor=Colors.BLACK,
                 textColor = Colors.RED,
                 curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
-    classes.Action("Статы врага",backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
-    classes.Action("Сбежать",backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action(f'Атаковать врага',icon= imgs.attack, backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
+    classes.Action("Статы врага",icon= imgs.enemyStats, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
+    classes.Action("Сбежать",icon= imgs.arrowLeft, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
     ]),
     classes.Event(f'враг готовится нанести удар',
                 backColor=Colors.BLACK,
                 textColor = Colors.RED,
                 curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
-    classes.Action("Статы врага",backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
-    classes.Action("Сбежать",backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action(f'Атаковать врага',icon= imgs.attack, backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
+    classes.Action("Статы врага",icon= imgs.enemyStats, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
+    classes.Action("Сбежать",icon= imgs.arrowLeft, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
     ]),
     classes.Event("скитаясь вы пришли к лесу",
                 backColor=Colors.BLACK,
                 textColor = Colors.GREEN ,
                 curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action("Магазин", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowStore),
-    classes.Action("Идти дальше",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
-    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Магазин",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowStore),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
+    classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("скитаясь вы пришли к лесу",
                 backColor=Colors.BLACK,
                 textColor = Colors.GREEN,
                 curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action("Магазин", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowStore),
-    classes.Action("Идти дальше",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
-    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Магазин",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowStore),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
+    classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("вы набрели на разрушенный пустой колодец. здесь спокойно и можно передохнуть",
                   backColor=Colors.BLACK,
                   textColor = Colors.GREEN,
                   curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action("Осмотреть", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: MinorEvent("Колодец настолько стар, что едва можно разлечить\n его руины поросшие мхом, сомневаюсь что внутри\n есть вода\nДалее...", "Назад", ReturnToJourney)),
-    classes.Action("Обыскать колодец",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: TakeRandomItem(vars.TIER1_WELL_items)),
-    classes.Action("Идти дальше",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
-    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Осмотреть",icon= imgs.look, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: lambda: MinorEvent("Колодец настолько стар, что едва можно разлечить\n его руины поросшие мхом, сомневаюсь что внутри\n есть вода", "Назад", ReturnToJourney)),
+    classes.Action("Обыскать",icon= imgs.look, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: lambda: TakeRandomItem(vars.TIER1_WELL_items)),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
+    classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("скитаясь вы пришли в заброшенную деревню",
                   backColor=Colors.BLACK,
                   textColor = Colors.GREEN,
                   curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action("Обыскать дома",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: lambda: TakeRandomItem(vars.TIER1_VILLAGE_items)),
-    classes.Action("Идти дальше",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
-    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Обыскать дома",icon= imgs.look, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: lambda: TakeRandomItem(vars.TIER1_VILLAGE_items)),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
+    classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
 ]
 
@@ -1293,6 +1296,8 @@ FORK_EVENTS = [classes.Event("вы пришли к тому что охраня�
 '''
 
 
+
+
 class Game(Frame):
     def __init__(self,tk): 
         super(Game,self).__init__(tk)
@@ -1307,19 +1312,21 @@ class Game(Frame):
         self.TK_Scene.textArea = Label(text=f'Event Name Text Area',font = ('ImesNewRoman',20,'bold'),bg = '#000',fg = '#fff')
         self.TK_Scene.textArea.pack(anchor="w", fill= X) #padx, pady
 
+        #Btn Icon
+        self.bntIcon = PhotoImage(file= imgs.ring)
+        self.btnIcons = [PhotoImage(file=imgs.circle)]
+
         #self.UpdateBtn = Button(text= f'Update',bg='#FFFACD',font =('ImesNewRoman',21,'bold'),fg = '#000', command= lambda: self.UpdateScneneGUI("w"))
         #self.UpdateBtn.pack()
         self.StartScreen()
-        
-       
 
     def StartScreen(self):
         #del funks.Elist[:]
 
         locvars.Scene = classes.Event("ДОБРО ПОЖАЛОВАТЬ В subRPG (*Tkinter)", backColor= Colors.BLACK ,textColor = Colors.GOLDEN , curentActions=[
-                classes.Action("Нажмите, чтобы НАЧАТЬ играть",backColor= Colors.KHAKI, textColor = Colors.GREEN, function = lambda: SetNewScene),
-                classes.Action("получить стартовый набор предметов",backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: self.GiveStarterKit),
-                classes.Action("Об игре",backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: self.AboutGame),
+                classes.Action("Нажмите, чтобы НАЧАТЬ играть", icon= imgs.circle,backColor= Colors.KHAKI, textColor = Colors.GREEN, function = lambda: SetNewScene),
+                #classes.Action("получить стартовый набор предметов",backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: self.GiveStarterKit),
+                classes.Action("Об игре",backColor= Colors.PEACH,icon= imgs.look, textColor = Colors.BROWN, function = lambda: self.AboutGame),
                 ])
         
         
@@ -1343,13 +1350,16 @@ class Game(Frame):
        
 
         self.ClearActionBar()
-        
+
+        i = 0
         for action in locvars.Scene.curentActions:
             #print(action.name)
-            
-            btn = Button(text= f'{action.name}',bg= action.backColor, fg= action.textColor, font =('ImesNewRoman',21,'bold'), command= action.function())
+            self.btnIcons.append(PhotoImage(file = action.icon))
+
+            btn = Button(text= f'{action.name}',bg= action.backColor, fg= action.textColor, font =('ImesNewRoman',21,'bold'), command= action.function(), image= self.btnIcons[i] ,compound="left")
             self.TK_Scene.curentActionsBar.append(btn)
             btn.pack(anchor= BtnAnchor)
+            i += 1
 
 
     def UpdateAll(self):
@@ -1369,6 +1379,7 @@ class Game(Frame):
     def ClearActionBar(self):
         for btn in self.TK_Scene.curentActionsBar:
             btn.destroy()
+        del self.btnIcons[:]  
         del self.TK_Scene.curentActionsBar[:]
 
 
@@ -1387,7 +1398,7 @@ class Game(Frame):
                                     backColor= Colors.BLACK,
                                     textColor = Colors.LIGHT_CYAN,
                                     curentActions=[
-                classes.Action("Назад",backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: self.StartScreen),
+                classes.Action("Назад",icon= imgs.ring, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: self.StartScreen),
                 ])
         
         self.UpdateScneneGUI("c")

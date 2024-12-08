@@ -66,13 +66,14 @@ def ShowInventory():
         ExamineItemIsZeroCount(i-1)
 
         if Islot.equip == True:
-            locvars.Scene.curentActions.append(classes.Action(f'(Экирировано)\n{Islot.item.name}({Islot.count}x) урон:{Islot.item.damage} цена: {Islot.item.cost}$',icon= imgs.circle, backColor= Colors.OLIVE, textColor = Colors.WHITE, function= lambda: ReturnToJourney))
+            locvars.Scene.curentActions.append(classes.Action(f'(Экирировано)\n{Islot.item.name}({Islot.count}x) урон:{Islot.item.damage} цена: {Islot.item.cost}$',icon= Islot.item.icon, backColor= Colors.OLIVE, textColor = Colors.WHITE, function= lambda: ReturnToJourney))
             continue
         if Islot.item.damage == 0:
-            locvars.Scene.curentActions.append(classes.Action(f'{Islot.item.name}({Islot.count}x) цена: {Islot.item.cost}$',icon= imgs.circle, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function= lambda: ReturnToJourney))
+            locvars.Scene.curentActions.append(classes.Action(f'{Islot.item.name}({Islot.count}x) цена: {Islot.item.cost}$',icon= Islot.item.icon, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function= lambda: ReturnToJourney))
         else:
-            locvars.Scene.curentActions.append(classes.Action(f'{Islot.item.name}({Islot.count}x) урон:{Islot.item.damage} цена: {Islot.item.cost}$',icon= imgs.circle, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=lambda: ReturnToJourney))
+            locvars.Scene.curentActions.append(classes.Action(f'{Islot.item.name}({Islot.count}x) урон:{Islot.item.damage} цена: {Islot.item.cost}$',icon= Islot.item.icon, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=lambda: ReturnToJourney))
 
+    window.ClearActionBar()
     window.UpdateScneneGUI("n")
 
     
@@ -1364,7 +1365,7 @@ class Game(Frame):
 
     def UpdateAll(self):
         time.sleep(0.03)
-        self.UpdateScneneGUI("w")
+        self.UpdateScneneGUI('w')
 
         if vars.ARMOR <= 0:
                         vars.ARMOR = 0

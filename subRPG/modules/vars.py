@@ -1,4 +1,5 @@
 from modules import classes
+from modules import imgs
 from enum import IntEnum
 from tkinter import *
 import os
@@ -9,86 +10,86 @@ clear = lambda: os.system('cls')
 #Все Предметы
 ItemList = [
 # Лечение
-classes.Item("none", cost = 0, stackCount = 1,damage=0), #0
-classes.Item("Мал. Зелье Лечения (15 ед.)", cost = 30, stackCount = 5, damage= 0), # 1
-classes.Item("Сред. Зелье Лечения (25 ед.)", cost = 50, stackCount = 5, damage=0), # 2
-classes.Item("Бол. Зелье Лечения (50 ед.)", cost = 80, stackCount = 5, damage=0), # 3
+classes.Item("none", icon= imgs.I_unknown, cost = 0, stackCount = 1,damage=0), #0
+classes.Item("Мал. Зелье Лечения (15 ед.)",icon= imgs.I_smallHeal,   cost = 30, stackCount = 5, damage= 0), # 1
+classes.Item("Сред. Зелье Лечения (25 ед.)",icon= imgs.I_mediumHeal,   cost = 50, stackCount = 5, damage=0), # 2
+classes.Item("Бол. Зелье Лечения (50 ед.)",icon= imgs.I_largeHeal,   cost = 80, stackCount = 5, damage=0), # 3
 
-classes.Item("Мал. Зелье Регенерации (15 ед. 3 акта)", cost = 30, stackCount = 5, damage=0), # 4
-classes.Item("Сред. Зелье Регенерации (25 ед.) (15 ед. 6 актов)", cost = 60, stackCount = 5, damage=0), # 5
-classes.Item("Бол. Зелье Регенерации (45 ед.) (15 ед. 12 актов)", cost = 130, stackCount = 5, damage=0), # 6
+classes.Item("Мал. Зелье Регенерации (15 ед. 3 акта)",icon= imgs.I_smallRegen,   cost = 30, stackCount = 5, damage=0), # 4
+classes.Item("Сред. Зелье Регенерации (25 ед.) (15 ед. 6 актов)",icon= imgs.I_mediumRegen,   cost = 60, stackCount = 5, damage=0), # 5
+classes.Item("Бол. Зелье Регенерации (45 ед.) (15 ед. 12 актов)",icon= imgs.I_largeRegen,   cost = 130, stackCount = 5, damage=0), # 6
 # М Е Ч И
-classes.Item("Именной Меч", cost = 30, stackCount = 1, damage=11), # 7
-classes.Item("Меч", cost = 30, stackCount = 1, damage=10), # 8
-classes.Item("Меч Героя", cost = 100, stackCount = 1, damage=20), # 9
+classes.Item("Именной Меч",icon= imgs.I_mySword,   cost = 30, stackCount = 1, damage=11), # 7
+classes.Item("Меч",icon= imgs.I_sword,    cost = 30, stackCount = 1, damage=10), # 8
+classes.Item("Меч Героя",icon= imgs.I_heroSword,   cost = 100, stackCount = 1, damage=20), # 9
 #Замок
-classes.Item("Стальной меч", cost = 350, stackCount = 1, damage= 30), # 10
-classes.Item("Серебрянный меч", cost = 510, stackCount = 1, damage=48), # 11
+classes.Item("Стальной меч",icon= imgs.I_steelSword,   cost = 350, stackCount = 1, damage= 30), # 10
+classes.Item("Серебрянный меч",icon= imgs.I_silverSword,   cost = 510, stackCount = 1, damage=48), # 11
 # Огонь
-classes.Item('Меч "Ярость"', cost = 350, stackCount = 1, damage= 35), # 12
-classes.Item("Метеоритовый Меч", cost = 630, stackCount = 1, damage=50), # 13
+classes.Item('Меч "Ярость"',icon= imgs.I_furySword, cost = 350, stackCount = 1, damage= 35), # 12
+classes.Item("Метеоритовый Меч",icon= imgs.I_meteoriteSword,   cost = 630, stackCount = 1, damage=50), # 13
 # Лед
-classes.Item('Меч "Метель"', cost = 180, stackCount = 1, damage= 32), # 14
-classes.Item('Меч "Осколок Льда"', cost = 445, stackCount = 1, damage= 45), # 15
+classes.Item('Меч "Метель"',icon= imgs.I_metelSword,   cost = 180, stackCount = 1, damage= 32), # 14
+classes.Item('Меч "Осколок Льда"',icon= imgs.I_iceSharpSword,   cost = 445, stackCount = 1, damage= 45), # 15
 # Эфир
-classes.Item("Эфирный Меч", cost = 500, stackCount = 1, damage= 65), # 16
-classes.Item('Меч "Эфирная Гибель"', cost = 1500, stackCount = 1, damage= 111), # 17
+classes.Item("Эфирный Меч",icon= imgs.I_etherialSword,   cost = 500, stackCount = 1, damage= 65), # 16
+classes.Item('Меч "Эфирная Гибель"',icon= imgs.I_etherialDoomSword,    cost = 1500, stackCount = 1, damage= 111), # 17
 
 # Д И С Т А Н Ц И О Н Н О Е   О Р У Ж И Е
-classes.Item("Стрела", cost = 2, stackCount = 20, damage=0), # 18
+classes.Item("Стрела",icon= imgs.I_arrow,   cost = 2, stackCount = 20, damage=0), # 18
 
-classes.Item("Лук", cost = 50, stackCount = 1,damage=16), # 19
-classes.Item("Лук Героя", cost = 200, stackCount = 1,damage=30), # 20
+classes.Item("Лук",icon= imgs.I_bow,    cost = 50, stackCount = 1,damage=16), # 19
+classes.Item("Лук Героя",icon= imgs.I_heroBow,  cost = 200, stackCount = 1,damage=30), # 20
 # Замок
-classes.Item("Бесконечный Лук (стрелы не нужны)", cost = 350, stackCount = 1,damage=35), # 21
-classes.Item("Посох Чародея", cost = 510, stackCount = 1,damage=60), # 22
+classes.Item("Бесконечный Лук (стрелы не нужны)",icon= imgs.I_infiniteBow,  cost = 350, stackCount = 1,damage=35), # 21
+classes.Item("Посох Чародея",icon= imgs.I_sorcererStaff,  cost = 510, stackCount = 1,damage=60), # 22
 # Огонь
-classes.Item('Лук "Вспышка"', cost = 550, stackCount = 1, damage= 50), # 23
-classes.Item('Посох "Метеора"', cost = 900, stackCount = 1, damage= 75), # 24
+classes.Item('Лук "Вспышка"', icon= imgs.I_flashBow,  cost = 550, stackCount = 1, damage= 50), # 23
+classes.Item('Посох "Метеора"',icon= imgs.I_meteoraStaff, cost = 900, stackCount = 1, damage= 75), # 24
 # Лед
-classes.Item("Посох Ледянного Выстрела", cost = 510, stackCount = 1,damage=60), # 25
-classes.Item('Лук "Тайга"', cost = 700, stackCount = 1, damage= 70), # 26
+classes.Item("Посох Ледянного Выстрела",icon= imgs.I_iceShotStaff, cost = 510, stackCount = 1,damage=60), # 25
+classes.Item('Лук "Тайга"', icon= imgs.I_taigaBow,  cost = 700, stackCount = 1, damage= 70), # 26
 # Эфир
-classes.Item("Эфирный Посох", cost = 666, stackCount = 1, damage= 75), # 27
-classes.Item("Эфирный Лук", cost = 2250, stackCount = 1, damage= 199), # 28
+classes.Item("Эфирный Посох", icon= imgs.I_etherialStaff, cost = 666, stackCount = 1, damage= 75), # 27
+classes.Item("Эфирный Лук",icon= imgs.I_etherialBow, cost = 2250, stackCount = 1, damage= 199), # 28
 
 # Б Р О Н Я
-classes.Item("Кожаная Броня (20 ед. +защита от холода 10 актов)", cost = 20, stackCount = 1,damage=0), # 29
-classes.Item("Стальной Доспех (50 ед.)", cost = 80, stackCount = 1,damage= 0), # 30
-classes.Item("Серебрянные Латы (65 ед.)", cost = 120, stackCount = 1,damage=0), # 31
-classes.Item("Метеоритный Доспех (75 ед.)", cost = 250, stackCount = 1,damage=0), # 32
-classes.Item("Ледяная Кольчуга (150 ед. обморожение 5 актов)", cost = 300, stackCount = 1,damage=0), # 33
-classes.Item("Эфирные Латы (100 ед.)", cost = 500, stackCount = 1,damage=0), # 34
+classes.Item("Кожаная Броня (20 ед. +защита от холода 10 актов)",icon= imgs.I_leatherArmor,  cost = 20, stackCount = 1,damage=0), # 29
+classes.Item("Стальной Доспех (50 ед.)",icon= imgs.I_steelArmor, cost = 80, stackCount = 1,damage= 0), # 30
+classes.Item("Серебрянные Латы (65 ед.)",icon= imgs.I_silverArmor, cost = 120, stackCount = 1,damage=0), # 31
+classes.Item("Метеоритный Доспех (75 ед.)",icon= imgs.I_meteoriteArmor, cost = 250, stackCount = 1,damage=0), # 32
+classes.Item("Ледяная Кольчуга (150 ед. обморожение 5 актов)",icon= imgs.I_iceArmor, cost = 300, stackCount = 1,damage=0), # 33
+classes.Item("Эфирные Латы (100 ед.)",icon= imgs.I_etherialArmor, cost = 500, stackCount = 1,damage=0), # 34
 
 # Д Р А Г О Ц Е Н Н О С Т И
-classes.Item("Брилиант (Драгоценность)", cost = 50, stackCount = 3,damage=0), # 35
-classes.Item("Кольцо с изумрудом(Драгоценность)", cost = 50, stackCount = 1,damage=0), # 36
-classes.Item("Ожерелье с изумрудом(Драгоценность)", cost = 80, stackCount = 1,damage=0), # 37
+classes.Item("Брилиант (Драгоценность)",icon= imgs.I_unknown,  cost = 50, stackCount = 3,damage=0), # 35
+classes.Item("Кольцо с изумрудом(Драгоценность)",icon= imgs.I_emeralRing, cost = 50, stackCount = 1,damage=0), # 36
+classes.Item("Ожерелье с изумрудом(Драгоценность)", icon= imgs.I_unknown,  cost = 80, stackCount = 1,damage=0), # 37
 # Замок
-classes.Item("Слиток Золота(Драгоценность)", cost = 50, stackCount = 3,damage=0), # 38
+classes.Item("Слиток Золота(Драгоценность)",icon= imgs.I_goldBar, cost = 50, stackCount = 3,damage=0), # 38
 # Огонь
-classes.Item("Осколок Метеорита (Драгоценность)", cost = 50, stackCount = 3,damage=0), # 39
+classes.Item("Осколок Метеорита (Драгоценность)",icon= imgs.I_meteoritePiece, cost = 50, stackCount = 3,damage=0), # 39
 
-classes.Item("Кольцо с топазом(Драгоценность)", cost = 70, stackCount = 1,damage=0), # 40
-classes.Item("Ожерелье с топазом(Драгоценность)", cost = 100, stackCount = 1,damage=0), # 41
+classes.Item("Кольцо с топазом(Драгоценность)", icon= imgs.I_topazRing, cost = 70, stackCount = 1,damage=0), # 40
+classes.Item("Ожерелье с топазом(Драгоценность)", icon= imgs.I_unknown,   cost = 100, stackCount = 1,damage=0), # 41
 
-classes.Item("Кольцо с рубином(Драгоценность)", cost = 90, stackCount = 1,damage=0), # 42
-classes.Item("Ожерелье с рубином(Драгоценность)", cost = 120, stackCount = 1,damage=0), # 43
+classes.Item("Кольцо с рубином(Драгоценность)", icon= imgs.I_rubyRing,  cost = 90, stackCount = 1,damage=0), # 42
+classes.Item("Ожерелье с рубином(Драгоценность)",icon= imgs.I_unknown, cost = 120, stackCount = 1,damage=0), # 43
 # Лед
-classes.Item("Кристал Льда (Драгоценность)", cost = 40, stackCount = 6,damage=0), # 44
+classes.Item("Кристал Льда (Драгоценность)",icon= imgs.I_iceCrystal,  cost = 40, stackCount = 6,damage=0), # 44
 
-classes.Item("Кольцо с сапфиром(Драгоценность)", cost = 110, stackCount = 1,damage=0), # 45
-classes.Item("Ожерелье с сапфиром(Драгоценность)", cost = 100, stackCount = 1,damage=0), # 46
+classes.Item("Кольцо с сапфиром(Драгоценность)",icon= imgs.I_saphireRing, cost = 110, stackCount = 1,damage=0), # 45
+classes.Item("Ожерелье с сапфиром(Драгоценность)",icon= imgs.I_unknown, cost = 100, stackCount = 1,damage=0), # 46
 
-classes.Item("Кольцо с алмазом(Драгоценность)", cost = 130, stackCount = 1,damage=0), # 47
-classes.Item("Ожерелье с алмазом(Драгоценность)", cost = 140, stackCount = 1,damage=0), # 48
+classes.Item("Кольцо с алмазом(Драгоценность)",icon= imgs.I_diamondRing, cost = 130, stackCount = 1,damage=0), # 47
+classes.Item("Ожерелье с алмазом(Драгоценность)",icon= imgs.I_unknown, cost = 140, stackCount = 1,damage=0), # 48
 # Эфир
-classes.Item("Эфирный Сгусток (Драгоценность)", cost = 100, stackCount = 4,damage=0), # 49
+classes.Item("Эфирный Сгусток (Драгоценность)",icon= imgs.I_unknown, cost = 100, stackCount = 4,damage=0), # 49
 
-classes.Item("Ожерелье с Эфиром(Драгоценность)", cost = 300, stackCount = 1,damage=0), # 50
+classes.Item("Ожерелье с Эфиром(Драгоценность)",icon= imgs.I_unknown, cost = 300, stackCount = 1,damage=0), # 50
 
 # если использовать на боссе Ледяной Граф можно исцелить его
-classes.Item(f'Зелье незамерзайка', cost = 160, stackCount = 1,damage=0), # 51
+classes.Item(f'Зелье незамерзайка',icon= imgs.I_unknown,  cost = 160, stackCount = 1,damage=0), # 51
 
     ]
 

@@ -1,8 +1,9 @@
 from tkinter import *
 
 class Item:
-    def __init__(self, name, cost, stackCount, damage):
+    def __init__(self, name, icon ,  cost, stackCount, damage):
         self.name = name
+        self.icon = icon
         self.cost = cost
         self.stackCount = stackCount
         self.damage = damage

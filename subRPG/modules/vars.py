@@ -285,7 +285,6 @@ Endings = [
 Inventory: list[classes.Slot] = [
     classes.Slot(ItemList[ItemID.MySword], count = 1, equip=False),
     classes.Slot(ItemList[ItemID.SmallHealPotion], count = 2, equip=False),
-    classes.Slot(ItemList[ItemID.Bow], count = 1, equip=False),
 ]
 
 StoreAssortment = [ classes.Item,]

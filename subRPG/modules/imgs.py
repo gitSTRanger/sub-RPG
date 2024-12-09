@@ -1,5 +1,7 @@
 
-# ICONS
+none =  "Images/none.png"
+
+# I C O N S
 
 Hp = "Images/GUI/HP.png"
 Armor = "Images/GUI/Armor.png"
@@ -14,7 +16,11 @@ arrowUp = "Images/GUI/arrowUp.png"
 arrowLeft = "Images/GUI/arrowLeft.png"
 
 
-# ITEMS
+# S P E C I A L    S C R E A N S
+
+inventoryBag =  "Images/inventory.png"
+
+# I T E M S
 
 I_unknown = "Images/Items/unknown.png"
 
@@ -70,3 +76,14 @@ I_topazRing =   "Images/Items/topazRing.png"
 I_rubyRing =   "Images/Items/rubyRing.png"
 I_saphireRing =   "Images/Items/saphireRing.png"
 I_diamondRing =   "Images/Items/diamondRing.png"
+
+
+# L O C A T I O N S
+
+startScreen =  "Images/screens/startScreen.png"
+
+F_forest =   "Images/screens/FOREST/forest.png"
+F_possibleFight =   "Images/screens/FOREST/possibleFight.png"
+F_fight = "Images/screens/FOREST/fight.png"
+F_well =   "Images/screens/FOREST/well.png"
+F_village =   "Images/screens/FOREST/village.png"

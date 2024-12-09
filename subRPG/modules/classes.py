@@ -33,8 +33,9 @@ class Action():
 
 
 class Event():
-    def __init__(self, name, backColor, textColor, curentActions: list[Action] = Action):
+    def __init__(self, name, screen ,backColor, textColor, curentActions: list[Action] = Action):
         self.curentActions = curentActions
+        self.screen = screen
         self.backColor = backColor
         self.textColor = textColor
         self.name = name

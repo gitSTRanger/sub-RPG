@@ -47,18 +47,25 @@ class Colors:
     DARK_PINK = '#DA70D6'
 
     PEACH = '#FFDAB9'
+    PAPER = '#dec3aa'
     BROWN = '#744c2a'
+
 
 
 
 def ShowInventory():
     vars.Weapon.equip = True
     
-    locvars.Scene.name = "Инвентарь:"
+    tk ['bg']= Colors.BROWN
     del locvars.Scene.curentActions[:]
-    locvars.Scene.curentActions.append(classes.Action(f'<- Назад',icon= imgs.ring, backColor= Colors.PEACH, textColor = Colors.BROWN, function=lambda: ReturnToJourney))
+
+    locvars.Scene = classes.Event(f'Инвентарь:',screen= imgs.inventoryBag,backColor= Colors.BLACK, textColor = Colors.WHITE , curentActions=[
+                classes.Action(f'Назад',icon= imgs.ring, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=lambda: ReturnToJourney),
+                ])
+    
 
     slotList: list[classes.Slot] = vars.Inventory
+
 
     i = 0
     for Islot in vars.Inventory:
@@ -84,22 +91,28 @@ def ShowInventory():
 
     window.ClearActionBar()
     window.UpdateScneneGUI("n")
+    return
 
 
 def SelectItem(slot: classes.Slot):
     locvars.Scene.name = slot.item.name
     del locvars.Scene.curentActions[:]
-    locvars.Scene.curentActions.append(classes.Action(f'<- Назад',icon= imgs.ring, backColor= Colors.PEACH, textColor = Colors.BROWN, function=lambda: ReturnToJourney))
+    
+    locvars.Scene.curentActions.append(classes.Action(f'Назад',icon= imgs.ring, backColor= Colors.PEACH, textColor = Colors.BROWN, function=lambda: ShowInventory))
     
     if slot.equip == False and slot.item.damage != 0:
         locvars.Scene.curentActions.append(classes.Action(f'Экипировать',icon= imgs.circle, backColor= Colors.OLIVE, textColor = Colors.WHITE, function= lambda: lambda: Equip(slot)))
 
     if slot.item == vars.ItemList[vars.ItemID.SmallHealPotion] or slot.item == vars.ItemList[vars.ItemID.MiddleHealPotion] or slot.item == vars.ItemList[vars.ItemID.LargeHealPotion]:
-        locvars.Scene.curentActions.append(classes.Action(f'Лечиться',icon= imgs.circle, backColor= Colors.PEACH, textColor = Colors.BROWN, function= lambda:lambda: UseHealPotion(slot.item)))
+        locvars.Scene.curentActions.append(classes.Action(f'Лечиться',icon= imgs.circle, backColor= Colors.PEACH, textColor = Colors.GREEN, function= lambda:lambda: UseHealPotion(slot.item)))
         slot.count -= 1
 
     if slot.item == vars.ItemList[vars.ItemID.SmallRegenPotion] or slot.item == vars.ItemList[vars.ItemID.MiddleRegenPotion] or slot.item == vars.ItemList[vars.ItemID.LargeRegenPotion]:
-        locvars.Scene.curentActions.append(classes.Action(f'Лечиться',icon= imgs.circle, backColor= Colors.PEACH, textColor = Colors.BROWN, function= lambda: lambda:UseHealPotion(slot.item)))
+        locvars.Scene.curentActions.append(classes.Action(f'Лечиться',icon= imgs.circle, backColor= Colors.PEACH, textColor = Colors.GREEN, function= lambda: lambda:UseHealPotion(slot.item)))
+        slot.count -= 1
+
+    if slot.item == vars.ItemList[vars.ItemID.LeatherArmor] or slot.item == vars.ItemList[vars.ItemID.SteelArmor] or slot.item == vars.ItemList[vars.ItemID.SilverArmor] or slot.item == vars.ItemList[vars.ItemID.MeteoriteArmor] or slot.item == vars.ItemList[vars.ItemID.IceArmor] or slot.item == vars.ItemList[vars.ItemID.EtherealArmor]:
+        locvars.Scene.curentActions.append(classes.Action(f'Надеть броню',icon= imgs.circle, backColor= Colors.PEACH, textColor = Colors.GREEN, function= lambda: lambda:TakeArmor(slot.item)))
         slot.count -= 1
 
     window.ClearActionBar()
@@ -137,7 +150,7 @@ def TakeRandomItem(itemPool):
 
 
 
-def UseHealPotion(potion = classes.Item):
+def UseHealPotion(potion: classes.Item):
     if potion == vars.ItemList[vars.ItemID.SmallHealPotion]:
         Heal(15)
     elif potion == vars.ItemList[vars.ItemID.MiddleHealPotion]:
@@ -161,8 +174,8 @@ def UseHealPotion(potion = classes.Item):
 
 def Heal(healPoints):
     vars.HP += healPoints
-    print(f'\nВы полечились на {healPoints} ед здоровья \nТекущее здоровье:{vars.HP}')
-    #input("Далее...")
+    locvars.Scene.name = f'\nВы полечились на {healPoints} ед здоровья \nТекущее здоровье:{vars.HP}'
+    window.UpdateAll()
 
 
 def TakeArmor(item: classes.Item):
@@ -190,9 +203,8 @@ def TakeArmor(item: classes.Item):
         armorPoint = 100
 
     vars.ARMOR += armorPoint
-    print(f'Вы надели {item.name}')
-    #input(f'Получено {armorPoint} ед. брони \nТекущая Броня:{vars.ARMOR}\n')
-
+    locvars.Scene.name = f'Вы надели {item.name}\n Получено {armorPoint} ед. брони'
+    ReturnToJourney()
 
 
 def ExamineItemIsZeroCount(slotNumber):
@@ -627,7 +639,7 @@ def SetNewScene():
 #TKINTER LOGIC
 
 def MinorEvent(eventName, actionName, funcion):
-    locvars.Scene = classes.Event(f'{eventName}',backColor= Colors.BLACK, textColor = Colors.WHITE , curentActions=[
+    locvars.Scene = classes.Event(f'{eventName}',screen= imgs.none,backColor= Colors.BLACK, textColor = Colors.WHITE , curentActions=[
                 classes.Action(f'{actionName}',icon= imgs.ring, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: funcion),
                 ])
     vars.step += 1
@@ -641,6 +653,7 @@ def ReturnToJourney():
     CheckLocation()  
     CheckBuffs()
     vars.step += 1
+    tk ['bg']= Colors.PAPER
     window.UpdateAll()
 
 
@@ -692,6 +705,7 @@ class EventID(IntEnum):
 
 FOREST_EVENTS = [
     classes.Event("на вашем пути появился чей то силуэт",
+                screen= imgs.F_possibleFight,
                 backColor=Colors.BLACK,
                 textColor = Colors.GREEN ,
                 curentActions=[
@@ -700,6 +714,7 @@ FOREST_EVENTS = [
     classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function =lambda: GoOtherWay),
     ]),
     classes.Event("вы слышите чье-то рычание впереди, осмотревшись вы видите врага",
+                screen= imgs.F_fight,
                 backColor=Colors.BLACK,
                 textColor = Colors.RED,
                 curentActions=[
@@ -709,6 +724,7 @@ FOREST_EVENTS = [
     classes.Action("Сбежать",icon= imgs.arrowLeft, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
     ]),
     classes.Event(f'враг готовится нанести удар',
+                screen= imgs.F_fight,
                 backColor=Colors.BLACK,
                 textColor = Colors.RED,
                 curentActions=[
@@ -718,6 +734,7 @@ FOREST_EVENTS = [
     classes.Action("Сбежать",icon= imgs.arrowLeft, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
     ]),
     classes.Event("скитаясь вы пришли к лесу",
+                screen= imgs.F_forest,
                 backColor=Colors.BLACK,
                 textColor = Colors.GREEN ,
                 curentActions=[
@@ -727,6 +744,7 @@ FOREST_EVENTS = [
     classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("скитаясь вы пришли к лесу",
+                screen= imgs.F_forest,
                 backColor=Colors.BLACK,
                 textColor = Colors.GREEN,
                 curentActions=[
@@ -736,6 +754,7 @@ FOREST_EVENTS = [
     classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("вы набрели на разрушенный пустой колодец. здесь спокойно и можно передохнуть",
+                  screen= imgs.F_well,
                   backColor=Colors.BLACK,
                   textColor = Colors.GREEN,
                   curentActions=[
@@ -746,6 +765,7 @@ FOREST_EVENTS = [
     classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("скитаясь вы пришли в заброшенную деревню",
+                  screen= imgs.F_village,
                   backColor=Colors.BLACK,
                   textColor = Colors.GREEN,
                   curentActions=[
@@ -1347,11 +1367,15 @@ class Game(Frame):
         self.Stats_Area = Label(text=f'stats ',font = ('ImesNewRoman',20,'bold'),bg = '#000',fg = '#fff')
         self.Stats_Area.pack(anchor="w", fill= X) #padx, pady
 
+        self.screenImage = PhotoImage(file =imgs.startScreen).zoom(4,4)
+        self.screen = Label(image= self.screenImage, bg= Colors.BLACK)
+        self.screen.pack(fill = X)
+
         self.TK_Scene.textArea = Label(text=f'Event Name Text Area',font = ('ImesNewRoman',20,'bold'),bg = '#000',fg = '#fff')
         self.TK_Scene.textArea.pack(anchor="w", fill= X) #padx, pady
 
         #Btn Icon
-        self.bntIcon = PhotoImage(file= imgs.ring)
+
         self.btnIcons = [PhotoImage(file=imgs.circle)]
 
         #self.UpdateBtn = Button(text= f'Update',bg='#FFFACD',font =('ImesNewRoman',21,'bold'),fg = '#000', command= lambda: self.UpdateScneneGUI("w"))
@@ -1361,7 +1385,7 @@ class Game(Frame):
     def StartScreen(self):
         #del funks.Elist[:]
 
-        locvars.Scene = classes.Event("ДОБРО ПОЖАЛОВАТЬ В subRPG (*Tkinter)", backColor= Colors.BLACK ,textColor = Colors.GOLDEN , curentActions=[
+        locvars.Scene = classes.Event("ДОБРО ПОЖАЛОВАТЬ В subRPG (*Tkinter)",screen= imgs.startScreen, backColor= Colors.BLACK ,textColor = Colors.GOLDEN , curentActions=[
                 classes.Action("Нажмите, чтобы НАЧАТЬ играть", icon= imgs.circle,backColor= Colors.KHAKI, textColor = Colors.GREEN, function = lambda: SetNewScene),
                 #classes.Action("получить стартовый набор предметов",backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: self.GiveStarterKit),
                 classes.Action("Об игре",backColor= Colors.PEACH,icon= imgs.look, textColor = Colors.BROWN, function = lambda: self.AboutGame),
@@ -1384,6 +1408,9 @@ class Game(Frame):
         PrintStats()
         self.Stats_Area.config(text= vars.statsLine, bg= Colors.DARK_GRAY)
 
+        self.screenImage = PhotoImage(file= locvars.Scene.screen).zoom(4,4)
+        self.screen.config(image= self.screenImage)
+
         self.TK_Scene.textArea.config(text=locvars.Scene.name, bg= locvars.Scene.backColor ,fg= locvars.Scene.textColor) #padx, pady
        
 
@@ -1394,7 +1421,7 @@ class Game(Frame):
             #print(action.name)
             self.btnIcons.append(PhotoImage(file = action.icon))
 
-            btn = Button(text= f'{action.name}',bg= action.backColor, fg= action.textColor, font =('ImesNewRoman',21,'bold'), command= action.function(), image= self.btnIcons[i] ,compound="left")
+            btn = Button(text= f'{action.name}',bg= action.backColor, fg= action.textColor, font =('TimesNewRoman',21,'bold'), command= action.function(), image= self.btnIcons[i] ,compound="left")
             self.TK_Scene.curentActionsBar.append(btn)
             btn.pack(anchor= BtnAnchor, ipadx = 10 ) #fill= X
             i += 1
@@ -1448,8 +1475,8 @@ class Game(Frame):
 
 
 tk = Tk()
-tk ['bg']='#dec3aa'
-tk.resizable(False,False)
+tk ['bg']= Colors.PAPER
+#tk.resizable(False,False)
 tk.geometry ('1200x720+200+200')
 tk.title('sub_RPG')
 window = Game(tk)

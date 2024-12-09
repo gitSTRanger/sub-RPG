@@ -63,7 +63,7 @@ classes.Item("Эфирные Латы (100 ед.)",icon= imgs.I_etherialArmor, c
 
 # Д Р А Г О Ц Е Н Н О С Т И
 classes.Item("Брилиант (Драгоценность)",icon= imgs.I_unknown,  cost = 50, stackCount = 3,damage=0), # 35
-classes.Item("Кольцо с изумрудом(Драгоценность)",icon= imgs.I_emeralRing, cost = 50, stackCount = 1,damage=0), # 36
+classes.Item("Кольцо с изумрудом(Драгоценность)",icon= imgs.I_emeraldRing, cost = 50, stackCount = 1,damage=0), # 36
 classes.Item("Ожерелье с изумрудом(Драгоценность)", icon= imgs.I_unknown,  cost = 80, stackCount = 1,damage=0), # 37
 # Замок
 classes.Item("Слиток Золота(Драгоценность)",icon= imgs.I_goldBar, cost = 50, stackCount = 3,damage=0), # 38
@@ -282,9 +282,10 @@ Endings = [
 '''
 
 
-Inventory = [
+Inventory: list[classes.Slot] = [
     classes.Slot(ItemList[ItemID.MySword], count = 1, equip=False),
     classes.Slot(ItemList[ItemID.SmallHealPotion], count = 2, equip=False),
+    classes.Slot(ItemList[ItemID.Bow], count = 1, equip=False),
 ]
 
 StoreAssortment = [ classes.Item,]

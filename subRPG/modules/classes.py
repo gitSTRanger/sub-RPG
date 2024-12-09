@@ -10,7 +10,7 @@ class Item:
 
 
 class Slot:
-    def __init__(self, item, count, equip):
+    def __init__(self, item: Item, count, equip):
         self.item = item
         self.count = count
         self.equip = equip

@@ -58,26 +58,53 @@ def ShowInventory():
     del locvars.Scene.curentActions[:]
     locvars.Scene.curentActions.append(classes.Action(f'<- Назад',icon= imgs.ring, backColor= Colors.PEACH, textColor = Colors.BROWN, function=lambda: ReturnToJourney))
 
+    slotList: list[classes.Slot] = vars.Inventory
+
     i = 0
     for Islot in vars.Inventory:
 
         i += 1
-
         ExamineItemIsZeroCount(i-1)
-
+        
         if Islot.equip == True:
-            locvars.Scene.curentActions.append(classes.Action(f'(Экирировано)\n{Islot.item.name}({Islot.count}x) урон:{Islot.item.damage} цена: {Islot.item.cost}$',icon= Islot.item.icon, backColor= Colors.OLIVE, textColor = Colors.WHITE, function= lambda: ReturnToJourney))
+            locvars.Scene.curentActions.append(classes.Action(f'(Экирировано)\n{Islot.item.name}({Islot.count}x) урон:{Islot.item.damage} цена: {Islot.item.cost}$',icon= Islot.item.icon, backColor= Colors.OLIVE, textColor = Colors.WHITE, function= lambda: lambda: SelectItem(Islot)))
             continue
         if Islot.item.damage == 0:
-            locvars.Scene.curentActions.append(classes.Action(f'{Islot.item.name}({Islot.count}x) цена: {Islot.item.cost}$',icon= Islot.item.icon, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function= lambda: ReturnToJourney))
+            locvars.Scene.curentActions.append(classes.Action(f'{Islot.item.name}({Islot.count}x) цена: {Islot.item.cost}$',icon= Islot.item.icon, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function= lambda: lambda: SelectItem(Islot)))
         else:
-            locvars.Scene.curentActions.append(classes.Action(f'{Islot.item.name}({Islot.count}x) урон:{Islot.item.damage} цена: {Islot.item.cost}$',icon= Islot.item.icon, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=lambda: ReturnToJourney))
+            locvars.Scene.curentActions.append(classes.Action(f'{Islot.item.name}({Islot.count}x) урон:{Islot.item.damage} цена: {Islot.item.cost}$',icon= Islot.item.icon, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=lambda: lambda: SelectItem(Islot)))
 
     window.ClearActionBar()
     window.UpdateScneneGUI("n")
 
+
+def SelectItem(slot: classes.Slot):
+    locvars.Scene.name = slot.item.name
+    del locvars.Scene.curentActions[:]
+    locvars.Scene.curentActions.append(classes.Action(f'<- Назад',icon= imgs.ring, backColor= Colors.PEACH, textColor = Colors.BROWN, function=lambda: ReturnToJourney))
     
-    
+    if slot.equip == False and slot.item.damage != 0:
+        locvars.Scene.curentActions.append(classes.Action(f'Экипировать',icon= imgs.circle, backColor= Colors.OLIVE, textColor = Colors.WHITE, function= lambda: lambda: Equip(slot)))
+
+    if slot.item == vars.ItemList[vars.ItemID.SmallHealPotion] or slot.item == vars.ItemList[vars.ItemID.MiddleHealPotion] or slot.item == vars.ItemList[vars.ItemID.LargeHealPotion]:
+        locvars.Scene.curentActions.append(classes.Action(f'Лечиться',icon= imgs.circle, backColor= Colors.PEACH, textColor = Colors.BROWN, function= lambda:lambda: UseHealPotion(slot.item)))
+        slot.count -= 1
+
+    if slot.item == vars.ItemList[vars.ItemID.SmallRegenPotion] or slot.item == vars.ItemList[vars.ItemID.MiddleRegenPotion] or slot.item == vars.ItemList[vars.ItemID.LargeRegenPotion]:
+        locvars.Scene.curentActions.append(classes.Action(f'Лечиться',icon= imgs.circle, backColor= Colors.PEACH, textColor = Colors.BROWN, function= lambda: lambda:UseHealPotion(slot.item)))
+        slot.count -= 1
+
+    window.ClearActionBar()
+    window.UpdateScneneGUI("n")
+
+
+
+def Equip(slot: classes.Slot):
+    vars.Weapon.equip = False
+    vars.Weapon = slot
+    vars.Weapon.equip = True
+    ReturnToJourney()
+
 
 def TakeItem(item = classes.Item, count = int):
     print("Take Item")
@@ -120,6 +147,8 @@ def UseHealPotion(potion = classes.Item):
     elif potion == vars.ItemList[vars.ItemID.LargeRegenPotion]:
         vars.BUFF_regeneration += 12
         Heal(45)
+
+    ReturnToJourney()
         
 
 def Heal(healPoints):
@@ -667,7 +696,7 @@ FOREST_EVENTS = [
                 textColor = Colors.RED,
                 curentActions=[
     classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action(f'Атаковать врага',icon= imgs.attack, backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
+    classes.Action(f'Атаковать врага',icon= imgs.attack, backColor= Colors.ORANGE, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага",icon= imgs.enemyStats, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
     classes.Action("Сбежать",icon= imgs.arrowLeft, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
     ]),
@@ -676,7 +705,7 @@ FOREST_EVENTS = [
                 textColor = Colors.RED,
                 curentActions=[
     classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action(f'Атаковать врага',icon= imgs.attack, backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
+    classes.Action(f'Атаковать врага',icon= imgs.attack, backColor= Colors.ORANGE, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага",icon= imgs.enemyStats, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
     classes.Action("Сбежать",icon= imgs.arrowLeft, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
     ]),
@@ -1359,7 +1388,7 @@ class Game(Frame):
 
             btn = Button(text= f'{action.name}',bg= action.backColor, fg= action.textColor, font =('ImesNewRoman',21,'bold'), command= action.function(), image= self.btnIcons[i] ,compound="left")
             self.TK_Scene.curentActionsBar.append(btn)
-            btn.pack(anchor= BtnAnchor)
+            btn.pack(anchor= BtnAnchor, ipadx = 10 ) #fill= X
             i += 1
 
 

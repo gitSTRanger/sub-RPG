@@ -65,14 +65,22 @@ def ShowInventory():
 
         i += 1
         ExamineItemIsZeroCount(i-1)
+
+        # NOTE: rewrite to your preferred coding style
+        # Lambdas do not properly capture the iterator values in `for` loops
+        # This can be fixed by manually providing an optional argument with a default preferred value
+        selectItemFn = \
+            lambda Islot=Islot: \
+            lambda: \
+                SelectItem(Islot)
         
         if Islot.equip == True:
-            locvars.Scene.curentActions.append(classes.Action(f'(Экирировано)\n{Islot.item.name}({Islot.count}x) урон:{Islot.item.damage} цена: {Islot.item.cost}$',icon= Islot.item.icon, backColor= Colors.OLIVE, textColor = Colors.WHITE, function= lambda: lambda: SelectItem(Islot)))
+            locvars.Scene.curentActions.append(classes.Action(f'(Экирировано)\n{Islot.item.name}({Islot.count}x) урон:{Islot.item.damage} цена: {Islot.item.cost}$',icon= Islot.item.icon, backColor= Colors.OLIVE, textColor = Colors.WHITE, function=selectItemFn))
             continue
         if Islot.item.damage == 0:
-            locvars.Scene.curentActions.append(classes.Action(f'{Islot.item.name}({Islot.count}x) цена: {Islot.item.cost}$',icon= Islot.item.icon, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function= lambda: lambda: SelectItem(Islot)))
+            locvars.Scene.curentActions.append(classes.Action(f'{Islot.item.name}({Islot.count}x) цена: {Islot.item.cost}$',icon= Islot.item.icon, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=selectItemFn))
         else:
-            locvars.Scene.curentActions.append(classes.Action(f'{Islot.item.name}({Islot.count}x) урон:{Islot.item.damage} цена: {Islot.item.cost}$',icon= Islot.item.icon, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=lambda: lambda: SelectItem(Islot)))
+            locvars.Scene.curentActions.append(classes.Action(f'{Islot.item.name}({Islot.count}x) урон:{Islot.item.damage} цена: {Islot.item.cost}$',icon= Islot.item.icon, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=selectItemFn))
 
     window.ClearActionBar()
     window.UpdateScneneGUI("n")

@@ -41,7 +41,7 @@ class Colors:
     ORANGE = '#FFA500'
 
     CYAN = '#00FFFF'
-    LIGHT_CYAN = '#E0FFFF'
+    LIGHT_CYAN = '#D5FBFB'
 
     PINK = '#FF69B4'
     DARK_PINK = '#DA70D6'
@@ -98,21 +98,23 @@ def SelectItem(slot: classes.Slot):
     locvars.Scene.name = slot.item.name
     del locvars.Scene.curentActions[:]
     
-    locvars.Scene.curentActions.append(classes.Action(f'Назад',icon= imgs.ring, backColor= Colors.PEACH, textColor = Colors.BROWN, function=lambda: ShowInventory))
+    locvars.Scene = classes.Event(slot.item.name ,screen= slot.item.icon ,backColor= Colors.BLACK, textColor = Colors.WHITE , curentActions=[
+                classes.Action(f'Назад',icon= imgs.ring, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=lambda: ShowInventory),
+                ])
     
     if slot.equip == False and slot.item.damage != 0:
         locvars.Scene.curentActions.append(classes.Action(f'Экипировать',icon= imgs.circle, backColor= Colors.OLIVE, textColor = Colors.WHITE, function= lambda: lambda: Equip(slot)))
 
     if slot.item == vars.ItemList[vars.ItemID.SmallHealPotion] or slot.item == vars.ItemList[vars.ItemID.MiddleHealPotion] or slot.item == vars.ItemList[vars.ItemID.LargeHealPotion]:
-        locvars.Scene.curentActions.append(classes.Action(f'Лечиться',icon= imgs.circle, backColor= Colors.PEACH, textColor = Colors.GREEN, function= lambda:lambda: UseHealPotion(slot.item)))
+        locvars.Scene.curentActions.append(classes.Action(f'Лечиться',icon= imgs.circle, backColor= Colors.GREEN, textColor = Colors.WHITE, function= lambda:lambda: UseHealPotion(slot.item)))
         slot.count -= 1
 
     if slot.item == vars.ItemList[vars.ItemID.SmallRegenPotion] or slot.item == vars.ItemList[vars.ItemID.MiddleRegenPotion] or slot.item == vars.ItemList[vars.ItemID.LargeRegenPotion]:
-        locvars.Scene.curentActions.append(classes.Action(f'Лечиться',icon= imgs.circle, backColor= Colors.PEACH, textColor = Colors.GREEN, function= lambda: lambda:UseHealPotion(slot.item)))
+        locvars.Scene.curentActions.append(classes.Action(f'Лечиться',icon= imgs.circle, backColor= Colors.GREEN, textColor = Colors.WHITE, function= lambda: lambda:UseHealPotion(slot.item)))
         slot.count -= 1
 
     if slot.item == vars.ItemList[vars.ItemID.LeatherArmor] or slot.item == vars.ItemList[vars.ItemID.SteelArmor] or slot.item == vars.ItemList[vars.ItemID.SilverArmor] or slot.item == vars.ItemList[vars.ItemID.MeteoriteArmor] or slot.item == vars.ItemList[vars.ItemID.IceArmor] or slot.item == vars.ItemList[vars.ItemID.EtherealArmor]:
-        locvars.Scene.curentActions.append(classes.Action(f'Надеть броню',icon= imgs.circle, backColor= Colors.PEACH, textColor = Colors.GREEN, function= lambda: lambda:TakeArmor(slot.item)))
+        locvars.Scene.curentActions.append(classes.Action(f'Надеть броню',icon= imgs.circle, backColor= Colors.DARK_BLUE, textColor = Colors.LIGHT_BLUE, function= lambda: lambda:TakeArmor(slot.item)))
         slot.count -= 1
 
     window.ClearActionBar()
@@ -133,11 +135,11 @@ def TakeItem(item = classes.Item, count = int):
     vars.actStep += 1
 
     if item == vars.ItemList[vars.ItemID.Empty]:
-        MinorEvent("Пусто...", "Далее", SetNewScene)
+        MinorEvent("Пусто...", "Далее", screen = imgs.none, funcion= SetNewScene)
         return
 
     vars.Inventory.append(classes.Slot(item, count, False))
-    MinorEvent(f'Получено > {item.name} ({count}x)', "взять", SetNewScene)
+    MinorEvent(f'Получено > {item.name} ({count}x)', "взять", screen = item.icon, funcion= SetNewScene)
 
 def TakeRandomItem(itemPool):
     print("Take Random Item")
@@ -373,7 +375,7 @@ def Attack():
     vars.curEnemy.HP -= vars.Weapon.item.damage
 
     if vars.curEnemy.HP <= 0:
-        MinorEvent("враг мертв, на сей раз вы победили", "Обыскать", lambda: TakeRandomItem(vars.TIER1_MONSTER_DROP))
+        MinorEvent("враг мертв, на сей раз вы победили", "Обыскать",screen = imgs.none, funcion=  lambda: TakeRandomItem(vars.TIER1_MONSTER_DROP))
         return
 
 
@@ -401,7 +403,7 @@ def TryRunAway():
 
     if chance <= vars.curEnemy.missChance:
         vars.actStep += 1
-        MinorEvent(f'вы удачно сбежали!', "Далее", SetNewScene)
+        MinorEvent(f'вы удачно сбежали!', "Далее",screen = imgs.none, funcion= SetNewScene)
         return
         
     else:
@@ -466,7 +468,7 @@ def SetLocation(events, locInt):
     Elist = events
     locvars.Scene = deepcopy(Elist[3])
     locvars.LOCATION = locInt
-    MinorEvent(f'вы пошли в {locvars.stringLocation[locvars.LOCATION]}', "Далее", SetNewScene)
+    MinorEvent(f'вы пошли в {locvars.stringLocation[locvars.LOCATION]}', "Далее", screen = imgs.none, funcion=SetNewScene)
 
 
 
@@ -638,8 +640,8 @@ def SetNewScene():
 
 #TKINTER LOGIC
 
-def MinorEvent(eventName, actionName, funcion):
-    locvars.Scene = classes.Event(f'{eventName}',screen= imgs.none,backColor= Colors.BLACK, textColor = Colors.WHITE , curentActions=[
+def MinorEvent(eventName, actionName,screen, funcion):
+    locvars.Scene = classes.Event(f'{eventName}',screen= screen,backColor= Colors.BLACK, textColor = Colors.WHITE , curentActions=[
                 classes.Action(f'{actionName}',icon= imgs.ring, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: funcion),
                 ])
     vars.step += 1
@@ -759,7 +761,7 @@ FOREST_EVENTS = [
                   textColor = Colors.GREEN,
                   curentActions=[
     classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action("Осмотреть",icon= imgs.look, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: lambda: MinorEvent("Колодец настолько стар, что едва можно разлечить\n его руины поросшие мхом, сомневаюсь что внутри\n есть вода", "Назад", ReturnToJourney)),
+    classes.Action("Осмотреть",icon= imgs.look, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: lambda: MinorEvent("Колодец настолько стар, что едва можно разлечить\n его руины поросшие мхом, сомневаюсь что внутри\n есть вода", "Назад",screen = imgs.none, funcion= ReturnToJourney)),
     classes.Action("Обыскать",icon= imgs.look, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: lambda: TakeRandomItem(vars.TIER1_WELL_items)),
     classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
     classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
@@ -1385,7 +1387,7 @@ class Game(Frame):
     def StartScreen(self):
         #del funks.Elist[:]
 
-        locvars.Scene = classes.Event("ДОБРО ПОЖАЛОВАТЬ В subRPG (*Tkinter)",screen= imgs.startScreen, backColor= Colors.BLACK ,textColor = Colors.GOLDEN , curentActions=[
+        locvars.Scene = classes.Event("ДОБРО ПОЖАЛОВАТЬ В subRPG (*Tkinter)",screen= imgs.startScreenTitle, backColor= Colors.BLACK ,textColor = Colors.LIGHT_BLUE , curentActions=[
                 classes.Action("Нажмите, чтобы НАЧАТЬ играть", icon= imgs.circle,backColor= Colors.KHAKI, textColor = Colors.GREEN, function = lambda: SetNewScene),
                 #classes.Action("получить стартовый набор предметов",backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: self.GiveStarterKit),
                 classes.Action("Об игре",backColor= Colors.PEACH,icon= imgs.look, textColor = Colors.BROWN, function = lambda: self.AboutGame),
@@ -1460,6 +1462,7 @@ class Game(Frame):
         textAbout = "Порт игры subRPG на Tkinter\nкроме переноса всего контента с оригинала, игра получит\nряд нового контента, что в значительной мере расширит игру"
 
         locvars.Scene = classes.Event(textAbout, 
+                                    screen= imgs.startScreen,
                                     backColor= Colors.BLACK,
                                     textColor = Colors.LIGHT_CYAN,
                                     curentActions=[

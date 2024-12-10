@@ -81,6 +81,7 @@ I_diamondRing =   "Images/Items/diamondRing.png"
 # L O C A T I O N S
 
 startScreen =  "Images/screens/startScreen.png"
+startScreenTitle = "Images/screens/startScreenTitle.png"
 
 F_forest =   "Images/screens/FOREST/forest.png"
 F_possibleFight =   "Images/screens/FOREST/possibleFight.png"

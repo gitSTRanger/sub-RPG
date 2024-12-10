@@ -84,6 +84,8 @@ startScreen =  "Images/screens/startScreen.png"
 startScreenTitle = "Images/screens/startScreenTitle.png"
 
 F_forest =   "Images/screens/FOREST/forest.png"
+F_forest_1 =   "Images/screens/FOREST/forest_1.png"
+F_forest_2 =   "Images/screens/FOREST/forest_2.png"
 F_possibleFight =   "Images/screens/FOREST/possibleFight.png"
 F_fight = "Images/screens/FOREST/fight.png"
 F_well =   "Images/screens/FOREST/well.png"

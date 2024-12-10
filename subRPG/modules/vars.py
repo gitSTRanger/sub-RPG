@@ -158,32 +158,35 @@ class ItemID(IntEnum):
 Enemies = [
     classes.Enemy("Скелет", HP = 20, damage = 5, missChance = 15), # 0
     classes.Enemy("Скелет в броне", HP = 30, damage = 5, missChance = 15), # 1
-    classes.Enemy("Орк", HP = 40, damage = 10, missChance = 20), # 2
-    classes.Enemy("Вурдолак", HP = 35, damage = 5, missChance = 30), # 3
-    classes.Enemy("Слепой Гуль", HP = 40, damage = 20, missChance = 50), # 4
-    classes.Enemy("Тролль", HP = 100, damage = 20, missChance = 30), # 5
+    classes.Enemy("злоцвет", HP = 15, damage = 15, missChance = 20), # 2
+    classes.Enemy("Пыльник", HP = 40, damage = 5, missChance = 20), # 3
+    classes.Enemy("Орк", HP = 40, damage = 10, missChance = 30), # 4
+    classes.Enemy("Вурдолак", HP = 35, damage = 5, missChance = 30), # 5
+    classes.Enemy("Слепой Гуль", HP = 40, damage = 20, missChance = 50), # 6
+    classes.Enemy("змеи-древ", HP = 60, damage = 10, missChance = 20), # 7
+     classes.Enemy("Тролль", HP = 100, damage = 20, missChance = 30), # 8
     # Замок
-    classes.Enemy("Скелет Рыцарь", HP = 50, damage = 10, missChance = 20), # 6
-    classes.Enemy("Рыцарь Герой", HP = 50, damage = 20, missChance = 15), # 7
-    classes.Enemy("Бронированный Скелет Рыцарь", HP = 65, damage = 10, missChance = 25), # 8
-    classes.Enemy("Одержимый Королевский Страж", HP = 40, damage = 30, missChance = 10), # 9
-    classes.Enemy("Каменная Горгулья", HP = 80, damage = 30, missChance = 40), # 10
+    classes.Enemy("Скелет Рыцарь", HP = 50, damage = 10, missChance = 20), # 9
+    classes.Enemy("Рыцарь Герой", HP = 50, damage = 20, missChance = 15), # 10
+    classes.Enemy("Бронированный Скелет Рыцарь", HP = 65, damage = 10, missChance = 25), # 11
+    classes.Enemy("Одержимый Королевский Страж", HP = 40, damage = 30, missChance = 10), # 12
+    classes.Enemy("Каменная Горгулья", HP = 80, damage = 30, missChance = 40), # 13
     # Огонь
-    classes.Enemy("Огненная Бестия", HP = 65, damage = 25, missChance = 20), # 11
-    classes.Enemy("Пламенная Елементаль", HP = 60, damage = 20, missChance = 15), # 12
-    classes.Enemy("Расплавленный Рыцарь", HP = 70, damage = 30, missChance = 30), # 13
-    classes.Enemy("Обсидиановый Страж", HP = 70, damage = 30, missChance = 30), # 14
+    classes.Enemy("Огненная Бестия", HP = 65, damage = 25, missChance = 20), # 14
+    classes.Enemy("Пламенная Елементаль", HP = 60, damage = 20, missChance = 15), # 15
+    classes.Enemy("Расплавленный Рыцарь", HP = 70, damage = 30, missChance = 30), # 16
+    classes.Enemy("Обсидиановый Страж", HP = 70, damage = 30, missChance = 30), # 17
     # Лед
-    classes.Enemy("Замороженный скелет", HP = 40, damage = 15, missChance = 20), # 15
-    classes.Enemy("Ледяной Елементаль", HP = 60, damage = 40, missChance = 60), # 16
-    classes.Enemy("Снеговик", HP = 30, damage = 15, missChance = 15), # 17
-    classes.Enemy("Ледовик", HP = 50, damage = 20, missChance = 20), # 18
+    classes.Enemy("Замороженный скелет", HP = 40, damage = 15, missChance = 20), # 18
+    classes.Enemy("Ледяной Елементаль", HP = 60, damage = 40, missChance = 60), # 19
+    classes.Enemy("Снеговик", HP = 30, damage = 15, missChance = 15), # 20
+    classes.Enemy("Ледовик", HP = 50, damage = 20, missChance = 20), # 21
     # Эфир
-    classes.Enemy("Жидкая слизь", HP = 100, damage = 35, missChance = 20), # 19
-    classes.Enemy("Эфирная Елементаль", HP = 90, damage = 40, missChance = 60), # 20
-    classes.Enemy("Эфирная фея", HP = 85, damage = 30, missChance = 15), # 21
-    classes.Enemy("Эфирная Хватайка", HP = 100, damage = 60, missChance = 60), # 22
-    classes.Enemy("Радужная Хватайка", HP = 120, damage = 80, missChance = 70), # 23
+    classes.Enemy("Жидкая слизь", HP = 100, damage = 35, missChance = 20), # 22
+    classes.Enemy("Эфирная Елементаль", HP = 90, damage = 40, missChance = 60), # 23
+    classes.Enemy("Эфирная фея", HP = 85, damage = 30, missChance = 15), # 24
+    classes.Enemy("Эфирная Хватайка", HP = 100, damage = 60, missChance = 60), # 25
+    classes.Enemy("Радужная Хватайка", HP = 120, damage = 80, missChance = 70), # 26
 ]
 
 Bosses = [
@@ -202,32 +205,36 @@ Bosses = [
 class EnemyID(IntEnum):
     Skeleton = 0
     ArmoredSkeleton = 1
-    Ork = 2
-    Ghoul = 3
-    BlindGhoul = 4
-    Troll = 5
-
-    SkeletonKnight = 6
-    KinghtHero = 7
-    ArmoredSkeletonKnight = 8
-    PossessedRoyalGuard = 9
-    StoneGargoyle = 10
-
-    FireBeast = 11
-    FlameElemental = 12
-    MoltenKnight = 13
-    ObsidianGuard = 14
-
-    FrostSkeleton = 15
-    IceElemental = 16
-    Snowman = 17
-    Iceman = 18
+    eviflover = 2
+    duster = 3
+    Ork = 4
+    Ghoul = 5
+    BlindGhoul = 6
+    snakeThree = 7
+    Troll = 8
     
-    LiquidSlime = 19
-    EtherealElemental = 20
-    EtherealFairy = 21
-    EtherealGrabber = 22
-    RainbowGrabber = 23
+
+    SkeletonKnight = 9
+    KinghtHero = 10
+    ArmoredSkeletonKnight = 11
+    PossessedRoyalGuard = 12
+    StoneGargoyle = 13
+
+    FireBeast = 14
+    FlameElemental = 15
+    MoltenKnight = 16
+    ObsidianGuard = 17
+
+    FrostSkeleton = 18
+    IceElemental = 19
+    Snowman = 20
+    Iceman = 21
+    
+    LiquidSlime = 22
+    EtherealElemental = 23
+    EtherealFairy = 24
+    EtherealGrabber = 25
+    RainbowGrabber = 26
 
 class BossID(IntEnum):
     GiantTroll = 0
@@ -285,7 +292,7 @@ Endings = [
 Inventory: list[classes.Slot] = [
     classes.Slot(ItemList[ItemID.MySword], count = 1, equip=False),
     classes.Slot(ItemList[ItemID.SmallHealPotion], count = 2, equip=False),
-    classes.Slot(ItemList[ItemID.SteelArmor], count = 2, equip=False),
+    classes.Slot(ItemList[ItemID.SteelArmor], count = 1, equip=False),
 ]
 
 StoreAssortment = [ classes.Item,]

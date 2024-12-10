@@ -73,6 +73,9 @@ def ShowInventory():
         i += 1
         ExamineItemIsZeroCount(i-1)
 
+        if Islot.count <= 0:
+            continue
+
         # NOTE: rewrite to your preferred coding style
         # Lambdas do not properly capture the iterator values in `for` loops
         # This can be fixed by manually providing an optional argument with a default preferred value
@@ -106,16 +109,14 @@ def SelectItem(slot: classes.Slot):
         locvars.Scene.curentActions.append(classes.Action(f'Экипировать',icon= imgs.circle, backColor= Colors.OLIVE, textColor = Colors.WHITE, function= lambda: lambda: Equip(slot)))
 
     if slot.item == vars.ItemList[vars.ItemID.SmallHealPotion] or slot.item == vars.ItemList[vars.ItemID.MiddleHealPotion] or slot.item == vars.ItemList[vars.ItemID.LargeHealPotion]:
-        locvars.Scene.curentActions.append(classes.Action(f'Лечиться',icon= imgs.circle, backColor= Colors.GREEN, textColor = Colors.WHITE, function= lambda:lambda: UseHealPotion(slot.item)))
-        slot.count -= 1
+        locvars.Scene.curentActions.append(classes.Action(f'Лечиться',icon= imgs.circle, backColor= Colors.GREEN, textColor = Colors.WHITE, function= lambda:lambda: UseHealPotion(slot)))
 
     if slot.item == vars.ItemList[vars.ItemID.SmallRegenPotion] or slot.item == vars.ItemList[vars.ItemID.MiddleRegenPotion] or slot.item == vars.ItemList[vars.ItemID.LargeRegenPotion]:
-        locvars.Scene.curentActions.append(classes.Action(f'Лечиться',icon= imgs.circle, backColor= Colors.GREEN, textColor = Colors.WHITE, function= lambda: lambda:UseHealPotion(slot.item)))
-        slot.count -= 1
+        locvars.Scene.curentActions.append(classes.Action(f'Лечиться',icon= imgs.circle, backColor= Colors.GREEN, textColor = Colors.WHITE, function= lambda: lambda:UseHealPotion(slot)))
 
     if slot.item == vars.ItemList[vars.ItemID.LeatherArmor] or slot.item == vars.ItemList[vars.ItemID.SteelArmor] or slot.item == vars.ItemList[vars.ItemID.SilverArmor] or slot.item == vars.ItemList[vars.ItemID.MeteoriteArmor] or slot.item == vars.ItemList[vars.ItemID.IceArmor] or slot.item == vars.ItemList[vars.ItemID.EtherealArmor]:
-        locvars.Scene.curentActions.append(classes.Action(f'Надеть броню',icon= imgs.circle, backColor= Colors.DARK_BLUE, textColor = Colors.LIGHT_BLUE, function= lambda: lambda:TakeArmor(slot.item)))
-        slot.count -= 1
+        locvars.Scene.curentActions.append(classes.Action(f'Надеть броню',icon= imgs.circle, backColor= Colors.DARK_BLUE, textColor = Colors.LIGHT_BLUE, function= lambda: lambda:TakeArmor(slot)))
+        
 
     window.ClearActionBar()
     window.UpdateScneneGUI("n")
@@ -152,26 +153,28 @@ def TakeRandomItem(itemPool):
 
 
 
-def UseHealPotion(potion: classes.Item):
-    if potion == vars.ItemList[vars.ItemID.SmallHealPotion]:
+def UseHealPotion(potion: classes.Slot):
+    potion.count -= 1
+
+    if potion.item == vars.ItemList[vars.ItemID.SmallHealPotion]:
         Heal(15)
-    elif potion == vars.ItemList[vars.ItemID.MiddleHealPotion]:
+    elif potion.item == vars.ItemList[vars.ItemID.MiddleHealPotion]:
         Heal(25)
-    elif potion == vars.ItemList[vars.ItemID.LargeHealPotion]:
+    elif potion.item == vars.ItemList[vars.ItemID.LargeHealPotion]:
         Heal(50)
 
     
-    if potion == vars.ItemList[vars.ItemID.SmallRegenPotion]:
+    if potion.item == vars.ItemList[vars.ItemID.SmallRegenPotion]:
         vars.BUFF_regeneration += 3
         Heal(15)
-    elif potion == vars.ItemList[vars.ItemID.MiddleRegenPotion]:
+    elif potion.item == vars.ItemList[vars.ItemID.MiddleRegenPotion]:
         vars.BUFF_regeneration += 6
         Heal(25)
-    elif potion == vars.ItemList[vars.ItemID.LargeRegenPotion]:
+    elif potion.item == vars.ItemList[vars.ItemID.LargeRegenPotion]:
         vars.BUFF_regeneration += 12
         Heal(45)
 
-    ReturnToJourney()
+    ShowInventory()
         
 
 def Heal(healPoints):
@@ -180,38 +183,44 @@ def Heal(healPoints):
     window.UpdateAll()
 
 
-def TakeArmor(item: classes.Item):
+def TakeArmor(slot: classes.Slot):
     armorPoint = 0
+    slot.count -= 1
 
-
-    if item == vars.ItemList[vars.ItemID.LeatherArmor]:
+    if slot.item == vars.ItemList[vars.ItemID.LeatherArmor]:
         vars.BUFF_warm += 10
         armorPoint = 20
 
-    if item == vars.ItemList[vars.ItemID.SteelArmor]:
+    if slot.item == vars.ItemList[vars.ItemID.SteelArmor]:
         armorPoint = 50
 
-    if item == vars.ItemList[vars.ItemID.SilverArmor]:
+    if slot.item == vars.ItemList[vars.ItemID.SilverArmor]:
         armorPoint = 65
 
-    if item == vars.ItemList[vars.ItemID.MeteoriteArmor]:
+    if slot.item == vars.ItemList[vars.ItemID.MeteoriteArmor]:
         armorPoint = 75
 
-    if item == vars.ItemList[vars.ItemID.IceArmor]:
+    if slot.item == vars.ItemList[vars.ItemID.IceArmor]:
         vars.deBUFF_frostbite += 10
         armorPoint = 150
 
-    if item == vars.ItemList[vars.ItemID.EtherealArmor]:
+    if slot.item == vars.ItemList[vars.ItemID.EtherealArmor]:
         armorPoint = 100
 
     vars.ARMOR += armorPoint
-    locvars.Scene.name = f'Вы надели {item.name}\n Получено {armorPoint} ед. брони'
-    ReturnToJourney()
+    ShowInventory()
+    #locvars.Scene.name = f'Вы надели {slot.item.name}\n Получено {armorPoint} ед. брони'
+    #locvars.Scene.textColor = Colors.WHITE
+    #window.UpdateScneneGUI('n')
 
 
 def ExamineItemIsZeroCount(slotNumber):
+    print("examine is zero")
     if vars.Inventory[slotNumber].count <= 0:
+        print("remove")
         vars.Inventory.remove(vars.Inventory[slotNumber])
+    
+    
 
 
 def ShowStore():
@@ -743,10 +752,20 @@ FOREST_EVENTS = [
     classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowStore),
     classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
+    classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),6
+    ]),
+    classes.Event("тропинка по которой вы шли обрывается",
+                screen= imgs.F_forest_1,
+                backColor=Colors.BLACK,
+                textColor = Colors.GREEN,
+                curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Магазин",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowStore),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
     classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
-    classes.Event("скитаясь вы пришли к лесу",
-                screen= imgs.F_forest,
+    classes.Event("скитаясь вы заблудились в лесу",
+                screen= imgs.F_forest_2,
                 backColor=Colors.BLACK,
                 textColor = Colors.GREEN,
                 curentActions=[

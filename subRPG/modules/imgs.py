@@ -1,5 +1,5 @@
 
-none =  "Images/none.png"
+none =  "Images/GUI/none.png"
 
 # I C O N S
 
@@ -18,7 +18,8 @@ arrowLeft = "Images/GUI/arrowLeft.png"
 
 # S P E C I A L    S C R E A N S
 
-inventoryBag =  "Images/inventory.png"
+inventoryIcon=  "Images/GUI/inventory.png"
+storeIcon =  "Images/GUI/store.png"
 
 # I T E M S
 
@@ -79,6 +80,9 @@ I_diamondRing =   "Images/Items/diamondRing.png"
 
 
 # L O C A T I O N S
+
+store =  "Images/screens/store.png"
+store_1 =  "Images/screens/store_1.png"
 
 startScreen =  "Images/screens/startScreen.png"
 startScreenTitle = "Images/screens/startScreenTitle.png"

@@ -56,10 +56,10 @@ class Colors:
 def ShowInventory():
     vars.Weapon.equip = True
     
-    tk ['bg']= Colors.BROWN
+    tk ['bg']= Colors.DARK_GRAY
     del locvars.Scene.curentActions[:]
 
-    locvars.Scene = classes.Event(f'Инвентарь:',screen= imgs.inventoryBag,backColor= Colors.BLACK, textColor = Colors.WHITE , curentActions=[
+    locvars.Scene = classes.Event(f'Инвентарь:',screen= imgs.inventoryIcon,backColor= Colors.BLACK, textColor = Colors.WHITE , curentActions=[
                 classes.Action(f'Назад',icon= imgs.ring, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=lambda: ReturnToJourney),
                 ])
     
@@ -82,7 +82,7 @@ def ShowInventory():
         selectItemFn = \
             lambda Islot=Islot: \
             lambda: \
-                SelectItem(Islot)
+                SelectItem(Islot, forSale= False)
         
         if Islot.equip == True:
             locvars.Scene.curentActions.append(classes.Action(f'(Экирировано)\n{Islot.item.name}({Islot.count}x) урон:{Islot.item.damage} цена: {Islot.item.cost}$',icon= Islot.item.icon, backColor= Colors.OLIVE, textColor = Colors.WHITE, function=selectItemFn))
@@ -97,28 +97,36 @@ def ShowInventory():
     return
 
 
-def SelectItem(slot: classes.Slot):
+def SelectItem(slot: classes.Slot, forSale: bool):
+
     locvars.Scene.name = slot.item.name
     del locvars.Scene.curentActions[:]
     
     locvars.Scene = classes.Event(slot.item.name ,screen= slot.item.icon ,backColor= Colors.BLACK, textColor = Colors.WHITE , curentActions=[
-                classes.Action(f'Назад',icon= imgs.ring, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=lambda: ShowInventory),
-                ])
-    
-    if slot.equip == False and slot.item.damage != 0:
-        locvars.Scene.curentActions.append(classes.Action(f'Экипировать',icon= imgs.circle, backColor= Colors.OLIVE, textColor = Colors.WHITE, function= lambda: lambda: Equip(slot)))
+                classes.Action(f'Назад',icon= imgs.ring, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=lambda: ReturnToJourney),
+            ])
 
-    if slot.item == vars.ItemList[vars.ItemID.SmallHealPotion] or slot.item == vars.ItemList[vars.ItemID.MiddleHealPotion] or slot.item == vars.ItemList[vars.ItemID.LargeHealPotion]:
-        locvars.Scene.curentActions.append(classes.Action(f'Лечиться',icon= imgs.circle, backColor= Colors.GREEN, textColor = Colors.WHITE, function= lambda:lambda: UseHealPotion(slot)))
 
-    if slot.item == vars.ItemList[vars.ItemID.SmallRegenPotion] or slot.item == vars.ItemList[vars.ItemID.MiddleRegenPotion] or slot.item == vars.ItemList[vars.ItemID.LargeRegenPotion]:
-        locvars.Scene.curentActions.append(classes.Action(f'Лечиться',icon= imgs.circle, backColor= Colors.GREEN, textColor = Colors.WHITE, function= lambda: lambda:UseHealPotion(slot)))
+    if forSale == False:
 
-    if slot.item == vars.ItemList[vars.ItemID.LeatherArmor] or slot.item == vars.ItemList[vars.ItemID.SteelArmor] or slot.item == vars.ItemList[vars.ItemID.SilverArmor] or slot.item == vars.ItemList[vars.ItemID.MeteoriteArmor] or slot.item == vars.ItemList[vars.ItemID.IceArmor] or slot.item == vars.ItemList[vars.ItemID.EtherealArmor]:
-        locvars.Scene.curentActions.append(classes.Action(f'Надеть броню',icon= imgs.circle, backColor= Colors.DARK_BLUE, textColor = Colors.LIGHT_BLUE, function= lambda: lambda:TakeArmor(slot)))
-        
+        if slot.equip == False and slot.item.damage != 0:
+            locvars.Scene.curentActions.append(classes.Action(f'Экипировать',icon= imgs.circle, backColor= Colors.OLIVE, textColor = Colors.WHITE, function= lambda: lambda: Equip(slot)))
 
-    window.ClearActionBar()
+        if slot.item == vars.ItemList[vars.ItemID.SmallHealPotion] or slot.item == vars.ItemList[vars.ItemID.MiddleHealPotion] or slot.item == vars.ItemList[vars.ItemID.LargeHealPotion]:
+            locvars.Scene.curentActions.append(classes.Action(f'Лечиться',icon= imgs.circle, backColor= Colors.GREEN, textColor = Colors.WHITE, function= lambda:lambda: UseHealPotion(slot)))
+
+        if slot.item == vars.ItemList[vars.ItemID.SmallRegenPotion] or slot.item == vars.ItemList[vars.ItemID.MiddleRegenPotion] or slot.item == vars.ItemList[vars.ItemID.LargeRegenPotion]:
+            locvars.Scene.curentActions.append(classes.Action(f'Лечиться',icon= imgs.circle, backColor= Colors.GREEN, textColor = Colors.WHITE, function= lambda: lambda:UseHealPotion(slot)))
+
+        if slot.item == vars.ItemList[vars.ItemID.LeatherArmor] or slot.item == vars.ItemList[vars.ItemID.SteelArmor] or slot.item == vars.ItemList[vars.ItemID.SilverArmor] or slot.item == vars.ItemList[vars.ItemID.MeteoriteArmor] or slot.item == vars.ItemList[vars.ItemID.IceArmor] or slot.item == vars.ItemList[vars.ItemID.EtherealArmor]:
+            locvars.Scene.curentActions.append(classes.Action(f'Надеть броню',icon= imgs.circle, backColor= Colors.DARK_BLUE, textColor = Colors.LIGHT_BLUE, function= lambda: lambda:TakeArmor(slot)))
+    else:
+        locvars.Scene.curentActions.append(classes.Action(f'продать',icon= imgs.circle, backColor= Colors.OLIVE, textColor = Colors.WHITE, function= lambda: lambda: Sell(slot, window.Counter)))
+        locvars.Scene.curentActions.append(classes.Action(f'Продать всё',icon= imgs.circle, backColor= Colors.OLIVE, textColor = Colors.WHITE, function= lambda: lambda: Sell(slot, slot.count)))
+        window.Counter = 1
+        window.OpenCounterWindow(slot.item.icon)
+        return
+
     window.UpdateScneneGUI("n")
 
 
@@ -175,12 +183,14 @@ def UseHealPotion(potion: classes.Slot):
         Heal(45)
 
     ShowInventory()
+
+    
         
 
 def Heal(healPoints):
     vars.HP += healPoints
     locvars.Scene.name = f'\nВы полечились на {healPoints} ед здоровья \nТекущее здоровье:{vars.HP}'
-    window.UpdateAll()
+    window.UpdateScneneGUI("n")
 
 
 def TakeArmor(slot: classes.Slot):
@@ -209,9 +219,9 @@ def TakeArmor(slot: classes.Slot):
 
     vars.ARMOR += armorPoint
     ShowInventory()
-    #locvars.Scene.name = f'Вы надели {slot.item.name}\n Получено {armorPoint} ед. брони'
-    #locvars.Scene.textColor = Colors.WHITE
-    #window.UpdateScneneGUI('n')
+    locvars.Scene.name = f'Вы надели {slot.item.name}\n Получено {armorPoint} ед. брони'
+    locvars.Scene.textColor = Colors.WHITE
+    window.UpdateScneneGUI('n')
 
 
 def ExamineItemIsZeroCount(slotNumber):
@@ -224,9 +234,13 @@ def ExamineItemIsZeroCount(slotNumber):
 
 
 def ShowStore():
-    print(f'Деньги:{vars.MONEY}')
-    print("1. Продать\n2. Купить")
-    
+    tk ['bg']= Colors.DARK_OLIVE
+    locvars.Scene = classes.Event(f'Лавка торговца:',screen= imgs.storeIcon,backColor= Colors.BLACK, textColor = Colors.WHITE , curentActions=[
+        classes.Action(f'Назад',icon= imgs.ring, backColor= Colors.PEACH, textColor = Colors.BROWN, function=lambda: ReturnToJourney),
+        classes.Action(f'Купить',icon= imgs.circle, backColor= Colors.GOLDEN, textColor = Colors.WHITE, function=lambda: ReturnToJourney),
+        classes.Action(f'Продать',icon= imgs.circle, backColor= Colors.BROWN, textColor = Colors.WHITE, function=lambda: ShowSellMenu),
+    ])
+    window.UpdateScneneGUI("n")
     
 
     
@@ -234,62 +248,62 @@ def ShowSellMenu():
     
     vars.Weapon.equip = True
     
+    tk ['bg']= Colors.BROWN
+    del locvars.Scene.curentActions[:]
 
-    print("0: назад")
+    locvars.Scene = classes.Event(f'Продать:',screen= imgs.storeIcon,backColor= Colors.BLACK, textColor = Colors.WHITE , curentActions=[
+                classes.Action(f'Назад',icon= imgs.ring, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=lambda: ReturnToJourney),
+                ])
+    
+
+    slotList: list[classes.Slot] = vars.Inventory
+
+
     i = 0
     for Islot in vars.Inventory:
-        ExamineItemIsZeroCount(i-1)
 
         i += 1
-        if Islot.equip == True:
-            print(f'\n {i}: {Islot.item.name} товар экипирован (нельзя продать)\n')
+        ExamineItemIsZeroCount(i-1)
+
+        if Islot.count <= 0:
             continue
+
+        # NOTE: rewrite to your preferred coding style
+        # Lambdas do not properly capture the iterator values in `for` loops
+        # This can be fixed by manually providing an optional argument with a default preferred value
+        selectItemFn = \
+            lambda Islot=Islot: \
+            lambda: \
+                SelectItem(Islot, forSale= True)
         
-        print(f' {i}: {Islot.item.name}({Islot.count}x)', "цена:", Islot.item.cost, "$")
+        if Islot.equip == True:
+            continue
+        else:
+            locvars.Scene.curentActions.append(classes.Action(f'{Islot.item.name}({Islot.count}x) ЦЕНА: {Islot.item.cost}$',icon= Islot.item.icon, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=selectItemFn))
 
-    a = int(input("\n Действие:"))
-    vars.clear()
-
-    if a == 0:
-        return
-    if vars.Inventory[a-1].equip == True:
-        input("вы не можете продать экипированный предмет")
-        return
-
-    slot = vars.Inventory[a-1]
-    
-
-    print(f'что вы хотите сделать с {slot.item.name}({slot.count})?')
-    print("1: Назад\n2. Продать \n3. Продать всё")
-    
-    b = int(input("\n Действие:"))
-
-    if b == 2:
-        c = int(input(f'Сколько вы хотите продать из {slot.count}?\n...'))
-        
-        if c > slot.count:
-            vars.clear()
-            input("У вас столько нет")
-            ShowSellMenu()
-            return
-        
-        Sell(sellCount = c,slotNumber = a-1, cost = slot.item.cost)
-
-    elif b == 3:
-        Sell(sellCount = slot.count,slotNumber = a-1, cost = slot.item.cost)
+    window.ClearActionBar()
+    window.UpdateScneneGUI("n")
+    return
 
 
-def Sell(sellCount, slotNumber, cost):
+
+
+def Sell(slot: classes.Slot, sellCount):
     #i = int(input(f'вы действительно хотите продать {sellCount}x?  \n 1. Да\n 2. Нет\n...'))
 
-    #if i == 1:
-    saleMoney = cost * sellCount
-    vars.MONEY += saleMoney
-    vars.Inventory[slotNumber].count -= sellCount
-    ExamineItemIsZeroCount(slotNumber)
-    print("вы продали", sellCount)
+    if sellCount > slot.count:
+        MinorEvent("у вас столько нет", "назад", screen = imgs.none, funcion= ShowSellMenu)
+        return
+       
 
-    #input("Далее...")
+    #if i == 1:
+    saleMoney = slot.item.cost * sellCount
+    vars.MONEY += saleMoney
+    slot.count -= sellCount
+    ShowSellMenu()
+    print("sale money",saleMoney, "sell count",sellCount)
+    #ExamineItemIsZeroCount(slotNumber)
+    print("вы продали", sellCount)
 
 
 def ShowShoppingMenu():
@@ -319,14 +333,14 @@ def ShowShoppingMenu():
         return
         
 
-    vars.clear()
+    
     buyItem = assortment[a-1]
 
     print("1. Назад \n2. Купить")
     b = int(input("действие:"))
 
     if b == 2:
-        vars.clear()
+        
         c = int(input(f'Сколько вы хотите купить {buyItem.name}?\n'))
         Buy(buyItem, c)
 
@@ -340,7 +354,7 @@ def Buy(buyItem = classes.Item ,buyCount = int):
     if vars.MONEY < buyCount * buyItem.cost:
         input("У вас не хватает денег\n")
 
-        vars.clear()
+        
         return
     
     if buyCount > buyItem.stackCount:
@@ -350,7 +364,7 @@ def Buy(buyItem = classes.Item ,buyCount = int):
         vars.Inventory.append(classes.Slot(buyItem, buyCount, False))
     
     vars.MONEY -= buyCount * buyItem.cost
-    vars.clear()
+    
     input(f'Вы купили ({buyCount}) {buyItem.name} за {buyCount * buyItem.cost} денег')
     return
 
@@ -358,6 +372,7 @@ def Buy(buyItem = classes.Item ,buyCount = int):
 
 def MoveOn():
     vars.actStep += 1
+    CheckLocation()
     SetNewScene()
     locvars.Scene.name = f'вы пошли дальше...\n' + locvars.Scene.name
     window.UpdateAll()
@@ -369,7 +384,6 @@ def GoOtherWay():
     rndPeacefulPlace = random.randint(3, len(Elist) - 1)
     locvars.Scene = deepcopy(Elist[rndPeacefulPlace])
     locvars.curEventId = rndPeacefulPlace
-    CheckLocation()
     locvars.Scene.name = f'вы пошли другой дорогой\n' + locvars.Scene.name
     window.UpdateAll()
    
@@ -513,8 +527,11 @@ def CheckBuffs():
 
 def CheckLocation():
     # Л Е С
+    global Elist
+
     if locvars.LOCATION == locvars.Locations.Forest:
         vars.StoreAssortment = vars.ASSORTMENT_DEFAULT
+        Elist = FOREST_EVENTS
         #if vars.actStep % 15 == 0:
             #SetLocation(events = WILD_FOREST_EVENTS, locInt = locvars.Locations.WildForest)
     '''
@@ -609,25 +626,12 @@ def CheckLocation():
                 locvars.Scene = classes.Event("Вы перерезали Сплетения сердца, земля начинает очищаться\n Вы прошли игру. Концовка - Срубил под Корень Проблемы", textColor = Colors.GREEN , curentActions=[
                 classes.Action("Завершить", function = lambda: input("Спасибо за игру!\n"))])
         '''
+    if vars.actStep % 10 == 0:
+        locvars.curEventId = random.randint(0,1)
+        Elist = STORE_EVENTS
+        ReturnToJourney()
 
 
-def PrintStats():
-    #vars.clear()
-    vars.statsLine = f'step:{vars.step}    act:{vars.actStep}'
-    vars.statsLine += f'\nЛокация: {locvars.stringLocation[locvars.LOCATION]}'
-    vars.statsLine += f'\nЖизни:{vars.HP}    Броня:{vars.ARMOR}    Деньги:{vars.MONEY}\n'
-
-    if vars.isFrost == True:
-        vars.statsLine +=f'{Colors.BLUE}[Дебафф: Холод]{Colors.WHITE}'
-
-    if vars.deBUFF_frostbite != 0:
-        vars.statsLine += f'[Дебафф: обморожение на {Colors.CYAN}{vars.deBUFF_frostbite}{Colors.WHITE} актов]'
-
-    if vars.BUFF_warm != 0 and vars.isFrost == True:
-        vars.statsLine += f'[Бафф:вы согреты на {Colors.YELLOW}{vars.BUFF_warm}{Colors.WHITE} актов]'
-
-    if vars.BUFF_regeneration != 0:
-        vars.statsLine += f'[Бафф:Регенерация на {Colors.GREEN}{vars.BUFF_regeneration}{Colors.WHITE} актов]'
 
 
 
@@ -637,11 +641,10 @@ def SetNewScene():
     locvars.curEventId = randomEvent
 
     if randomEvent == EventID.StartFight or randomEvent == EventID.OnFight:
-        vars.clear()
+        
         locvars.curEventId = EventID.StartFight
         StartFight()
 
-    CheckLocation()  
     CheckBuffs()
     vars.step += 1
     window.UpdateAll()
@@ -654,18 +657,15 @@ def MinorEvent(eventName, actionName,screen, funcion):
                 classes.Action(f'{actionName}',icon= imgs.ring, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: funcion),
                 ])
     vars.step += 1
-    window.UpdateAll()
+    window.UpdateScneneGUI("w")
     
 
 def ReturnToJourney():
     locvars.Scene = deepcopy(Elist[locvars.curEventId])
-    print(locvars.curEventId)
-    print(Elist[locvars.curEventId].name)
-    CheckLocation()  
     CheckBuffs()
     vars.step += 1
     tk ['bg']= Colors.PAPER
-    window.UpdateAll()
+    window.UpdateScneneGUI("w")
 
 
 
@@ -713,6 +713,33 @@ class EventID(IntEnum):
     EtherialBag = 7
     EtherialCombatBag = 8
     CoruptedCorpse = 9
+
+STORE_EVENTS = [
+    classes.Event("вы пришли в лавку торговца",
+                screen= imgs.store,
+                backColor=Colors.BLACK,
+                textColor = Colors.GREEN ,
+                curentActions=[
+    classes.Action("Осмотреть",icon= imgs.look, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: lambda: MinorEvent("Лавка торговца на колесиках - это странствующий торговец\nлибо он просто скиталец либо\nв бегах от чего то", "Назад",screen = imgs.none, funcion= ReturnToJourney)),
+    classes.Action("Магазин",icon= imgs.circle, backColor= Colors.DARK_GOLDEN, textColor = Colors.GOLDEN, function = lambda: ShowStore),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Уйти",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
+    
+    ]),
+    classes.Event("вы пришли в хижину торговца",
+                screen= imgs.store_1,
+                backColor=Colors.BLACK,
+                textColor = Colors.GREEN ,
+                curentActions=[
+    classes.Action("Осмотреть",icon= imgs.look, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: lambda: MinorEvent("Теплая уютная хижина, здесь пахнет дымом и пряностями\nНа прилавке множество ценных вещей", "Назад",screen = imgs.none, funcion= ReturnToJourney)),
+    classes.Action("Магазин",icon= imgs.circle, backColor= Colors.DARK_GOLDEN, textColor = Colors.GOLDEN, function = lambda: ShowStore),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Уйти",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
+   
+    ]),
+    
+    ]
+
 
 FOREST_EVENTS = [
     classes.Event("на вашем пути появился чей то силуэт",
@@ -1381,40 +1408,46 @@ class Game(Frame):
     def __init__(self,tk): 
         super(Game,self).__init__(tk)
 
+        # Кнопки для меню прибавления и вычитания
+        self.Counter = 0 # counter number
+        self.AddBtn = Button(text="+",bg= Colors.PEACH,font =('ImesNewRoman',18,'bold'),fg = Colors.GREEN, command= lambda: self.ChangeCNumber(1))
+        self.SubtractBtn = Button(text="-",bg= Colors.PEACH,font =('ImesNewRoman',18,'bold'),fg = Colors.RED, command= lambda: self.ChangeCNumber(-1))
+        self.AddBtn.pack(anchor= "w", side= LEFT, ipadx = 30)
+        self.SubtractBtn.pack(anchor= "w", side= LEFT,  ipadx = 30)
+
+        # Вариант сцены для Tkinter
         self.TK_Scene: classes.TkScene = classes.TkScene(Label(text="Вы пришли к тому что охраняло чудовище к табличке с направлениями",font = ('ImesNewRoman',25,'bold'),bg = '#000',fg = '#fff'), curentActionsBar=[
             Button(text="Идти в (Замок)",bg='#F5DEB3',font =('ImesNewRoman',18,'bold'),fg = '#FFD700', command= lambda: print("пустое действие")),
             ])
 
+        # Коле статов
         self.Stats_Area = Label(text=f'stats ',font = ('ImesNewRoman',20,'bold'),bg = '#000',fg = '#fff')
         self.Stats_Area.pack(anchor="w", fill= X) #padx, pady
 
+        # Изображение локации
         self.screenImage = PhotoImage(file =imgs.startScreen).zoom(4,4)
         self.screen = Label(image= self.screenImage, bg= Colors.BLACK)
         self.screen.pack(fill = X)
 
+        # Описание локации
         self.TK_Scene.textArea = Label(text=f'Event Name Text Area',font = ('ImesNewRoman',20,'bold'),bg = '#000',fg = '#fff')
         self.TK_Scene.textArea.pack(anchor="w", fill= X) #padx, pady
 
-        #Btn Icon
-
+        
+        # Иконки кнопок
         self.btnIcons = [PhotoImage(file=imgs.circle)]
 
-        #self.UpdateBtn = Button(text= f'Update',bg='#FFFACD',font =('ImesNewRoman',21,'bold'),fg = '#000', command= lambda: self.UpdateScneneGUI("w"))
-        #self.UpdateBtn.pack()
+        
         self.StartScreen()
 
     def StartScreen(self):
-        #del funks.Elist[:]
 
         locvars.Scene = classes.Event("ДОБРО ПОЖАЛОВАТЬ В subRPG (*Tkinter)",screen= imgs.startScreenTitle, backColor= Colors.BLACK ,textColor = Colors.LIGHT_BLUE , curentActions=[
                 classes.Action("Нажмите, чтобы НАЧАТЬ играть", icon= imgs.circle,backColor= Colors.KHAKI, textColor = Colors.GREEN, function = lambda: SetNewScene),
                 #classes.Action("получить стартовый набор предметов",backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: self.GiveStarterKit),
                 classes.Action("Об игре",backColor= Colors.PEACH,icon= imgs.look, textColor = Colors.BROWN, function = lambda: self.AboutGame),
                 ])
-        
-        
         self.UpdateScneneGUI("w")
-
 
         #locvars.ZeroScene = funks.Elist[funks.EventID.Forest]
         #locvars.Scene = locvars.ZeroScene
@@ -1426,8 +1459,8 @@ class Game(Frame):
 
 
     def UpdateScneneGUI(self, BtnAnchor):
-        PrintStats()
-        self.Stats_Area.config(text= vars.statsLine, bg= Colors.DARK_GRAY)
+        self.PrintStats()
+        
 
         self.screenImage = PhotoImage(file= locvars.Scene.screen).zoom(4,4)
         self.screen.config(image= self.screenImage)
@@ -1439,7 +1472,6 @@ class Game(Frame):
 
         i = 0
         for action in locvars.Scene.curentActions:
-            #print(action.name)
             self.btnIcons.append(PhotoImage(file = action.icon))
 
             btn = Button(text= f'{action.name}',bg= action.backColor, fg= action.textColor, font =('TimesNewRoman',21,'bold'), command= action.function(), image= self.btnIcons[i] ,compound="left")
@@ -1450,6 +1482,7 @@ class Game(Frame):
 
     def UpdateAll(self):
         time.sleep(0.03)
+        CheckLocation()
         self.UpdateScneneGUI('w')
 
         if vars.ARMOR <= 0:
@@ -1457,26 +1490,79 @@ class Game(Frame):
 
 
         if vars.HP <= 0:
-            vars.clear()
+            
             print(f'{Colors.RED}Игра Окончена \n{Colors.WHITE}')
             print("Ваше здоровье =", vars.HP)
 
+    def OpenCounterWindow(self, screen):
+        self.PrintStats()
+        
+
+        self.screenImage = PhotoImage(file= screen).zoom(4,4)
+        self.screen.config(image= self.screenImage)
+
+        self.TK_Scene.textArea.config(text= self.Counter, bg= locvars.Scene.backColor ,fg= locvars.Scene.textColor) #padx, pady
+       
+        self.ClearActionBar()
+
+        self.AddBtn = Button(text="+",bg= Colors.PEACH,font =('ImesNewRoman',18,'bold'),fg = Colors.GREEN, command= lambda: self.ChangeCNumber(1))
+        self.SubtractBtn = Button(text="-",bg= Colors.PEACH,font =('ImesNewRoman',18,'bold'),fg = Colors.RED, command= lambda: self.ChangeCNumber(-1))
+        self.AddBtn.pack(anchor= "n", ipadx = 30)
+        self.SubtractBtn.pack(anchor= "n",  ipadx = 30)
+
+        
+        i = 0
+        for action in locvars.Scene.curentActions:
+            self.btnIcons.append(PhotoImage(file = action.icon))
+
+            btn = Button(text= f'{action.name}',bg= action.backColor, fg= action.textColor, font =('TimesNewRoman',21,'bold'), command= action.function(), image= self.btnIcons[i] ,compound="left")
+            self.TK_Scene.curentActionsBar.append(btn)
+            btn.pack(anchor= "w", ipadx = 10 ) #fill= X
+            i += 1   
+      
+    def ChangeCNumber(self, add):
+        self.Counter += add
+        if self.Counter <= 0:
+            self.Counter = 0
+        self.TK_Scene.textArea.config(text= self.Counter, bg= locvars.Scene.backColor ,fg= locvars.Scene.textColor) #padx, pady
+
 
     def ClearActionBar(self):
+        self.AddBtn.destroy()
+        self.SubtractBtn.destroy()
         for btn in self.TK_Scene.curentActionsBar:
             btn.destroy()
         del self.btnIcons[:]  
         del self.TK_Scene.curentActionsBar[:]
 
+    def PrintStats(self):
+        vars.statsLine = f'step:{vars.step}    act:{vars.actStep}'
+        vars.statsLine += f'\nЛокация: {locvars.stringLocation[locvars.LOCATION]}'
+        vars.statsLine += f'\nЖизни:{vars.HP}    Броня:{vars.ARMOR}    Деньги:{vars.MONEY}\n'
 
+        if vars.isFrost == True:
+            vars.statsLine +=f'{Colors.BLUE}[Дебафф: Холод]{Colors.WHITE}'
+
+        if vars.deBUFF_frostbite != 0:
+            vars.statsLine += f'[Дебафф: обморожение на {Colors.CYAN}{vars.deBUFF_frostbite}{Colors.WHITE} актов]'
+
+        if vars.BUFF_warm != 0 and vars.isFrost == True:
+            vars.statsLine += f'[Бафф:вы согреты на {Colors.YELLOW}{vars.BUFF_warm}{Colors.WHITE} актов]'
+
+        if vars.BUFF_regeneration != 0:
+            vars.statsLine += f'[Бафф:Регенерация на {Colors.GREEN}{vars.BUFF_regeneration}{Colors.WHITE} актов]'
+    
+        self.Stats_Area.config(text= vars.statsLine, bg= Colors.DARK_GRAY)
 
     def GiveStarterKit(self):
         TakeRandomItem(vars.StarterPack)
         TakeRandomItem(vars.StarterPack)
         TakeRandomItem(vars.StarterPack)
         
-     
-        
+    
+
+    
+      
     def AboutGame(self):
         textAbout = "Порт игры subRPG на Tkinter\nкроме переноса всего контента с оригинала, игра получит\nряд нового контента, что в значительной мере расширит игру"
 

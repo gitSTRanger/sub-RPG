@@ -330,22 +330,14 @@ ASSORTMENT_DEFAULT = [
     ItemList[ItemID.SmallHealPotion],
     ItemList[ItemID.MiddleHealPotion],
 
-    ItemList[ItemID.Empty], # пробел
-
     ItemList[ItemID.SmallRegenPotion],
-
-    ItemList[ItemID.Empty], # пробел
 
     ItemList[ItemID.Sword],
     ItemList[ItemID.HeroSword],
     ItemList[ItemID.FurySword],
 
-    ItemList[ItemID.Empty], # пробел
-
     ItemList[ItemID.Bow],
     ItemList[ItemID.HeroBow],
-
-    ItemList[ItemID.Empty], # пробел
 
     ItemList[ItemID.LeatherArmor],
     ItemList[ItemID.SteelArmor],
@@ -359,24 +351,16 @@ ASSORTMENT_CASTLE = [
     ItemList[ItemID.MiddleHealPotion],
     ItemList[ItemID.LargeHealPotion],
 
-    ItemList[ItemID.Empty], # пробел
-
     ItemList[ItemID.SmallRegenPotion],
     ItemList[ItemID.MiddleRegenPotion],
-
-    ItemList[ItemID.Empty], # пробел
 
     ItemList[ItemID.SteelSword],
     ItemList[ItemID.SilverSword],
     ItemList[ItemID.MeteoriteSword],
 
-    ItemList[ItemID.Empty], # пробел
-
     ItemList[ItemID.HeroBow],
     ItemList[ItemID.InfinityBow],
     ItemList[ItemID.SorcererStaff],
-
-    ItemList[ItemID.Empty], # пробел
 
     ItemList[ItemID.SteelArmor],
     ItemList[ItemID.SilverArmor],
@@ -392,24 +376,16 @@ ASSORTMENT_MOLTEN_VALLEY = [
     ItemList[ItemID.LargeHealPotion],
     ItemList[ItemID.LargeHealPotion],
 
-    ItemList[ItemID.Empty], # пробел
-
     ItemList[ItemID.SmallRegenPotion],
     ItemList[ItemID.MiddleRegenPotion],
     ItemList[ItemID.LargeRegenPotion],
 
-    ItemList[ItemID.Empty], # пробел
-
     ItemList[ItemID.FurySword],
     ItemList[ItemID.MeteoriteSword],
-
-    ItemList[ItemID.Empty], # пробел
 
     ItemList[ItemID.InfinityBow],
     ItemList[ItemID.BowFlash],
     ItemList[ItemID.MeteoraStaff],
-
-    ItemList[ItemID.Empty], # пробел
 
     ItemList[ItemID.SteelArmor],
     ItemList[ItemID.MeteoriteArmor],
@@ -423,24 +399,16 @@ ASSORTMENT_ICE = [
     ItemList[ItemID.LargeHealPotion],
     ItemList[ItemID.LargeHealPotion],
 
-    ItemList[ItemID.Empty], # пробел
-
     ItemList[ItemID.SmallRegenPotion],
     ItemList[ItemID.MiddleRegenPotion],
     ItemList[ItemID.LargeRegenPotion],
 
-    ItemList[ItemID.Empty], # пробел
-
     ItemList[ItemID.MetelSword],
     ItemList[ItemID.IceSharpSword],
-
-    ItemList[ItemID.Empty], # пробел
 
     ItemList[ItemID.InfinityBow],
     ItemList[ItemID.IceShotStaff],
     ItemList[ItemID.BowTaiga],
-
-    ItemList[ItemID.Empty], # пробел
 
     ItemList[ItemID.LeatherArmor],
     ItemList[ItemID.IceArmor],
@@ -454,24 +422,16 @@ ASSORTMENT_ETHERIAL = [
     ItemList[ItemID.LargeHealPotion],
     ItemList[ItemID.LargeHealPotion],
 
-    ItemList[ItemID.Empty], # пробел
-
     ItemList[ItemID.SmallRegenPotion],
     ItemList[ItemID.MiddleRegenPotion],
     ItemList[ItemID.LargeRegenPotion],
 
-    ItemList[ItemID.Empty], # пробел
-
     ItemList[ItemID.EtherealSword],
     ItemList[ItemID.EtherealDoomSword],
-
-    ItemList[ItemID.Empty], # пробел
 
     ItemList[ItemID.EtherealStaff],
     ItemList[ItemID.EtherealBow],
     ItemList[ItemID.BowTaiga],
-
-    ItemList[ItemID.Empty], # пробел
 
     ItemList[ItemID.SteelArmor],
     ItemList[ItemID.MeteoriteArmor],

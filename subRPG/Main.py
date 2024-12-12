@@ -129,6 +129,16 @@ def SelectItem(slot: classes.Slot, forSale: bool):
 
     window.UpdateScneneGUI("n")
 
+def SelectPurchase(item: classes.Item):
+
+    locvars.Scene = classes.Event(item.name ,screen= item.icon ,backColor= Colors.BLACK, textColor = Colors.WHITE , curentActions=[
+        classes.Action(f'Назад',icon= imgs.ring, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=lambda: ReturnToJourney),
+        classes.Action(f'купить',icon= imgs.circle, backColor= Colors.OLIVE, textColor = Colors.WHITE, function= lambda: lambda: Buy(item, window.Counter)),
+    ])
+
+
+    window.Counter = 1
+    window.OpenCounterWindow(item.icon)
 
 
 def Equip(slot: classes.Slot):
@@ -237,7 +247,7 @@ def ShowStore():
     tk ['bg']= Colors.DARK_OLIVE
     locvars.Scene = classes.Event(f'Лавка торговца:',screen= imgs.storeIcon,backColor= Colors.BLACK, textColor = Colors.WHITE , curentActions=[
         classes.Action(f'Назад',icon= imgs.ring, backColor= Colors.PEACH, textColor = Colors.BROWN, function=lambda: ReturnToJourney),
-        classes.Action(f'Купить',icon= imgs.circle, backColor= Colors.GOLDEN, textColor = Colors.WHITE, function=lambda: ReturnToJourney),
+        classes.Action(f'Купить',icon= imgs.circle, backColor= Colors.GOLDEN, textColor = Colors.WHITE, function=lambda: ShowShoppingMenu),
         classes.Action(f'Продать',icon= imgs.circle, backColor= Colors.BROWN, textColor = Colors.WHITE, function=lambda: ShowSellMenu),
     ])
     window.UpdateScneneGUI("n")
@@ -307,42 +317,38 @@ def Sell(slot: classes.Slot, sellCount):
 
 
 def ShowShoppingMenu():
-    i = 0
+    vars.Weapon.equip = True
+    
+    tk ['bg']= Colors.DARK_OLIVE
 
-    assortment = [ ]
+    locvars.Scene = classes.Event(f'Товары:',screen= imgs.storeIcon,backColor= Colors.BLACK, textColor = Colors.WHITE , curentActions=[
+                classes.Action(f'Назад',icon= imgs.ring, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=lambda: ReturnToJourney),
+                ])
+    
 
-    print("0: назад")
-    for Iitem in vars.StoreAssortment:
 
-        if Iitem == vars.ItemList[vars.ItemID.Empty]:
-            print("\n")
-            continue
+    for Purchase in vars.StoreAssortment:
 
-        i += 1
         
-        if Iitem.damage == 0:
-            print(f' {i}: {Iitem.name}', "цена:", Iitem.cost, "$")
+
+        
+
+        # NOTE: rewrite to your preferred coding style
+        # Lambdas do not properly capture the iterator values in `for` loops
+        # This can be fixed by manually providing an optional argument with a default preferred value
+        selectItemFn = \
+            lambda Islot=Purchase: \
+            lambda: \
+                SelectPurchase(Islot)
+        
+        if Purchase.damage == 0:
+            locvars.Scene.curentActions.append(classes.Action(f'{Purchase.name} ЦЕНА: {Purchase.cost}$',icon= Purchase.icon, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=selectItemFn))
         else:
-            print(f' {i}: {Iitem.name} урон: {Iitem.damage}', "цена:", Iitem.cost, "$")
-        assortment.append(Iitem)
+            locvars.Scene.curentActions.append(classes.Action(f'{Purchase.name} урон:{Purchase.damage} ЦЕНА: {Purchase.cost}$',icon= Purchase.icon, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=selectItemFn))
 
-    
-    a = int(input("\n действие:"))
-
-    if a == 0:
-        return
-        
-
-    
-    buyItem = assortment[a-1]
-
-    print("1. Назад \n2. Купить")
-    b = int(input("действие:"))
-
-    if b == 2:
-        
-        c = int(input(f'Сколько вы хотите купить {buyItem.name}?\n'))
-        Buy(buyItem, c)
+    window.ClearActionBar()
+    window.UpdateScneneGUI("n")
+    return
 
 
     
@@ -352,11 +358,10 @@ def ShowShoppingMenu():
 
 def Buy(buyItem = classes.Item ,buyCount = int):
     if vars.MONEY < buyCount * buyItem.cost:
-        input("У вас не хватает денег\n")
-
-        
+        MinorEvent("У вас не хватает денег","Назад", screen=  imgs.none, funcion= ShowShoppingMenu)
         return
     
+
     if buyCount > buyItem.stackCount:
         vars.Inventory.append(classes.Slot(buyItem, buyItem.stackCount, False))
         vars.Inventory.append(classes.Slot(buyItem, buyCount - buyItem.stackCount, False))
@@ -365,7 +370,7 @@ def Buy(buyItem = classes.Item ,buyCount = int):
     
     vars.MONEY -= buyCount * buyItem.cost
     
-    input(f'Вы купили ({buyCount}) {buyItem.name} за {buyCount * buyItem.cost} денег')
+    MinorEvent(f'Вы купили ({buyCount}) {buyItem.name} за {buyCount * buyItem.cost} денег',"Далее",screen= buyItem.icon, funcion= ShowShoppingMenu)
     return
 
 
@@ -652,7 +657,7 @@ def SetNewScene():
 
 #TKINTER LOGIC
 
-def MinorEvent(eventName, actionName,screen, funcion):
+def MinorEvent(eventName, actionName, screen, funcion):
     locvars.Scene = classes.Event(f'{eventName}',screen= screen,backColor= Colors.BLACK, textColor = Colors.WHITE , curentActions=[
                 classes.Action(f'{actionName}',icon= imgs.ring, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: funcion),
                 ])
@@ -720,9 +725,9 @@ STORE_EVENTS = [
                 backColor=Colors.BLACK,
                 textColor = Colors.GREEN ,
                 curentActions=[
-    classes.Action("Осмотреть",icon= imgs.look, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: lambda: MinorEvent("Лавка торговца на колесиках - это странствующий торговец\nлибо он просто скиталец либо\nв бегах от чего то", "Назад",screen = imgs.none, funcion= ReturnToJourney)),
-    classes.Action("Магазин",icon= imgs.circle, backColor= Colors.DARK_GOLDEN, textColor = Colors.GOLDEN, function = lambda: ShowStore),
     classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Магазин",icon= imgs.circle, backColor= Colors.DARK_GOLDEN, textColor = Colors.GOLDEN, function = lambda: ShowStore),
+    classes.Action("Осмотреть",icon= imgs.look, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: lambda: MinorEvent("Лавка торговца на колесиках - это странствующий торговец\nлибо он просто скиталец либо\nв бегах от чего то", "Назад",screen = imgs.none, funcion= ReturnToJourney)),
     classes.Action("Уйти",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
     
     ]),
@@ -731,9 +736,9 @@ STORE_EVENTS = [
                 backColor=Colors.BLACK,
                 textColor = Colors.GREEN ,
                 curentActions=[
-    classes.Action("Осмотреть",icon= imgs.look, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: lambda: MinorEvent("Теплая уютная хижина, здесь пахнет дымом и пряностями\nНа прилавке множество ценных вещей", "Назад",screen = imgs.none, funcion= ReturnToJourney)),
-    classes.Action("Магазин",icon= imgs.circle, backColor= Colors.DARK_GOLDEN, textColor = Colors.GOLDEN, function = lambda: ShowStore),
     classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Магазин",icon= imgs.circle, backColor= Colors.DARK_GOLDEN, textColor = Colors.GOLDEN, function = lambda: ShowStore),
+    classes.Action("Осмотреть",icon= imgs.look, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: lambda: MinorEvent("Теплая уютная хижина, здесь пахнет дымом и пряностями\nНа прилавке множество ценных вещей", "Назад",screen = imgs.none, funcion= ReturnToJourney)),
     classes.Action("Уйти",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
    
     ]),
@@ -777,7 +782,6 @@ FOREST_EVENTS = [
                 textColor = Colors.GREEN ,
                 curentActions=[
     classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action("Магазин",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowStore),
     classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
     classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),6
     ]),
@@ -787,7 +791,6 @@ FOREST_EVENTS = [
                 textColor = Colors.GREEN,
                 curentActions=[
     classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action("Магазин",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowStore),
     classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
     classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
@@ -797,7 +800,6 @@ FOREST_EVENTS = [
                 textColor = Colors.GREEN,
                 curentActions=[
     classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action("Магазин",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowStore),
     classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
     classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
@@ -1544,13 +1546,13 @@ class Game(Frame):
             vars.statsLine +=f'{Colors.BLUE}[Дебафф: Холод]{Colors.WHITE}'
 
         if vars.deBUFF_frostbite != 0:
-            vars.statsLine += f'[Дебафф: обморожение на {Colors.CYAN}{vars.deBUFF_frostbite}{Colors.WHITE} актов]'
+            vars.statsLine += f'[Дебафф: обморожение на {vars.deBUFF_frostbite} актов]'
 
         if vars.BUFF_warm != 0 and vars.isFrost == True:
-            vars.statsLine += f'[Бафф:вы согреты на {Colors.YELLOW}{vars.BUFF_warm}{Colors.WHITE} актов]'
+            vars.statsLine += f'[Бафф:вы согреты на {vars.BUFF_warm} актов]'
 
         if vars.BUFF_regeneration != 0:
-            vars.statsLine += f'[Бафф:Регенерация на {Colors.GREEN}{vars.BUFF_regeneration}{Colors.WHITE} актов]'
+            vars.statsLine += f'[Бафф:Регенерация на {vars.BUFF_regeneration} актов]'
     
         self.Stats_Area.config(text= vars.statsLine, bg= Colors.DARK_GRAY)
 

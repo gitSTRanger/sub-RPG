@@ -94,3 +94,11 @@ F_possibleFight =   "Images/screens/FOREST/possibleFight.png"
 F_fight = "Images/screens/FOREST/fight.png"
 F_well =   "Images/screens/FOREST/well.png"
 F_village =   "Images/screens/FOREST/village.png"
+
+
+MV_valley =    "Images/screens/MOLTEN/valley.png"
+MV_valley_1 =    "Images/screens/MOLTEN/valley_1.png"
+MV_valley_2 =    "Images/screens/MOLTEN/valley_2.png"
+MV_valley_3 =    "Images/screens/MOLTEN/valley_3.png"
+MV_obsidianPath =    "Images/screens/MOLTEN/obsidianPath.png"
+MV_corpse =    "Images/screens/MOLTEN/corpse.png"

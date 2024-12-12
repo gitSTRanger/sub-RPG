@@ -447,6 +447,12 @@ def StartFight():
 
     startRange = 0
     endRange = 0
+    
+
+    if vars.curEnemy == vars.BossID.GiantTroll:
+        vars.actStep += 1
+        window.UpdateAll()
+        return
 
     if locvars.LOCATION == locvars.Locations.Forest:
         startRange = 0
@@ -488,6 +494,7 @@ def TakeDamage(hit):
 def SetEvent(eventID):
     locvars.Scene = deepcopy(Elist[eventID])
     vars.actStep += 1
+    window.UpdateAll()
 
 
 
@@ -537,22 +544,24 @@ def CheckLocation():
     if locvars.LOCATION == locvars.Locations.Forest:
         vars.StoreAssortment = vars.ASSORTMENT_DEFAULT
         Elist = FOREST_EVENTS
-        #if vars.actStep % 15 == 0:
-            #SetLocation(events = WILD_FOREST_EVENTS, locInt = locvars.Locations.WildForest)
-    '''
+        if vars.actStep % 20 == 0:
+            SetLocation(events = WILD_FOREST_EVENTS, locInt = locvars.Locations.WildForest)
+
     # Д И К И Й   Л Е С
     elif locvars.LOCATION == locvars.Locations.WildForest:
         vars.StoreAssortment = vars.ASSORTMENT_DEFAULT
+        Elist = WILD_FOREST_EVENTS
         
-        if vars.actStep % 15 == 0:
+        if vars.actStep % 41 == 0:
             vars.curEnemy = deepcopy(vars.Bosses[vars.BossID.GiantTroll])
             Elist = FOREST_BOSS_EVENTS
             locvars.Scene = deepcopy(Elist[EventID.PossibleFight])
             
 
-        if vars.actStep == 32:
-                TakeItem(vars.ItemList[vars.ItemID.antiFreezePotion], 1)
-                Elist = FORK_EVENTS
+        #if vars.actStep == 32:
+                #TakeItem(vars.ItemList[vars.ItemID.antiFreezePotion], 1)
+                #Elist = FORK_EVENTS
+    '''
     # З А М О К
     elif locvars.LOCATION == locvars.Locations.Castle:
         vars.StoreAssortment = vars.ASSORTMENT_CASTLE
@@ -826,139 +835,171 @@ FOREST_EVENTS = [
     ]),
 ]
 
-'''
+
+
+
+
+
+
 WILD_FOREST_EVENTS = [
-    classes.Event("на вашем пути появился чей то силуэт",
-                backColor=Colors.DARK_GREEN,
+     classes.Event("на вашем пути появился чей то силуэт",
+                screen= imgs.F_possibleFight,
+                backColor=Colors.BLACK,
                 textColor = Colors.GREEN ,
                 curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action("Идти дальше",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: StartFight),
-    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function =lambda: GoOtherWay),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: StartFight),
+    classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function =lambda: GoOtherWay),
     ]),
     classes.Event("вы слышите чье-то рычание впереди, осмотревшись вы видите врага",
+                screen= imgs.F_fight,
                 backColor=Colors.BLACK,
                 textColor = Colors.RED,
                 curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
-    classes.Action("Статы врага",backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
-    classes.Action("Сбежать",backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action(f'Атаковать врага',icon= imgs.attack, backColor= Colors.ORANGE, textColor = Colors.DARK_RED, function = lambda: Attack),
+    classes.Action("Статы врага",icon= imgs.enemyStats, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
+    classes.Action("Сбежать",icon= imgs.arrowLeft, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
     ]),
     classes.Event(f'враг готовится нанести удар',
+                screen= imgs.F_fight,
                 backColor=Colors.BLACK,
                 textColor = Colors.RED,
                 curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
-    classes.Action("Статы врага",backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
-    classes.Action("Сбежать",backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action(f'Атаковать врага',icon= imgs.attack, backColor= Colors.ORANGE, textColor = Colors.DARK_RED, function = lambda: Attack),
+    classes.Action("Статы врага",icon= imgs.enemyStats, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
+    classes.Action("Сбежать",icon= imgs.arrowLeft, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
     ]),
     classes.Event("скитаясь вы пришли к лесу",
-                backColor=Colors.DARK_GREEN,
+                screen= imgs.F_forest_2,
+                backColor=Colors.BLACK,
                 textColor = Colors.GREEN,
                 curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action("Магазин", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowStore),
-    classes.Action("Идти дальше",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
-    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
+    classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
-    classes.Event("вы замечаете растяжку", textColor = Colors.GREEN, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action("Магазин", function = ShowStore),
-    classes.Action("Идти дальше", function = lambda: TakeDamage(hit=15)),
-    classes.Action("обойти", function = GoOtherWay),
+    classes.Event("вы замечаете растяжку", 
+    screen= imgs.F_forest_2,
+    backColor=Colors.BLACK,
+    textColor = Colors.GREEN,
+    curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: lambda: MinorEvent(TakeDamage(25), "Назад",screen = imgs.none, funcion= ReturnToJourney)),
+    classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
-    classes.Event("вы резко остановились впереди в прелой листве блестает капкан",textColor = Colors.GREEN, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action("Магазин", function = ShowStore),
-    classes.Action("Идти дальше", function = lambda: TakeDamage(hit=25)),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    classes.Event("вы резко остановились впереди в прелой листве блестает капкан",
+    screen= imgs.F_forest_2,
+    backColor=Colors.BLACK,
+    textColor = Colors.GREEN,
+    curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: lambda: MinorEvent(TakeDamage(35), "Назад",screen = imgs.none, funcion= ReturnToJourney)),
+    classes.Action("обойти",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
-    classes.Event("земля бурлит от дыма, приглядевшись вы замечаете что стоите на упавшем метеорите",textColor = Colors.GREEN, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action("Взять остывший камень под ногами", function = lambda: TakeItem(vars.ItemList[vars.ItemID.MeteoritePiece], 1)),
-    classes.Action("Потрогать землю", function = lambda: TakeDamage(100)),
-    classes.Action("Идти дальше", function = MoveOn),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    classes.Event("земля бурлит от дыма, приглядевшись вы замечаете что стоите на упавшем метеорите",
+    screen= imgs.MV_valley_3,
+    backColor=Colors.BLACK,
+    textColor = Colors.RED,
+    curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Взять остывший камень под ногами",icon= imgs.circle, backColor= Colors.DARK_RED, textColor = Colors.WHITE, function = lambda: lambda: TakeItem(vars.ItemList[vars.ItemID.MeteoritePiece], 1)),
+    classes.Action("Потрогать землю",icon= imgs.circle, backColor= Colors.DARK_RED, textColor = Colors.WHITE, function = lambda: lambda: MinorEvent(TakeDamage(100), "Назад",screen = imgs.none, funcion= ReturnToJourney)),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
+    classes.Action("Пойти в другую сторону", icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("вы замечаете чью-то протоптанную тропинку",
-                backColor=Colors.DARK_GREEN,
+                screen= imgs.F_forest,
+                backColor=Colors.BLACK,
                 textColor = Colors.GREEN,
                 curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action("Магазин", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowStore),
-    classes.Action("Идти по тропинке",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
-    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Идти по тропинке",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
+    classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
 ]
 
 FOREST_BOSS_EVENTS =[
-    classes.Event("на вашем пути появилась огромная тварь",textColor = Colors.RED , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action("Идти дальше", function = lambda: SetEvent(EventID.StartFight)),
+    classes.Event("на вашем пути появилась огромная тварь",
+                screen= imgs.F_possibleFight,
+                backColor=Colors.BLACK,
+                textColor = Colors.GREEN ,
+                curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: lambda: SetEvent(EventID.StartFight)),
     ]),
-    classes.Event("вы слышите оглушающий рев, осмотревшись вы видите его",textColor = Colors.RED , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
-    classes.Action("Статы врага", function = ShowEnemyStats),
+    classes.Event("вы слышите оглушающий рев, осмотревшись вы видите его",
+                screen= imgs.F_fight,
+                backColor=Colors.BLACK,
+                textColor = Colors.RED,
+                curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action(f'Атаковать врага',icon= imgs.attack, backColor= Colors.ORANGE, textColor = Colors.DARK_RED, function = lambda: Attack),
+    classes.Action("Статы врага",icon= imgs.enemyStats, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
+    classes.Action("Сбежать",icon= imgs.arrowLeft, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
     ]),
-    classes.Event(f'Босс готовится нанести удар',textColor = Colors.RED , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
-    classes.Action("Статы врага", function = ShowEnemyStats),
+    classes.Event(f'Босс готовится нанести удар',
+                screen= imgs.F_fight,
+                backColor=Colors.BLACK,
+                textColor = Colors.RED,
+                curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action(f'Атаковать врага',icon= imgs.attack, backColor= Colors.ORANGE, textColor = Colors.DARK_RED, function = lambda: Attack),
+    classes.Action("Статы врага",icon= imgs.enemyStats, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
+    classes.Action("Сбежать",icon= imgs.arrowLeft, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
     ]),
 ] 
 
-
+'''
 
 CASTLE_EVENTS = [
     classes.Event("в глубине коридора виден чей то силуэт",textColor = Colors.YELLOW , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action("Идти дальше",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: StartFight),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
+    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("вы слышите чье-то рычание впереди, осмотревшись вы видите врага",textColor = Colors.RED , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     classes.Action("Сбежать", function = TryRunAway),
     ]),
     classes.Event(f'враг готовится нанести удар',textColor = Colors.RED , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     classes.Action("Сбежать", function = TryRunAway),
     ]),
     classes.Event("в замешательстве вы пришли в огромный зал", textColor = Colors.YELLOW , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Осмотреть", function = lambda: input("Осмотревшись вы увидели табличку (Зал Церемоний)\nДалее...")),
     classes.Action("Идти дальше", function = MoveOn),
     classes.Action("Пойти в другой коридор", function = GoOtherWay),
     ]),
     classes.Event("вы идете по корридору и замечаете странную плиту под ногами",textColor = Colors.YELLOW , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Идти дальше", function = lambda: TakeDamage(hit=25)),
     classes.Action("обойти", function = GoOtherWay),
     ]),
     classes.Event("блукая вы пришли в зал с длинными столами в ряд", textColor = Colors.YELLOW , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Осмотреть", function = lambda: input("Осмотревшись вы понимаете, вероятно это столовая\nДалее...")),
     classes.Action("Идти дальше", function = MoveOn),
     classes.Action("Пойти в другой коридор", function = GoOtherWay),
     ]),
     classes.Event("вы пришли в длинный корридор в конце которого стоит сундук",textColor = Colors.YELLOW , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Осмотреть Коридор", function = lambda: input("длинный величественный коридор с высокими потолками, с развешанными королевскими флагами по стенам\nДалее...")),
     classes.Action("Открыть Сундук", function = lambda: TakeRandomItem(vars.TIER2_CHEST)),
     classes.Action("Идти дальше", function = MoveOn),
     classes.Action("Пойти в другой корридор", function = GoOtherWay),
     ]),
     classes.Event("кажеться вы заблудились в однообразных коридорах но наткнулись на зал с колоннами", textColor = Colors.YELLOW , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Осмотреть", function = lambda: input("Осмотревшись вы выдите стоящих вдоль колонн рыцарей, кажеться это просто стенды\nДалее...")),
     classes.Action("Снять броню со стенда", function = lambda: TakeRandomItem(vars.TIER2_ARMOR_STAND)),
@@ -966,7 +1007,7 @@ CASTLE_EVENTS = [
     classes.Action("Пойти в другой коридор", function = GoOtherWay),
     ]),
     classes.Event("Вы пришли в библиотеку, перед собой вы видите шкаф с книгами", textColor = Colors.YELLOW , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Идти дальше", function = GoOtherWay),
     classes.Action(f'Читать "Искуство Битвы или пособие рыцаря"', function = lambda: input("бегло прочитав вы остановили свой взор на строчке 'не с каждым противником стоит сражаться, чем больше шанс врагу промазать, тем больше шанс вам сбежать '\nДалее...")),
@@ -975,7 +1016,7 @@ CASTLE_EVENTS = [
     classes.Action(f'Читать неизвестную книгу', function = lambda: input("Когда шаман Зрек падет, на землю камень упадет, ну а потом шаман придет, и снова станет он силен ***рные берега он разольет [обрывается]\nДалее...")),
     ]),
     classes.Event("вы снова пришли в какой-то из коридоров ведущий в 4 направления. Вы забыли откуда пришли", textColor = Colors.YELLOW , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Осмотреть", function = lambda: input("Осмотревшись вы увидели табличку (<<Столовая, Библиотека>>)\nДалее...")),
     classes.Action("Идти прямо", function = MoveOn),
@@ -984,7 +1025,7 @@ CASTLE_EVENTS = [
     classes.Action("Пойти в назад", function = GoOtherWay),
     ]),
     classes.Event("вы снова пришли в какой-то из коридоров ведущий в 4 направления. Вы забыли откуда пришли", textColor = Colors.YELLOW , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Осмотреть", function = lambda: input("Осмотревшись вы увидели табличку (<<Оружейная, Библиотека>>)\nДалее...")),
     classes.Action("Идти прямо", function = MoveOn),
@@ -993,7 +1034,7 @@ CASTLE_EVENTS = [
     classes.Action("Пойти в назад", function = GoOtherWay),
     ]),
     classes.Event("вы снова пришли в какой-то из коридоров ведущий в 4 направления. Вы забыли откуда пришли", textColor = Colors.YELLOW , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Осмотреть", function = lambda: input("Осмотревшись вы увидели табличку (<<Зал Церемоний, Хранилище>>)\nДалее...")),
     classes.Action("Идти прямо", function = MoveOn),
@@ -1006,16 +1047,16 @@ CASTLE_EVENTS = [
 
 CASTLE_BOSS_EVENTS =[
     classes.Event("Наконец вы пришли в тронный зал, но на троне воссидает уже измененый король",textColor = Colors.RED , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Идти дальше", function = lambda: SetEvent(EventID.StartFight)),
     ]),
     classes.Event("Вы видите как из спины короля торчат щупальца, а глаза его черны.Опоздали его уже не спасти",textColor = Colors.RED , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     ]),
     classes.Event(f'Король готовится нанести удар',textColor = Colors.RED , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     ]),
@@ -1025,59 +1066,59 @@ CASTLE_BOSS_EVENTS =[
 
 MOLTEN_VALLEY_EVENTS = [
     classes.Event("на в дыму виднеется чей то силуэт",textColor = Colors.RED , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action("Идти дальше",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: StartFight),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
+    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("вы слышите чье-то рычание впереди, осмотревшись вы видите врага",textColor = Colors.RED , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     classes.Action("Сбежать", function = TryRunAway),
     ]),
     classes.Event(f'враг готовится нанести удар',textColor = Colors.RED, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     classes.Action("Сбежать", function = TryRunAway),
     ]),
     classes.Event("вы бредете в завесе дыма на ощупь", textColor = Colors.RED, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Потрогать землю", function = lambda: TakeDamage(50)),
     classes.Action("Идти дальше", function = MoveOn),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("впереди слышен гейзер", textColor = Colors.RED, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Потрогать землю", function = lambda: TakeDamage(50)),
     classes.Action("Идти дальше", function = lambda: TakeDamage(hit=30)),
     classes.Action("обойти", function = GoOtherWay),
     ]),
     classes.Event("впереди слышен гейзер", textColor = Colors.RED, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Потрогать землю", function = lambda: TakeDamage(50)),
     classes.Action("Идти дальше", function = lambda: TakeDamage(hit=30)),
     classes.Action("обойти", function = GoOtherWay),
     ]),
     classes.Event("вы наконец пришли в остывшее место, где можно спокойно осмотреться",textColor = Colors.RED, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Взять остывший камень под ногами", function = lambda: TakeItem(vars.ItemList[vars.ItemID.MeteoritePiece], 1)),
     classes.Action("Осмотреться", function = lambda: input("вы замечаете дорогу из остывшей породы в гуще дыма в другой стороне")),
     classes.Action("Идти дальше", function = MoveOn),
     classes.Action("Пойти в другую сторону", function = lambda: SetEvent(EventID.ObsidianPath)),
     ]),
     classes.Event("вы идете по обсидиановой дороге, вокруг вас стены дыма", textColor = Colors.RED , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("подобрать все остывшие камни под ногами", function = lambda: TakeItem(vars.ItemList[vars.ItemID.MeteoritePiece], 3)),
     classes.Action("Идти по тропинке", function = MoveOn),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("перед вами лежит скелет путника",textColor = Colors.RED, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Осмотреть", function = lambda: TakeRandomItem(vars.TIER2_MOLTEN_CORPSE)),
     classes.Action("Идти дальше", function = MoveOn),
     classes.Action("Пойти в другую сторону", function = lambda: SetEvent(EventID.ObsidianPath)),
@@ -1086,16 +1127,16 @@ MOLTEN_VALLEY_EVENTS = [
 
 MOLTEN_VALLEY_BOSS_EVENTS =[
     classes.Event("перед вами огромный кратор",textColor = Colors.RED , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Спуститься", function = lambda: SetEvent(EventID.StartFight)),
     ]),
     classes.Event("в краторе спало нечто, рык пошелся по всей округе",textColor = Colors.RED , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     ]),
     classes.Event(f'Дракон пустошей раскрывает пасть',textColor = Colors.RED , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     ]),
@@ -1105,90 +1146,90 @@ MOLTEN_VALLEY_BOSS_EVENTS =[
 
 ICE_LAKE_EVENTS = [
     classes.Event("впереди в снежном тумане виднеется чей-то силуэт",textColor = Colors.CYAN , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action("Идти дальше",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: StartFight),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
+    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("вы слышите чье-то рычание впереди, осмотревшись вы видите врага",textColor = Colors.RED , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     classes.Action("Сбежать", function = TryRunAway),
     ]),
     classes.Event(f'враг готовится нанести удар',textColor = Colors.RED, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     classes.Action("Сбежать", function = TryRunAway),
     ]),
     classes.Event("поднялся сильный ветер, метель близко", textColor = Colors.CYAN, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Идти дальше", function = MoveOn),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("впереди магическая ловушка", textColor = Colors.CYAN, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Идти дальше", function = lambda: TakeDamage(hit=30)),
     classes.Action("обойти", function = GoOtherWay),
     ]),
     classes.Event("вы резко остановились впереди в сугробе блестает капкан", textColor = Colors.CYAN, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Идти дальше", function = lambda: TakeDamage(hit=30)),
     classes.Action("обойти", function = GoOtherWay),
     ]),
     classes.Event("вы видете перед собой ледяное дерево", textColor = Colors.CYAN , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Сорвать ледяные листья", function = lambda: TakeItem(vars.ItemList[vars.ItemID.IceCrystal], 4)),
     classes.Action("Идти дальше", function = MoveOn),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("под вашими ногами куча мелких осколков льда", textColor = Colors.CYAN , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("слепить в один кристал", function = lambda: TakeItem(vars.ItemList[vars.ItemID.IceCrystal], 1)),
     classes.Action("Идти дальше", function = MoveOn),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("перед вами лежит замороженный труп путника",textColor = Colors.CYAN, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Осмотреть", function = lambda: TakeRandomItem(vars.TIER2_FROZEN_CORPSE)),
     classes.Action("Идти дальше", function = MoveOn),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("вы нашли чей то горящий костер", textColor = Colors.YELLOW, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("согреться", function = lambda: KeepWarm(3)),
     classes.Action("Идти дальше", function = MoveOn),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("вы нашли чей то горящий костер", textColor = Colors.YELLOW, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("согреться", function = lambda: KeepWarm(3)),
     classes.Action("Идти дальше", function = MoveOn),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     
 ]
 
 ICE_LAKE_BOSS_EVENTS =[
     classes.Event("Вы пришли к ледяной крепости",textColor = Colors.RED , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Осмотреть", function = lambda: input("Возле ворот стоит статуя стража, сама крепость не такая уж большая")),
     classes.Action("Идти дальше", function = lambda: SetEvent(EventID.StartFight)),
     ]),
     classes.Event("Страж стоявший неподвижно вдруг зашевилился и пошагал в вашу сторону, поднялась метель",textColor = Colors.RED , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     ]),
     classes.Event(f'Страж замахиваеться',textColor = Colors.RED , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     ]),
@@ -1196,36 +1237,36 @@ ICE_LAKE_BOSS_EVENTS =[
 
 ICE_STRONGHOLD_EVENTS = [
     classes.Event("на в дыму виднеется чей то силуэт",textColor = Colors.RED , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action("Идти дальше",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: StartFight),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
+    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("вы слышите чье-то рычание впереди, осмотревшись вы видите врага",textColor = Colors.RED , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     classes.Action("Сбежать", function = TryRunAway),
     ]),
     classes.Event(f'враг готовится нанести удар',textColor = Colors.RED, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     classes.Action("Сбежать", function = TryRunAway),
     ]),
     classes.Event("вы прислушались. по крепости ходит гул метели снаружи", textColor = Colors.BLUE, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Идти дальше", function = MoveOn),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("вы резко остановились на полу странная плита", textColor = Colors.BLUE, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Идти дальше", function = lambda: TakeDamage(30)),
     classes.Action("обойти", function = GoOtherWay),
     ]),
     classes.Event("в замешательстве вы пришли в огромный зал", textColor = Colors.BLUE , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Осмотреть", function = lambda: input("Осмотревшись вы выдите стоящих вдоль колонн рыцарей, кажеться это просто стенды\nДалее...")),
     classes.Action("Снять броню со стенда", function = lambda: TakeRandomItem(vars.TIER3_FROZEN_ARMORY)),
@@ -1233,55 +1274,55 @@ ICE_STRONGHOLD_EVENTS = [
     classes.Action("Пойти в другой коридор", function = GoOtherWay),
     ]),
     classes.Event("вы пришли в длинный корридор в конце которого стоит сундук",textColor = Colors.BLUE , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Осмотреть Коридор", function = lambda: input("длинный узкий коридор в конце которого стоит сундук\nДалее...")),
     classes.Action("Открыть Сундук", function = lambda: TakeRandomItem(vars.TIER3_FROZEN_CHEST)),
     classes.Action("Идти дальше", function = MoveOn),
     classes.Action("Пойти в другой корридор", function = GoOtherWay),
     ]),
     classes.Event("блукая вы пришли в зал с длинными столами в ряд", textColor = Colors.BLUE , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Осмотреть", function = lambda: input("Осмотревшись вы понимаете, вероятно это столовая\nДалее...")),
     classes.Action("Идти дальше", function = MoveOn),
     classes.Action("Пойти в другой коридор", function = GoOtherWay),
     ]),
     classes.Event("перед вами лежит замороженный труп прислуги",textColor = Colors.BLUE, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Осмотреть", function = lambda: TakeRandomItem(vars.TIER2_FROZEN_CORPSE)),
     classes.Action("Идти дальше", function = MoveOn),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("вы нашли чей то горящий костер", textColor = Colors.YELLOW, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("согреться", function = lambda: KeepWarm(3)),
     classes.Action("Идти дальше", function = MoveOn),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("вы нашли чей то горящий костер", textColor = Colors.YELLOW, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("согреться", function = lambda: KeepWarm(3)),
     classes.Action("Идти дальше", function = MoveOn),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     
 ]
 
 ICE_STRONGHOLD_BOSS_EVENTS =[
     classes.Event("вы пришли к трону Графа, сам же покровитель воссидает на троне и смотрит на вас",textColor = Colors.RED , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Осмотреть", function = lambda: input("Граф выглядит вполне здоровым, сейчас он под чарами магии")),
     classes.Action("Идти дальше", function = lambda: SetEvent(EventID.StartFight)),
     ]),
     classes.Event(f'Граф:"Всех пришедших чужаков сдесь ждет смерть!"',textColor = Colors.CYAN , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     ]),
     classes.Event(f'Граф нашептывает заклинания',textColor = Colors.RED , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     ]),
@@ -1291,89 +1332,89 @@ ICE_STRONGHOLD_BOSS_EVENTS =[
 
 ETHERIAL_SHORES_EVENTS = [
     classes.Event("впереди в пузырчатой дымке виднеется чей-то силуэт",textColor = Colors.PINK , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action("Идти дальше",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: StartFight),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
+    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("вы слышите чье-то рычание впереди, осмотревшись вы видите врага",textColor = Colors.RED , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     classes.Action("Сбежать", function = TryRunAway),
     ]),
     classes.Event(f'враг готовится нанести удар',textColor = Colors.RED, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     classes.Action("Сбежать", function = TryRunAway),
     ]),
     classes.Event("вы пришли в очень странное место, как в сказках. все какое то... волшебное", textColor = Colors.PINK, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Идти дальше", function = MoveOn),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("впереди вы замечаете нору в земле из которой торчат щупальца", textColor = Colors.PINK, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Осмотреться", function = lambda: input("из норы в большом кол-ве летят пузырьки, щупальца извиваясь лопают их")),
     classes.Action("Идти дальше", function = lambda: TakeDamage(hit=80)),
     classes.Action("обойти", function = GoOtherWay),
     ]),
     classes.Event("вы видете перед собой искаженное эфирное дерево", textColor = Colors.PINK , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Осмотреться", function = lambda: input("дерево очень странное, растет верх корнями и кроной уходит в густую эфирную почву")),
     classes.Action("Сорвать кору", function = lambda: TakeItem(vars.ItemList[vars.ItemID.EtherealClot], 4)),
     classes.Action("Идти дальше", function = MoveOn),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("вы остановились. Вокруг вас летают сгустки эфира", textColor = Colors.PINK , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Осмотреться", function = lambda: input("все вокруг в пузырчетой розовой пене")),
     classes.Action("Собрать все", function = lambda: TakeItem(vars.ItemList[vars.ItemID.EtherealClot], 4)),
     classes.Action("Идти дальше", function = MoveOn),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("вы остановились. Под ногами из земли появляется слизистый мешочек", textColor = Colors.PINK , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Осмотреться", function = lambda: input("Он не выглядит опасным, судя по всему он полон эфирной пеной")),
     classes.Action("Потрогать", function = lambda: TakeRandomItem(vars.TIER4_ETHERIAL_BAG)),
     classes.Action("Идти дальше", function = MoveOn),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("вы остановились. Под ногами из земли появляется слизистый мешочек", textColor = Colors.PINK , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин", function = ShowStore),
     classes.Action("Осмотреться", function = lambda: input("Он не выглядит опасным, судя по всему внутри что-то есть")),
     classes.Action("Потрогать", function = lambda: TakeRandomItem(vars.TIER4_ETHERIAL_COMBAT_BAG)),
     classes.Action("Идти дальше", function = MoveOn),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("перед вами лежит искаженный труп путника",textColor = Colors.PINK, curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Осмотреть", function = lambda: SetEvent(EventID.EtherialCombatBag)),
     classes.Action("Идти дальше", function = MoveOn),
-    classes.Action("Пойти в другую сторону", function = GoOtherWay),
+    classes.Action("Пойти в другую сторону",backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
 
 ]
 
 ETHERIAL_SHORES_BOSS_EVENTS =[
     classes.Event("Вы пришли к эфирному холму с огромной норой",textColor = Colors.PINK , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Осмотреть это", function = lambda: input("Похпже на вход в пещеру")),
     classes.Action("Идти в нору", function = lambda: SetEvent(EventID.StartFight)),
     ]),
     classes.Event("перед вами стоит старик",textColor = Colors.PINK , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     ]),
     classes.Event(f'Старик использует магию и из пола выползают щупальца корней',textColor = Colors.RED , curentActions=[
-    classes.Action("Инвентарь", backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action(f'Атаковать врага',backColor= Colors.RED, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага", function = ShowEnemyStats),
     ]),
@@ -1439,7 +1480,9 @@ class Game(Frame):
         # Иконки кнопок
         self.btnIcons = [PhotoImage(file=imgs.circle)]
 
-        
+        self.UpdateBtn =  Button(text="Update",bg=Colors.BLUE,font =('ImesNewRoman',18,'bold'),fg = Colors.WHITE, command= lambda: self.UpdateAll()).pack(side= TOP)
+
+
         self.StartScreen()
 
     def StartScreen(self):

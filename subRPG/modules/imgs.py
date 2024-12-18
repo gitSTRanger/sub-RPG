@@ -16,7 +16,7 @@ arrowUp = "Images/GUI/arrowUp.png"
 arrowLeft = "Images/GUI/arrowLeft.png"
 
 
-# S P E C I A L    S C R E A N S
+
 
 inventoryIcon=  "Images/GUI/inventory.png"
 storeIcon =  "Images/GUI/store.png"
@@ -87,6 +87,9 @@ store_1 =  "Images/screens/store_1.png"
 startScreen =  "Images/screens/startScreen.png"
 startScreenTitle = "Images/screens/startScreenTitle.png"
 
+gameOverScreen = "Images/screens/gameOver.png"
+
+# FOREST
 F_forest =   "Images/screens/FOREST/forest.png"
 F_forest_1 =   "Images/screens/FOREST/forest_1.png"
 F_forest_2 =   "Images/screens/FOREST/forest_2.png"
@@ -95,7 +98,20 @@ F_fight = "Images/screens/FOREST/fight.png"
 F_well =   "Images/screens/FOREST/well.png"
 F_village =   "Images/screens/FOREST/village.png"
 
+F_fork =   "Images/screens/FOREST/fork.png"
 
+# WILD FOREST
+WF_bearTrap =   "Images/screens/WILD/bearTrap.png"
+WF_trap =   "Images/screens/WILD/trap.png"
+
+# SPIDER FOREST
+SF_forest =   "Images/screens/SPIDER/forest.png"
+SF_forest_1 =   "Images/screens/SPIDER/forest_1.png"
+SF_lamp =   "Images/screens/SPIDER/lamp.png"
+SF_corpse =   "Images/screens/SPIDER/corpse.png"
+SF_corpse_1 =   "Images/screens/SPIDER/corpse_1.png"
+
+# MOLTEN VALLEY
 MV_valley =    "Images/screens/MOLTEN/valley.png"
 MV_valley_1 =    "Images/screens/MOLTEN/valley_1.png"
 MV_valley_2 =    "Images/screens/MOLTEN/valley_2.png"

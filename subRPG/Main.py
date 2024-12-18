@@ -485,8 +485,8 @@ def TakeDamage(hit):
         vars.ARMOR -= int(vars.curEnemy.damage - damage)
         
     vars.HP -= damage
-    #MinorEvent(f'вы получили {damage} урона', "Далее", ReturnToJourney)
-    #input("Далее...")
+
+    
     return f'вы получили {damage} урона'
 
 
@@ -544,8 +544,10 @@ def CheckLocation():
     if locvars.LOCATION == locvars.Locations.Forest:
         vars.StoreAssortment = vars.ASSORTMENT_DEFAULT
         Elist = FOREST_EVENTS
-        if vars.actStep % 20 == 0:
-            SetLocation(events = WILD_FOREST_EVENTS, locInt = locvars.Locations.WildForest)
+        if vars.actStep % 21 == 0:
+            #SetLocation(events = WILD_FOREST_EVENTS, locInt = locvars.Locations.WildForest)
+            Elist = deepcopy(FOREST_FORK_EVENTS)
+            locvars.Scene = deepcopy(Elist[0])
 
     # Д И К И Й   Л Е С
     elif locvars.LOCATION == locvars.Locations.WildForest:
@@ -671,7 +673,11 @@ def MinorEvent(eventName, actionName, screen, funcion):
                 classes.Action(f'{actionName}',icon= imgs.ring, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: funcion),
                 ])
     vars.step += 1
+
     window.UpdateScneneGUI("w")
+
+        
+
     
 
 def ReturnToJourney():
@@ -881,7 +887,7 @@ WILD_FOREST_EVENTS = [
     classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("вы замечаете растяжку", 
-    screen= imgs.F_forest_2,
+    screen= imgs.WF_trap,
     backColor=Colors.BLACK,
     textColor = Colors.GREEN,
     curentActions=[
@@ -890,7 +896,7 @@ WILD_FOREST_EVENTS = [
     classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
     classes.Event("вы резко остановились впереди в прелой листве блестает капкан",
-    screen= imgs.F_forest_2,
+    screen= imgs.WF_bearTrap,
     backColor=Colors.BLACK,
     textColor = Colors.GREEN,
     curentActions=[
@@ -919,6 +925,8 @@ WILD_FOREST_EVENTS = [
     classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
 ]
+
+
 
 FOREST_BOSS_EVENTS =[
     classes.Event("на вашем пути появилась огромная тварь",
@@ -1434,6 +1442,17 @@ ETHERIAL_SHORES_BOSS_EVENTS =[
 
 Elist: list[classes.Event] = deepcopy(FOREST_EVENTS) # текущие события (сцены)
 
+
+FOREST_FORK_EVENTS = [classes.Event("вы пришли к табличке с направлениями",
+        screen= imgs.F_fork,
+        backColor=Colors.BLACK,
+        textColor = Colors.GREEN,
+    curentActions=[
+    classes.Action(f'Идти в "Дикий Лес"',icon= imgs.arrowUp, backColor= Colors.DARK_OLIVE, textColor = Colors.PEACH, function = lambda: lambda: SetLocation(events = WILD_FOREST_EVENTS, locInt = locvars.Locations.WildForest)),
+    classes.Action(f'Идти в "Паучий лес" (пока не доступно)',icon= imgs.arrowUp, backColor= Colors.DARK_PINK, textColor = Colors.DARK_OLIVE, function = lambda: lambda: SetLocation(events = WILD_FOREST_EVENTS, locInt = locvars.Locations.WildForest)),
+    ])]
+
+
 '''
 FORK_EVENTS = [classes.Event("вы пришли к тому что охраняло чудовище к табличке с направлениями",textColor = Colors.YELLOW , curentActions=[
     classes.Action(f'Идти в (Замок)', function = lambda: SetLocation(events = CASTLE_EVENTS, locInt = locvars.Locations.Castle)),
@@ -1480,7 +1499,7 @@ class Game(Frame):
         # Иконки кнопок
         self.btnIcons = [PhotoImage(file=imgs.circle)]
 
-        self.UpdateBtn =  Button(text="Update",bg=Colors.BLUE,font =('ImesNewRoman',18,'bold'),fg = Colors.WHITE, command= lambda: self.UpdateAll()).pack(side= TOP)
+        #self.UpdateBtn =  Button(text="Update",bg=Colors.BLUE,font =('ImesNewRoman',18,'bold'),fg = Colors.WHITE, command= lambda: self.UpdateAll()).pack(side= TOP)
 
 
         self.StartScreen()
@@ -1527,6 +1546,10 @@ class Game(Frame):
 
     def UpdateAll(self):
         time.sleep(0.03)
+
+        if vars.HP <= 0:
+            MinorEvent(f'Игра Окончена\nВаше здоровье {vars.HP}', "Заново",screen= imgs.gameOverScreen, funcion = window.StartScreen)
+
         CheckLocation()
         self.UpdateScneneGUI('w')
 
@@ -1534,10 +1557,7 @@ class Game(Frame):
                         vars.ARMOR = 0
 
 
-        if vars.HP <= 0:
-            
-            print(f'{Colors.RED}Игра Окончена \n{Colors.WHITE}')
-            print("Ваше здоровье =", vars.HP)
+        
 
     def OpenCounterWindow(self, screen):
         self.PrintStats()
@@ -1609,7 +1629,8 @@ class Game(Frame):
     
       
     def AboutGame(self):
-        textAbout = "Порт игры subRPG на Tkinter\nкроме переноса всего контента с оригинала, игра получит\nряд нового контента, что в значительной мере расширит игру"
+        #"Порт игры subRPG на Tkinter\nкроме переноса всего контента с оригинала, игра получит\nряд нового контента, что в значительной мере расширит игру"
+        textAbout = "Порт игры subRPG на Tkinter\nДоступны первые 2 локации Лес, Дикий лес\nПеренесен первый босс, и добавлена новая развилка\nНа будующую новую локацию\nПеренесены все предметы и торговля(улучшенная)\nИзменен баланс стоимости"
 
         locvars.Scene = classes.Event(textAbout, 
                                     screen= imgs.startScreen,
@@ -1621,7 +1642,7 @@ class Game(Frame):
         
         self.UpdateScneneGUI("c")
 
-
+    
     
 
 

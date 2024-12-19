@@ -460,6 +460,9 @@ def StartFight():
     elif locvars.LOCATION == locvars.Locations.WildForest:
         startRange = 0
         endRange = vars.EnemyID.Troll
+    elif locvars.LOCATION == locvars.Locations.SpiderForest:
+        startRange = vars.EnemyID.SpidersSwarm
+        endRange = vars.EnemyID.AdultSpider
     elif locvars.LOCATION == locvars.Locations.Castle:
         startRange = vars.EnemyID.SkeletonKnight
         endRange = vars.EnemyID.StoneGargoyle
@@ -561,7 +564,21 @@ def CheckLocation():
             
 
         #if vars.actStep == 32:
-                #TakeItem(vars.ItemList[vars.ItemID.antiFreezePotion], 1)
+                
+                #Elist = FORK_EVENTS
+
+     # П А У Ч И Й    Л Е С
+    elif locvars.LOCATION == locvars.Locations.SpiderForest:
+        vars.StoreAssortment = vars.ASSORTMENT_SPIDER
+        Elist = SPIDER_FOREST_EVENTS
+        
+        if vars.actStep % 41 == 0:
+            vars.curEnemy = deepcopy(vars.Bosses[vars.BossID.SpiderQueen])
+            Elist = SPIDER_BOSS_EVENTS
+            locvars.Scene = deepcopy(Elist[EventID.PossibleFight])
+            
+
+        #if vars.actStep == 32:
                 #Elist = FORK_EVENTS
     '''
     # З А М О К
@@ -600,13 +617,14 @@ def CheckLocation():
             vars.StoreAssortment = vars.ASSORTMENT_ICE
             
 
-            if vars.actStep % 15 == 0:
+            if vars.actStep % 45 == 0:
                 vars.curEnemy = deepcopy(vars.Bosses[vars.BossID.IceGuardian])
                 Elist = ICE_LAKE_BOSS_EVENTS
                 locvars.Scene = deepcopy(Elist[EventID.PossibleFight])
                 
 
             if vars.actStep == 47:
+                TakeItem(vars.ItemList[vars.ItemID.antiFreezePotion], 1)
                 SetLocation(ICE_STRONGHOLD_EVENTS, locvars.Locations.IceStronghold)
     # Л Е Д Я Н А Я    К Р Е П О С Т Ь     
     elif locvars.LOCATION == locvars.Locations.IceStronghold:
@@ -958,6 +976,132 @@ FOREST_BOSS_EVENTS =[
     classes.Action("Сбежать",icon= imgs.arrowLeft, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
     ]),
 ] 
+
+
+
+
+
+SPIDER_FOREST_EVENTS = [
+     classes.Event("чей-то силуэт блеснул в корнях деревьев\n вы чувствуете опасность",
+                screen= imgs.SF_possibleFight,
+                backColor=Colors.BLACK,
+                textColor = Colors.LIGHT_GREEN ,
+                curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda: StartFight),
+    classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function =lambda: GoOtherWay),
+    ]),
+    classes.Event("вы слышите чье-то стрекотание, осмотревшись вы видите\n гигантского паука",
+                screen= imgs.F_fight,
+                backColor=Colors.BLACK,
+                textColor = Colors.RED,
+                curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action(f'Атаковать врага',icon= imgs.attack, backColor= Colors.ORANGE, textColor = Colors.DARK_RED, function = lambda: Attack),
+    classes.Action("Статы врага",icon= imgs.enemyStats, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
+    classes.Action("Сбежать",icon= imgs.arrowLeft, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
+    ]),
+    classes.Event(f'враг готовится нанести удар',
+                screen= imgs.F_fight,
+                backColor=Colors.BLACK,
+                textColor = Colors.RED,
+                curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action(f'Атаковать врага',icon= imgs.attack, backColor= Colors.ORANGE, textColor = Colors.DARK_RED, function = lambda: Attack),
+    classes.Action("Статы врага",icon= imgs.enemyStats, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
+    classes.Action("Сбежать",icon= imgs.arrowLeft, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
+    ]),
+    classes.Event("вы спустились к корням деревьев, запах дурманит вас",
+                screen= imgs.SF_forest,
+                backColor=Colors.BLACK,
+                textColor = Colors.LIGHT_GREEN,
+                curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
+    classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
+    ]),
+    classes.Event("вы посмотрели вверх, кроны слижком высоко, \nа с воздухом что-то не так",
+                screen= imgs.SF_forest_1,
+                backColor=Colors.BLACK,
+                textColor = Colors.LIGHT_GREEN,
+                curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
+    classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
+    ]),
+
+    classes.Event("вы пришли к странной лампе, \nона будоражит вас",
+                screen= imgs.SF_lamp,
+                backColor=Colors.BLACK,
+                textColor = Colors.GOLDEN,
+                curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
+    classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
+    ]),
+
+     classes.Event("вы пришли в паучье гнездо \nперед вами замотанный труп путника",
+    screen= imgs.SF_corpse,
+    backColor=Colors.BLACK,
+    textColor = Colors.DARK_PINK,
+    curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Осмотреть",icon= imgs.look, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: lambda: MinorEvent("судя по виду трупу несколько дней, \nрядом лежит рюкзак с вещами", "Назад",screen = imgs.none, funcion= ReturnToJourney)),
+    classes.Action("Обыскать",icon= imgs.circle, backColor= Colors.GRAY, textColor = Colors.WHITE, function = lambda: lambda: TakeRandomItem(vars.TIER1_VILLAGE_items)),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
+    classes.Action("Пойти в другую сторону", icon= imgs.arrowLeft, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
+    ]),
+
+
+    classes.Event("вы пришли в паучье гнездо, перед вами коконы",
+    screen= imgs.SF_corpse_1,
+    backColor=Colors.BLACK,
+    textColor = Colors.DARK_PINK,
+    curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Осмотреть",icon= imgs.look, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: lambda: MinorEvent("некоторые коконы напоминают людей", "Назад",screen = imgs.none, funcion= ReturnToJourney)),
+    classes.Action("Обыскать",icon= imgs.circle, backColor= Colors.GRAY, textColor = Colors.WHITE, function = lambda: lambda: TakeRandomItem(vars.TIER1_VILLAGE_items)),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
+    classes.Action("Пойти в другую сторону", icon= imgs.arrowLeft, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
+    ]),
+]
+
+
+
+SPIDER_BOSS_EVENTS =[
+    classes.Event("вы набрели на логово твари",
+                screen= imgs.SF_forest,
+                backColor=Colors.BLACK,
+                textColor = Colors.RED ,
+                curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: lambda: SetEvent(EventID.StartFight)),
+    ]),
+    classes.Event("вы слышите пронзающий срекот, осмотревшись вы видите её",
+                screen= imgs.F_fight,
+                backColor=Colors.BLACK,
+                textColor = Colors.RED,
+                curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action(f'Атаковать врага',icon= imgs.attack, backColor= Colors.ORANGE, textColor = Colors.DARK_RED, function = lambda: Attack),
+    classes.Action("Статы врага",icon= imgs.enemyStats, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
+    classes.Action("Сбежать",icon= imgs.arrowLeft, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
+    ]),
+    classes.Event(f'Королева пауков готовится нанести удар',
+                screen= imgs.F_fight,
+                backColor=Colors.BLACK,
+                textColor = Colors.RED,
+                curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action(f'Атаковать врага',icon= imgs.attack, backColor= Colors.ORANGE, textColor = Colors.DARK_RED, function = lambda: Attack),
+    classes.Action("Статы врага",icon= imgs.enemyStats, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
+    classes.Action("Сбежать",icon= imgs.arrowLeft, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
+    ]),
+] 
+
+
+
+
 
 '''
 
@@ -1449,7 +1593,7 @@ FOREST_FORK_EVENTS = [classes.Event("вы пришли к табличке с н
         textColor = Colors.GREEN,
     curentActions=[
     classes.Action(f'Идти в "Дикий Лес"',icon= imgs.arrowUp, backColor= Colors.DARK_OLIVE, textColor = Colors.PEACH, function = lambda: lambda: SetLocation(events = WILD_FOREST_EVENTS, locInt = locvars.Locations.WildForest)),
-    classes.Action(f'Идти в "Паучий лес" (пока не доступно)',icon= imgs.arrowUp, backColor= Colors.DARK_PINK, textColor = Colors.DARK_OLIVE, function = lambda: lambda: SetLocation(events = WILD_FOREST_EVENTS, locInt = locvars.Locations.WildForest)),
+    classes.Action(f'Идти в "Паучий лес"',icon= imgs.arrowUp, backColor= Colors.DARK_PINK, textColor = Colors.DARK_OLIVE, function = lambda: lambda: SetLocation(events = WILD_FOREST_EVENTS, locInt = locvars.Locations.SpiderForest)),
     ])]
 
 
@@ -1519,6 +1663,7 @@ class Game(Frame):
 
         #Развилка
         #SetLocation(WILD_FOREST_EVENTS, locvars.Locations.WildForest)
+        #locvars.LOCATION = locvars.Locations.SpiderForest
         #vars.actStep = 32
 
 
@@ -1547,8 +1692,7 @@ class Game(Frame):
     def UpdateAll(self):
         time.sleep(0.03)
 
-        if vars.HP <= 0:
-            MinorEvent(f'Игра Окончена\nВаше здоровье {vars.HP}', "Заново",screen= imgs.gameOverScreen, funcion = window.StartScreen)
+        self.CheckGameOver()
 
         CheckLocation()
         self.UpdateScneneGUI('w')
@@ -1600,6 +1744,12 @@ class Game(Frame):
         del self.btnIcons[:]  
         del self.TK_Scene.curentActionsBar[:]
 
+        
+
+    def CheckGameOver(self):
+        if vars.HP <= 0:
+            MinorEvent(f'Игра Окончена\nВаше здоровье {vars.HP}', "Заново",screen= imgs.gameOverScreen, funcion = window.StartScreen)
+
     def PrintStats(self):
         vars.statsLine = f'step:{vars.step}    act:{vars.actStep}'
         vars.statsLine += f'\nЛокация: {locvars.stringLocation[locvars.LOCATION]}'
@@ -1630,7 +1780,7 @@ class Game(Frame):
       
     def AboutGame(self):
         #"Порт игры subRPG на Tkinter\nкроме переноса всего контента с оригинала, игра получит\nряд нового контента, что в значительной мере расширит игру"
-        textAbout = "Порт игры subRPG на Tkinter\nДоступны первые 2 локации Лес, Дикий лес\nПеренесен первый босс, и добавлена новая развилка\nНа будующую новую локацию\nПеренесены все предметы и торговля(улучшенная)\nИзменен баланс стоимости"
+        textAbout = "Порт игры subRPG на Tkinter\nДоступны первые 2 локации Лес, Дикий лес\n и одна новая (эксклюзив)Паучий Лес\nПеренесен первый босс, и добавлена новая развилка\nНа будующую новую локацию\nПеренесены все предметы и торговля(улучшенная)\nИзменен баланс стоимости"
 
         locvars.Scene = classes.Event(textAbout, 
                                     screen= imgs.startScreen,

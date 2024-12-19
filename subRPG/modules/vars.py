@@ -165,42 +165,49 @@ Enemies = [
     classes.Enemy("Вурдолак", HP = 35, damage = 5, missChance = 30), # 5
     classes.Enemy("Слепой Гуль", HP = 40, damage = 20, missChance = 50), # 6
     classes.Enemy("змеи-древ", HP = 60, damage = 10, missChance = 20), # 7
-     classes.Enemy("Тролль", HP = 100, damage = 20, missChance = 30), # 8
+    classes.Enemy("Тролль", HP = 100, damage = 20, missChance = 30), # 8
+    # Паучий Лес
+    classes.Enemy("рой пауков", HP = 30, damage = 40, missChance = 0), # 9
+    classes.Enemy("малый паук", HP = 35, damage = 20, missChance = 15), # 10
+    classes.Enemy("Гигантский паук", HP = 40, damage = 30, missChance = 20), # 11
+    
     # Замок
-    classes.Enemy("Скелет Рыцарь", HP = 50, damage = 10, missChance = 20), # 9
-    classes.Enemy("Рыцарь Герой", HP = 50, damage = 20, missChance = 15), # 10
-    classes.Enemy("Бронированный Скелет Рыцарь", HP = 65, damage = 10, missChance = 25), # 11
-    classes.Enemy("Одержимый Королевский Страж", HP = 40, damage = 30, missChance = 10), # 12
-    classes.Enemy("Каменная Горгулья", HP = 80, damage = 30, missChance = 40), # 13
+    classes.Enemy("Скелет Рыцарь", HP = 50, damage = 10, missChance = 20), # 12
+    classes.Enemy("Рыцарь Герой", HP = 50, damage = 20, missChance = 15), # 13
+    classes.Enemy("Бронированный Скелет Рыцарь", HP = 65, damage = 10, missChance = 25), # 14
+    classes.Enemy("Одержимый Королевский Страж", HP = 40, damage = 30, missChance = 10), # 15
+    classes.Enemy("Каменная Горгулья", HP = 80, damage = 30, missChance = 40), # 16
     # Огонь
-    classes.Enemy("Огненная Бестия", HP = 65, damage = 25, missChance = 20), # 14
-    classes.Enemy("Пламенная Елементаль", HP = 60, damage = 20, missChance = 15), # 15
-    classes.Enemy("Расплавленный Рыцарь", HP = 70, damage = 30, missChance = 30), # 16
-    classes.Enemy("Обсидиановый Страж", HP = 70, damage = 30, missChance = 30), # 17
+    classes.Enemy("Огненная Бестия", HP = 65, damage = 25, missChance = 20), # 17
+    classes.Enemy("Пламенная Елементаль", HP = 60, damage = 20, missChance = 15), # 18
+    classes.Enemy("Расплавленный Рыцарь", HP = 70, damage = 30, missChance = 30), # 19
+    classes.Enemy("Обсидиановый Страж", HP = 70, damage = 30, missChance = 30), # 20
     # Лед
-    classes.Enemy("Замороженный скелет", HP = 40, damage = 15, missChance = 20), # 18
-    classes.Enemy("Ледяной Елементаль", HP = 60, damage = 40, missChance = 60), # 19
-    classes.Enemy("Снеговик", HP = 30, damage = 15, missChance = 15), # 20
-    classes.Enemy("Ледовик", HP = 50, damage = 20, missChance = 20), # 21
+    classes.Enemy("Замороженный скелет", HP = 40, damage = 15, missChance = 20), # 21
+    classes.Enemy("Ледяной Елементаль", HP = 60, damage = 40, missChance = 60), # 22
+    classes.Enemy("Снеговик", HP = 30, damage = 15, missChance = 15), # 23
+    classes.Enemy("Ледовик", HP = 50, damage = 20, missChance = 20), # 24
     # Эфир
-    classes.Enemy("Жидкая слизь", HP = 100, damage = 35, missChance = 20), # 22
-    classes.Enemy("Эфирная Елементаль", HP = 90, damage = 40, missChance = 60), # 23
-    classes.Enemy("Эфирная фея", HP = 85, damage = 30, missChance = 15), # 24
-    classes.Enemy("Эфирная Хватайка", HP = 100, damage = 60, missChance = 60), # 25
-    classes.Enemy("Радужная Хватайка", HP = 120, damage = 80, missChance = 70), # 26
+    classes.Enemy("Жидкая слизь", HP = 100, damage = 35, missChance = 20), # 25
+    classes.Enemy("Эфирная Елементаль", HP = 90, damage = 40, missChance = 60), # 26
+    classes.Enemy("Эфирная фея", HP = 85, damage = 30, missChance = 15), # 27
+    classes.Enemy("Эфирная Хватайка", HP = 100, damage = 60, missChance = 60), # 28
+    classes.Enemy("Радужная Хватайка", HP = 120, damage = 80, missChance = 70), # 29
 ]
 
 Bosses = [
     classes.Enemy("Гигантский Троль Людоед", HP = 120, damage = 35, missChance = 20), # 0
 
-    classes.Enemy("Король Талунг", HP = 300, damage = 30, missChance = 10), # 1
+    classes.Enemy("Арахнеус Императрикс", HP = 200, damage = 45, missChance = 40), # 1
 
-    classes.Enemy("Дракон Пустошей", HP = 200, damage = 45, missChance = 10), # 2
+    classes.Enemy("Король Талунг", HP = 300, damage = 30, missChance = 10), # 2
 
-    classes.Enemy("Ледяной Страж", HP = 180, damage = 35, missChance = 30), # 3
-    classes.Enemy("Ледяной Граф", HP = 400, damage = 30, missChance = 30), # 4
+    classes.Enemy("Дракон Пустошей", HP = 200, damage = 45, missChance = 10), # 3
 
-    classes.Enemy("Зрек Перерожденный", HP = 1000, damage = 30, missChance = 20), # 5
+    classes.Enemy("Ледяной Страж", HP = 180, damage = 35, missChance = 30), # 4
+    classes.Enemy("Ледяной Граф", HP = 400, damage = 30, missChance = 30), # 5
+
+    classes.Enemy("Зрек Перерожденный", HP = 1000, damage = 30, missChance = 20), # 6
 ]
 
 class EnemyID(IntEnum):
@@ -214,36 +221,41 @@ class EnemyID(IntEnum):
     snakeThree = 7
     Troll = 8
     
-
-    SkeletonKnight = 9
-    KinghtHero = 10
-    ArmoredSkeletonKnight = 11
-    PossessedRoyalGuard = 12
-    StoneGargoyle = 13
-
-    FireBeast = 14
-    FlameElemental = 15
-    MoltenKnight = 16
-    ObsidianGuard = 17
-
-    FrostSkeleton = 18
-    IceElemental = 19
-    Snowman = 20
-    Iceman = 21
+    SpidersSwarm = 9
+    YoungSpider = 10
+    AdultSpider = 11
     
-    LiquidSlime = 22
-    EtherealElemental = 23
-    EtherealFairy = 24
-    EtherealGrabber = 25
-    RainbowGrabber = 26
+
+    SkeletonKnight = 12
+    KinghtHero = 13
+    ArmoredSkeletonKnight = 14
+    PossessedRoyalGuard = 15
+    StoneGargoyle = 16
+
+    FireBeast = 17
+    FlameElemental = 18
+    MoltenKnight = 19
+    ObsidianGuard = 20
+
+    FrostSkeleton = 21
+    IceElemental = 22
+    Snowman = 23
+    Iceman = 24
+    
+    LiquidSlime = 25
+    EtherealElemental = 26
+    EtherealFairy = 27
+    EtherealGrabber = 28
+    RainbowGrabber = 29
 
 class BossID(IntEnum):
     GiantTroll = 0
-    KingTalung = 1
-    WastelandDragon = 2
-    IceGuardian = 3
-    IceBaron = 4
-    Zrek = 5
+    SpiderQueen = 1
+    KingTalung = 2
+    WastelandDragon = 3
+    IceGuardian = 4
+    IceBaron = 5
+    Zrek = 6
     
 
 curEnemy: classes.Enemy = Enemies[EnemyID.Skeleton]
@@ -342,6 +354,29 @@ ASSORTMENT_DEFAULT = [
     ItemList[ItemID.LeatherArmor],
     ItemList[ItemID.SteelArmor],
 ]
+
+ASSORTMENT_SPIDER = [
+
+    ItemList[ItemID.Arrow],
+
+    ItemList[ItemID.SmallHealPotion],
+    ItemList[ItemID.MiddleHealPotion],
+    ItemList[ItemID.LargeHealPotion],
+
+    ItemList[ItemID.SmallRegenPotion],
+    ItemList[ItemID.MiddleRegenPotion],
+
+    ItemList[ItemID.HeroSword],
+    ItemList[ItemID.MeteoriteSword],
+
+    ItemList[ItemID.HeroBow],
+    ItemList[ItemID.InfinityBow],
+    ItemList[ItemID.SorcererStaff],
+
+    ItemList[ItemID.LeatherArmor],
+    ItemList[ItemID.SteelArmor],
+]
+
 
 ASSORTMENT_CASTLE = [
 

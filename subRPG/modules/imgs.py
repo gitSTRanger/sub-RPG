@@ -107,6 +107,7 @@ WF_trap =   "Images/screens/WILD/trap.png"
 # SPIDER FOREST
 SF_forest =   "Images/screens/SPIDER/forest.png"
 SF_forest_1 =   "Images/screens/SPIDER/forest_1.png"
+SF_possibleFight =   "Images/screens/SPIDER/possibleFight.png"
 SF_lamp =   "Images/screens/SPIDER/lamp.png"
 SF_corpse =   "Images/screens/SPIDER/corpse.png"
 SF_corpse_1 =   "Images/screens/SPIDER/corpse_1.png"

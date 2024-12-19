@@ -112,6 +112,17 @@ SF_lamp =   "Images/screens/SPIDER/lamp.png"
 SF_corpse =   "Images/screens/SPIDER/corpse.png"
 SF_corpse_1 =   "Images/screens/SPIDER/corpse_1.png"
 
+# CANDY LAND (datura realm)
+
+C_possibleFight =   "Images/screens/SPIDER/CANDY/possibleFight.png"
+C_fight =   "Images/screens/SPIDER/CANDY/fight.png"
+C_candy =   "Images/screens/SPIDER/CANDY/candy.png"
+C_candy_1 =   "Images/screens/SPIDER/CANDY/candy_1.png"
+C_candyLake =   "Images/screens/SPIDER/CANDY/candy_2.png"
+C_candyOreoMeadow=   "Images/screens/SPIDER/CANDY/candy_3.png"
+C_lamp = "Images/screens/SPIDER/CANDY/lamp.png"
+
+
 # MOLTEN VALLEY
 MV_valley =    "Images/screens/MOLTEN/valley.png"
 MV_valley_1 =    "Images/screens/MOLTEN/valley_1.png"

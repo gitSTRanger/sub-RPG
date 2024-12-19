@@ -278,6 +278,7 @@ statsLine: StringVar
 BUFF_regeneration = 0
 BUFF_warm = 0 # согревание от брони
 deBUFF_frostbite = 0 # обморожение от ледяной брони
+deBuff_datura = 0 # дурман от леса пауков, позволяет видить неправельную реальность
 isFrost = False # холод в ледяной локации
 
 

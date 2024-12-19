@@ -509,6 +509,11 @@ def SetLocation(events, locInt):
     MinorEvent(f'вы пошли в {locvars.stringLocation[locvars.LOCATION]}', "Далее", screen = imgs.none, funcion=SetNewScene)
 
 
+def ResetDatura():
+    vars.deBuff_datura = -3
+
+    MinorEvent("вы резко пришли в себя", "идти дальше", screen= imgs.SF_lamp, funcion= MoveOn)
+
 
 def KeepWarm(warmPoint):
     vars.BUFF_warm += warmPoint
@@ -536,7 +541,16 @@ def CheckBuffs():
     if vars.deBUFF_frostbite != 0:
         vars.deBUFF_frostbite -= 1
         print("\nу вас обморожение")
-        TakeDamage(20)  
+        TakeDamage(20)
+
+    
+
+    
+
+            
+        
+            
+
 
 
 
@@ -572,7 +586,16 @@ def CheckLocation():
         vars.StoreAssortment = vars.ASSORTMENT_SPIDER
         Elist = SPIDER_FOREST_EVENTS
         
-        if vars.actStep % 41 == 0:
+        vars.deBuff_datura += 1
+
+        if vars.deBuff_datura <= 15:
+            if vars.deBuff_datura % 6 == 0:
+                Elist = CANDY_DATURA_EVENTS
+        else:
+            Elist = CANDY_DATURA_EVENTS
+            
+
+        if vars.actStep % 51 == 0:
             vars.curEnemy = deepcopy(vars.Bosses[vars.BossID.SpiderQueen])
             Elist = SPIDER_BOSS_EVENTS
             locvars.Scene = deepcopy(Elist[EventID.PossibleFight])
@@ -1036,6 +1059,7 @@ SPIDER_FOREST_EVENTS = [
                 textColor = Colors.GOLDEN,
                 curentActions=[
     classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Посмотреть на свет",icon= imgs.arrowUp, backColor= Colors.GOLDEN, textColor = Colors.WHITE, function = lambda: ResetDatura),
     classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
     classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
@@ -1099,6 +1123,92 @@ SPIDER_BOSS_EVENTS =[
     ]),
 ] 
 
+
+CANDY_DATURA_EVENTS = [
+     classes.Event("перед вами радостный житель конфетной страны\n вы чувствуете спокойствие",
+                screen= imgs.C_possibleFight,
+                backColor=Colors.BLACK,
+                textColor = Colors.DARK_PINK ,
+                curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("подойти",icon= imgs.arrowUp, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda: StartFight),
+    classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function =lambda: GoOtherWay),
+    ]),
+    classes.Event("вы слышите как он булькает, осмотревшись вы видите\n милого пушистика",
+                screen= imgs.C_possibleFight,
+                backColor=Colors.BLACK,
+                textColor = Colors.PINK,
+                curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action(f'Погладить',icon= imgs.Hp, backColor= Colors.PINK, textColor = Colors.YELLOW, function = lambda: Attack),
+    classes.Action("Статы",icon= imgs.look, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
+    classes.Action("Сбежать",icon= imgs.arrowLeft, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
+    ]),
+    classes.Event(f'пушистик позвал друзей, чтобы щекотать вас\n вам это очень нравиться',
+                screen= imgs.C_fight,
+                backColor=Colors.BLACK,
+                textColor = Colors.PINK,
+                curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action(f'Погладить',icon= imgs.Hp, backColor= Colors.PINK, textColor = Colors.YELLOW, function = lambda: Attack),
+    classes.Action("Статы",icon= imgs.look, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
+    classes.Action("Сбежать",icon= imgs.arrowLeft, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
+    ]),
+    classes.Event("внезапно вы попали в сладкий чудный мир",
+                screen= imgs.C_candy,
+                backColor=Colors.BLACK,
+                textColor = Colors.DARK_PINK,
+                curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
+    classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
+    ]),
+    classes.Event("О чудный конфетный лес, как же я тут оказался?",
+                screen= imgs.C_candy_1,
+                backColor=Colors.BLACK,
+                textColor = Colors.DARK_PINK,
+                curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
+    classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
+    ]),
+
+    classes.Event("деревья светяться странным светом,\n смотря на него будто настает ночь \nсвет заставляет вас о чем-то вспомнить",
+                screen= imgs.C_lamp,
+                backColor=Colors.DARK_OLIVE,
+                textColor = Colors.YELLOW,
+                curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Посмотреть на свет",icon= imgs.arrowUp, backColor= Colors.PINK, textColor = Colors.DARK_GREEN, function = lambda: ResetDatura),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
+    classes.Action("Пойти в другую сторону",icon= imgs.arrowLeft, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
+    ]),
+
+     classes.Event("вы пришли к шоколадному озеру, оно очень вязкое",
+    screen= imgs.C_candyLake,
+    backColor=Colors.BLACK,
+    textColor = Colors.DARK_PINK,
+    curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Осмотреть",icon= imgs.look, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: lambda: MinorEvent("вы тянетесь рукой чтоб испить шоколад\n но присматревшись вы видите шоколадные силуэты\n но вы ничего не поняли", "Назад",screen = imgs.none, funcion= ReturnToJourney)),
+    classes.Action("испить шоколада",icon= imgs.circle, backColor= Colors.PINK, textColor = Colors.WHITE, function = lambda: lambda: MinorEvent(f'вы слепо пьете из озера, но что-то не так\n {TakeDamage(100)}', "Назад",screen = imgs.none, funcion= ReturnToJourney)),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
+    classes.Action("Пойти в другую сторону", icon= imgs.arrowLeft, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
+    ]),
+
+
+    classes.Event("вы пришли на сказачное поле, оно всё блестит",
+    screen= imgs.C_candyOreoMeadow,
+    backColor=Colors.BLACK,
+    textColor = Colors.DARK_PINK,
+    curentActions=[
+    classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
+    classes.Action("Осмотреть",icon= imgs.look, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: lambda: MinorEvent("кажеться я бы мог сьесть кусочек еслиб был голодный", "Назад",screen = imgs.none, funcion= ReturnToJourney)),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
+    classes.Action("Пойти в другую сторону", icon= imgs.arrowLeft, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
+    ]),
+
+]
 
 
 
@@ -1766,6 +1876,10 @@ class Game(Frame):
 
         if vars.BUFF_regeneration != 0:
             vars.statsLine += f'[Бафф:Регенерация на {vars.BUFF_regeneration} актов]'
+
+        if vars.deBuff_datura != 0:
+            vars.statsLine += f'[Дебафф: дурман на {vars.deBuff_datura} актов]'
+    
     
         self.Stats_Area.config(text= vars.statsLine, bg= Colors.DARK_GRAY)
 

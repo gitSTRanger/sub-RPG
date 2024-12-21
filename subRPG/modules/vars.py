@@ -90,9 +90,20 @@ classes.Item("Эфирный Сгусток (Драгоценность)",icon= 
 classes.Item("Ожерелье с Эфиром(Драгоценность)",icon= imgs.I_unknown, cost = 200, stackCount = 1,damage=0), # 50
 
 # если использовать на боссе Ледяной Граф можно исцелить его
-classes.Item(f'Зелье незамерзайка',icon= imgs.I_unknown,  cost = 160, stackCount = 1,damage=0), # 51
+classes.Item(f'Зелье "незамерзайка"',icon= imgs.I_unknown,  cost = 160, stackCount = 1,damage=0), # 51
 
-    ]
+
+# Exclucive Items
+
+classes.Item(f'Зелье Невидимости',icon= imgs.I_invisPotion,  cost = 40, stackCount = 5,damage=0), # 52
+classes.Item(f'Кольцо Невидимости',icon= imgs.I_invisRing,  cost = 1, stackCount = 1,damage=0), # 53
+
+
+]
+
+
+
+
 
 class ItemID(IntEnum):
     Empty = 0
@@ -152,6 +163,8 @@ class ItemID(IntEnum):
 
     antiFreezePotion = 51
 
+    invisPotion = 52
+    invisRing = 53
 
 
 #Все Враги
@@ -277,6 +290,7 @@ statsLine: StringVar
 
 BUFF_regeneration = 0
 BUFF_warm = 0 # согревание от брони
+BUFF_invisibility = 0 # невидимость
 deBUFF_frostbite = 0 # обморожение от ледяной брони
 deBuff_datura = 0 # дурман от леса пауков, позволяет видить неправельную реальность
 isFrost = False # холод в ледяной локации
@@ -306,6 +320,8 @@ Endings = [
 Inventory: list[classes.Slot] = [
     classes.Slot(ItemList[ItemID.MySword], count = 1, equip=False),
     classes.Slot(ItemList[ItemID.SmallHealPotion], count = 2, equip=False),
+    classes.Slot(ItemList[ItemID.invisPotion], count = 5, equip=False),
+    classes.Slot(ItemList[ItemID.invisRing], count = 1, equip=False),
 ]
 
 StoreAssortment = [ classes.Item,]

@@ -78,6 +78,9 @@ I_rubyRing =   "Images/Items/rubyRing.png"
 I_saphireRing =   "Images/Items/saphireRing.png"
 I_diamondRing =   "Images/Items/diamondRing.png"
 
+# exclusive items
+I_invisPotion =   "Images/Items/invisPotion.png"
+I_invisRing =   "Images/Items/invisRing.png"
 
 # L O C A T I O N S
 

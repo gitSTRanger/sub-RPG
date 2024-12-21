@@ -74,7 +74,7 @@ def ShowInventory():
         ExamineItemIsZeroCount(i-1)
 
         if Islot.count <= 0:
-            continue
+            return ShowInventory()
 
         # NOTE: rewrite to your preferred coding style
         # Lambdas do not properly capture the iterator values in `for` loops
@@ -113,13 +113,21 @@ def SelectItem(slot: classes.Slot, forSale: bool):
             locvars.Scene.curentActions.append(classes.Action(f'Экипировать',icon= imgs.circle, backColor= Colors.OLIVE, textColor = Colors.WHITE, function= lambda: lambda: Equip(slot)))
 
         if slot.item == vars.ItemList[vars.ItemID.SmallHealPotion] or slot.item == vars.ItemList[vars.ItemID.MiddleHealPotion] or slot.item == vars.ItemList[vars.ItemID.LargeHealPotion]:
-            locvars.Scene.curentActions.append(classes.Action(f'Лечиться',icon= imgs.circle, backColor= Colors.GREEN, textColor = Colors.WHITE, function= lambda:lambda: UseHealPotion(slot)))
+            locvars.Scene.curentActions.append(classes.Action(f'Лечиться',icon= imgs.circle, backColor= Colors.GREEN, textColor = Colors.WHITE, function= lambda:lambda: UsePotion(slot)))
 
         if slot.item == vars.ItemList[vars.ItemID.SmallRegenPotion] or slot.item == vars.ItemList[vars.ItemID.MiddleRegenPotion] or slot.item == vars.ItemList[vars.ItemID.LargeRegenPotion]:
-            locvars.Scene.curentActions.append(classes.Action(f'Лечиться',icon= imgs.circle, backColor= Colors.GREEN, textColor = Colors.WHITE, function= lambda: lambda:UseHealPotion(slot)))
+            locvars.Scene.curentActions.append(classes.Action(f'Лечиться',icon= imgs.circle, backColor= Colors.GREEN, textColor = Colors.WHITE, function= lambda: lambda:UsePotion(slot)))
 
         if slot.item == vars.ItemList[vars.ItemID.LeatherArmor] or slot.item == vars.ItemList[vars.ItemID.SteelArmor] or slot.item == vars.ItemList[vars.ItemID.SilverArmor] or slot.item == vars.ItemList[vars.ItemID.MeteoriteArmor] or slot.item == vars.ItemList[vars.ItemID.IceArmor] or slot.item == vars.ItemList[vars.ItemID.EtherealArmor]:
             locvars.Scene.curentActions.append(classes.Action(f'Надеть броню',icon= imgs.circle, backColor= Colors.DARK_BLUE, textColor = Colors.LIGHT_BLUE, function= lambda: lambda:TakeArmor(slot)))
+        
+        if slot.item == vars.ItemList[vars.ItemID.invisPotion]:
+            locvars.Scene.curentActions.append(classes.Action(f'выпить зелье',icon= imgs.circle, backColor= Colors.GREEN, textColor = Colors.WHITE, function= lambda:lambda: UsePotion(slot)))
+            vars.curEnemy.missChance = 90
+
+        if slot.item == vars.ItemList[vars.ItemID.invisRing]:
+            locvars.Scene.curentActions.append(classes.Action(f'надеть кольцо',icon= imgs.circle, backColor= Colors.GREEN, textColor = Colors.WHITE, function= lambda:lambda: UsePotion(slot)))
+            vars.curEnemy.missChance = 90
     else:
         locvars.Scene.curentActions.append(classes.Action(f'продать',icon= imgs.circle, backColor= Colors.OLIVE, textColor = Colors.WHITE, function= lambda: lambda: Sell(slot, window.Counter)))
         locvars.Scene.curentActions.append(classes.Action(f'Продать всё',icon= imgs.circle, backColor= Colors.OLIVE, textColor = Colors.WHITE, function= lambda: lambda: Sell(slot, slot.count)))
@@ -171,8 +179,8 @@ def TakeRandomItem(itemPool):
 
 
 
-def UseHealPotion(potion: classes.Slot):
-    potion.count -= 1
+def UsePotion(potion: classes.Slot):
+    
 
     if potion.item == vars.ItemList[vars.ItemID.SmallHealPotion]:
         Heal(15)
@@ -191,6 +199,16 @@ def UseHealPotion(potion: classes.Slot):
     elif potion.item == vars.ItemList[vars.ItemID.LargeRegenPotion]:
         vars.BUFF_regeneration += 12
         Heal(45)
+
+
+    if potion.item == vars.ItemList[vars.ItemID.invisPotion]:
+        vars.BUFF_invisibility += 5
+
+    if potion.item == vars.ItemList[vars.ItemID.invisRing] and vars.BUFF_invisibility < 3:
+        vars.BUFF_invisibility = 3
+        return ShowInventory()
+
+    potion.count -= 1
 
     ShowInventory()
 
@@ -276,7 +294,7 @@ def ShowSellMenu():
         ExamineItemIsZeroCount(i-1)
 
         if Islot.count <= 0:
-            continue
+            return ShowSellMenu()
 
         # NOTE: rewrite to your preferred coding style
         # Lambdas do not properly capture the iterator values in `for` loops
@@ -311,9 +329,8 @@ def Sell(slot: classes.Slot, sellCount):
     vars.MONEY += saleMoney
     slot.count -= sellCount
     ShowSellMenu()
-    print("sale money",saleMoney, "sell count",sellCount)
     #ExamineItemIsZeroCount(slotNumber)
-    print("вы продали", sellCount)
+    
 
 
 def ShowShoppingMenu():
@@ -478,6 +495,10 @@ def StartFight():
 
     rndEnemy = random.randint(startRange, endRange)
     vars.curEnemy = deepcopy(vars.Enemies[rndEnemy])
+
+    if vars.BUFF_invisibility > 0:
+        vars.curEnemy.missChance = 90
+
     window.UpdateAll()
 
 
@@ -530,6 +551,9 @@ def CheckBuffs():
     if vars.BUFF_regeneration != 0:
                 vars.BUFF_regeneration -= 1
                 Heal(15)
+
+    if vars.BUFF_invisibility != 0:
+                vars.BUFF_invisibility -= 1
 
     if vars.isFrost == True:
         if vars.BUFF_warm != 0:
@@ -587,18 +611,19 @@ def CheckLocation():
         Elist = SPIDER_FOREST_EVENTS
         
         vars.deBuff_datura += 1
-
-        if vars.deBuff_datura <= 15:
-            if vars.deBuff_datura % 6 == 0:
-                Elist = CANDY_DATURA_EVENTS
-        else:
-            Elist = CANDY_DATURA_EVENTS
-            
-
         if vars.actStep % 51 == 0:
             vars.curEnemy = deepcopy(vars.Bosses[vars.BossID.SpiderQueen])
             Elist = SPIDER_BOSS_EVENTS
             locvars.Scene = deepcopy(Elist[EventID.PossibleFight])
+
+            if vars.deBuff_datura <= 18:
+                if vars.deBuff_datura % 6 == 0:
+                    Elist = CANDY_DATURA_EVENTS
+            else:
+                Elist = CANDY_DATURA_EVENTS
+            
+
+        
             
 
         #if vars.actStep == 32:
@@ -1140,7 +1165,7 @@ CANDY_DATURA_EVENTS = [
                 textColor = Colors.PINK,
                 curentActions=[
     classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action(f'Погладить',icon= imgs.Hp, backColor= Colors.PINK, textColor = Colors.YELLOW, function = lambda: Attack),
+    classes.Action(f'Погладить',icon= imgs.Hp, backColor= Colors.PINK, textColor = Colors.YELLOW, function = lambda: lambda: MinorEvent(f'вы поглаили пушистика, но почему то вас стало плохо\n {TakeDamage(15)}', "Назад",screen = imgs.none, funcion= ReturnToJourney)),
     classes.Action("Статы",icon= imgs.look, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
     classes.Action("Сбежать",icon= imgs.arrowLeft, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
     ]),
@@ -1150,7 +1175,8 @@ CANDY_DATURA_EVENTS = [
                 textColor = Colors.PINK,
                 curentActions=[
     classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action(f'Погладить',icon= imgs.Hp, backColor= Colors.PINK, textColor = Colors.YELLOW, function = lambda: Attack),
+    # function = lambda: lambda: MinorEvent(f'вы поглаили пушистика, но почему то вас стало плохо\n {TakeDamage(15)}', "Назад",screen = imgs.none, funcion= ReturnToJourney)),
+    classes.Action(f'Погладить',icon= imgs.Hp, backColor= Colors.PINK, textColor = Colors.YELLOW, function = lambda: lambda: MinorEvent(f'вы поглаили пушистика, но почему то вас стало плохо\n {TakeDamage(15)}', "Назад",screen = imgs.none, funcion= ReturnToJourney)),
     classes.Action("Статы",icon= imgs.look, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
     classes.Action("Сбежать",icon= imgs.arrowLeft, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
     ]),
@@ -1773,7 +1799,7 @@ class Game(Frame):
 
         #Развилка
         #SetLocation(WILD_FOREST_EVENTS, locvars.Locations.WildForest)
-        #locvars.LOCATION = locvars.Locations.SpiderForest
+        locvars.LOCATION = locvars.Locations.SpiderForest
         #vars.actStep = 32
 
 
@@ -1873,6 +1899,9 @@ class Game(Frame):
 
         if vars.BUFF_warm != 0 and vars.isFrost == True:
             vars.statsLine += f'[Бафф:вы согреты на {vars.BUFF_warm} актов]'
+
+        if vars.BUFF_invisibility != 0:
+            vars.statsLine += f'[Бафф:Невидимость на {vars.BUFF_invisibility} актов]'
 
         if vars.BUFF_regeneration != 0:
             vars.statsLine += f'[Бафф:Регенерация на {vars.BUFF_regeneration} актов]'

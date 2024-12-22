@@ -45,6 +45,11 @@ class Colors:
 
     PINK = '#FF69B4'
     DARK_PINK = '#DA70D6'
+    
+    
+    PURPLE = '#8F04A8'
+    DARK_PURPLE = '#5D016D'
+    LIGHT_PURPLE = '#BC38D3'
 
     PEACH = '#FFDAB9'
     PAPER = '#dec3aa'
@@ -93,7 +98,7 @@ def ShowInventory():
             locvars.Scene.curentActions.append(classes.Action(f'{Islot.item.name}({Islot.count}x) урон:{Islot.item.damage} цена: {Islot.item.cost}$',icon= Islot.item.icon, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=selectItemFn))
 
     window.ClearActionBar()
-    window.UpdateScneneGUI("n")
+    window.UpdateAll("n")
     return
 
 
@@ -122,11 +127,11 @@ def SelectItem(slot: classes.Slot, forSale: bool):
             locvars.Scene.curentActions.append(classes.Action(f'Надеть броню',icon= imgs.circle, backColor= Colors.DARK_BLUE, textColor = Colors.LIGHT_BLUE, function= lambda: lambda:TakeArmor(slot)))
         
         if slot.item == vars.ItemList[vars.ItemID.invisPotion]:
-            locvars.Scene.curentActions.append(classes.Action(f'выпить зелье',icon= imgs.circle, backColor= Colors.GREEN, textColor = Colors.WHITE, function= lambda:lambda: UsePotion(slot)))
+            locvars.Scene.curentActions.append(classes.Action(f'выпить зелье',icon= imgs.circle, backColor= Colors.DARK_PURPLE, textColor = Colors.WHITE, function= lambda:lambda: UsePotion(slot)))
             vars.curEnemy.missChance = 90
 
         if slot.item == vars.ItemList[vars.ItemID.invisRing]:
-            locvars.Scene.curentActions.append(classes.Action(f'надеть кольцо',icon= imgs.circle, backColor= Colors.GREEN, textColor = Colors.WHITE, function= lambda:lambda: UsePotion(slot)))
+            locvars.Scene.curentActions.append(classes.Action(f'надеть кольцо',icon= imgs.circle, backColor= Colors.DARK_PURPLE, textColor = Colors.WHITE, function= lambda:lambda: UsePotion(slot)))
             vars.curEnemy.missChance = 90
     else:
         locvars.Scene.curentActions.append(classes.Action(f'продать',icon= imgs.circle, backColor= Colors.OLIVE, textColor = Colors.WHITE, function= lambda: lambda: Sell(slot, window.Counter)))
@@ -135,7 +140,7 @@ def SelectItem(slot: classes.Slot, forSale: bool):
         window.OpenCounterWindow(slot.item.icon)
         return
 
-    window.UpdateScneneGUI("n")
+    window.UpdateAll("n")
 
 def SelectPurchase(item: classes.Item):
 
@@ -159,7 +164,7 @@ def Equip(slot: classes.Slot):
 def TakeItem(item = classes.Item, count = int):
     print("Take Item")
 
-    vars.actStep += 1
+    #vars.actStep += 1
 
     if item == vars.ItemList[vars.ItemID.Empty]:
         MinorEvent("Пусто...", "Далее", screen = imgs.none, funcion= SetNewScene)
@@ -218,7 +223,7 @@ def UsePotion(potion: classes.Slot):
 def Heal(healPoints):
     vars.HP += healPoints
     locvars.Scene.name = f'\nВы полечились на {healPoints} ед здоровья \nТекущее здоровье:{vars.HP}'
-    window.UpdateScneneGUI("n")
+    window.UpdateAll("n")
 
 
 def TakeArmor(slot: classes.Slot):
@@ -249,7 +254,7 @@ def TakeArmor(slot: classes.Slot):
     ShowInventory()
     locvars.Scene.name = f'Вы надели {slot.item.name}\n Получено {armorPoint} ед. брони'
     locvars.Scene.textColor = Colors.WHITE
-    window.UpdateScneneGUI('n')
+    window.UpdateAll('n')
 
 
 def ExamineItemIsZeroCount(slotNumber):
@@ -268,7 +273,7 @@ def ShowStore():
         classes.Action(f'Купить',icon= imgs.circle, backColor= Colors.GOLDEN, textColor = Colors.WHITE, function=lambda: ShowShoppingMenu),
         classes.Action(f'Продать',icon= imgs.circle, backColor= Colors.BROWN, textColor = Colors.WHITE, function=lambda: ShowSellMenu),
     ])
-    window.UpdateScneneGUI("n")
+    window.UpdateAll("n")
     
 
     
@@ -310,26 +315,22 @@ def ShowSellMenu():
             locvars.Scene.curentActions.append(classes.Action(f'{Islot.item.name}({Islot.count}x) ЦЕНА: {Islot.item.cost}$',icon= Islot.item.icon, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=selectItemFn))
 
     window.ClearActionBar()
-    window.UpdateScneneGUI("n")
+    window.UpdateAll("n")
     return
 
 
 
 
 def Sell(slot: classes.Slot, sellCount):
-    #i = int(input(f'вы действительно хотите продать {sellCount}x?  \n 1. Да\n 2. Нет\n...'))
 
     if sellCount > slot.count:
         MinorEvent("у вас столько нет", "назад", screen = imgs.none, funcion= ShowSellMenu)
         return
        
-
-    #if i == 1:
     saleMoney = slot.item.cost * sellCount
     vars.MONEY += saleMoney
     slot.count -= sellCount
     ShowSellMenu()
-    #ExamineItemIsZeroCount(slotNumber)
     
 
 
@@ -342,17 +343,8 @@ def ShowShoppingMenu():
                 classes.Action(f'Назад',icon= imgs.ring, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=lambda: ReturnToJourney),
                 ])
     
-
-
     for Purchase in vars.StoreAssortment:
 
-        
-
-        
-
-        # NOTE: rewrite to your preferred coding style
-        # Lambdas do not properly capture the iterator values in `for` loops
-        # This can be fixed by manually providing an optional argument with a default preferred value
         selectItemFn = \
             lambda Islot=Purchase: \
             lambda: \
@@ -364,13 +356,8 @@ def ShowShoppingMenu():
             locvars.Scene.curentActions.append(classes.Action(f'{Purchase.name} урон:{Purchase.damage} ЦЕНА: {Purchase.cost}$',icon= Purchase.icon, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=selectItemFn))
 
     window.ClearActionBar()
-    window.UpdateScneneGUI("n")
+    window.UpdateAll("n")
     return
-
-
-    
-
-
 
 
 def Buy(buyItem = classes.Item ,buyCount = int):
@@ -393,21 +380,26 @@ def Buy(buyItem = classes.Item ,buyCount = int):
 
 
 def MoveOn():
-    vars.actStep += 1
-    CheckLocation()
+    #vars.actStep += 1
     SetNewScene()
     locvars.Scene.name = f'вы пошли дальше...\n' + locvars.Scene.name
-    window.UpdateAll()
+    window.UpdateAll("w")
     
 
 
 def GoOtherWay():
+
     vars.actStep += 1
     rndPeacefulPlace = random.randint(3, len(Elist) - 1)
     locvars.Scene = deepcopy(Elist[rndPeacefulPlace])
     locvars.curEventId = rndPeacefulPlace
+
+    print(Elist[rndPeacefulPlace].name)
+
     locvars.Scene.name = f'вы пошли другой дорогой\n' + locvars.Scene.name
-    window.UpdateAll()
+
+    CheckLocation() 
+    window.UpdateAll("w")
    
 
 
@@ -431,14 +423,14 @@ def Attack():
         locvars.Scene.name += f'\n{vars.curEnemy.name} атакует вас {TakeDamage(hit= vars.curEnemy.damage)}'
     else:
         locvars.Scene.name += f'\n{vars.curEnemy.name} пытается атаковать, но промахивается'
-    window.UpdateAll()
+    window.UpdateAll("w")
 
 
 
 
 def ShowEnemyStats():
     locvars.Scene.name = f'{vars.curEnemy.name} жизни: {vars.curEnemy.HP}'
-    window.UpdateAll()
+    window.UpdateAll("w")
 
 
 def TryRunAway():
@@ -447,14 +439,13 @@ def TryRunAway():
     chance = random.randint(0, 100)
 
     if chance <= vars.curEnemy.missChance:
-        vars.actStep += 1
         MinorEvent(f'вы удачно сбежали!', "Далее",screen = imgs.none, funcion= SetNewScene)
         return
         
     else:
         locvars.Scene = deepcopy(Elist[EventID.OnFight])
         locvars.Scene.name =  f'вам не удалось сбежать' + TakeDamage(hit= vars.curEnemy.damage)
-    window.UpdateAll()
+    window.UpdateAll("w")
 
 
 
@@ -468,7 +459,7 @@ def StartFight():
 
     if vars.curEnemy == vars.BossID.GiantTroll:
         vars.actStep += 1
-        window.UpdateAll()
+        window.UpdateAll("w")
         return
 
     if locvars.LOCATION == locvars.Locations.Forest:
@@ -499,7 +490,7 @@ def StartFight():
     if vars.BUFF_invisibility > 0:
         vars.curEnemy.missChance = 90
 
-    window.UpdateAll()
+    window.UpdateAll("w")
 
 
 def TakeDamage(hit):
@@ -518,7 +509,7 @@ def TakeDamage(hit):
 def SetEvent(eventID):
     locvars.Scene = deepcopy(Elist[eventID])
     vars.actStep += 1
-    window.UpdateAll()
+    window.UpdateAll("w")
 
 
 
@@ -599,7 +590,7 @@ def CheckLocation():
             vars.curEnemy = deepcopy(vars.Bosses[vars.BossID.GiantTroll])
             Elist = FOREST_BOSS_EVENTS
             locvars.Scene = deepcopy(Elist[EventID.PossibleFight])
-            
+            return ReturnToJourney()
 
         #if vars.actStep == 32:
                 
@@ -610,17 +601,21 @@ def CheckLocation():
         vars.StoreAssortment = vars.ASSORTMENT_SPIDER
         Elist = SPIDER_FOREST_EVENTS
         
-        vars.deBuff_datura += 1
+        
         if vars.actStep % 51 == 0:
             vars.curEnemy = deepcopy(vars.Bosses[vars.BossID.SpiderQueen])
             Elist = SPIDER_BOSS_EVENTS
             locvars.Scene = deepcopy(Elist[EventID.PossibleFight])
+            return ReturnToJourney()
+        
+        # дурман
+        vars.deBuff_datura += 1
 
-            if vars.deBuff_datura <= 18:
-                if vars.deBuff_datura % 6 == 0:
-                    Elist = CANDY_DATURA_EVENTS
-            else:
+        if vars.deBuff_datura <= 18:
+            if vars.deBuff_datura % 6 == 0:
                 Elist = CANDY_DATURA_EVENTS
+        else:
+            Elist = CANDY_DATURA_EVENTS
             
 
         
@@ -718,29 +713,34 @@ def CheckLocation():
 
 
 def SetNewScene():
+    vars.actStep += 1
+    CheckLocation()
+
+
     randomEvent = random.randint(0, len(Elist)-1)
     locvars.Scene = deepcopy(Elist[randomEvent])
     locvars.curEventId = randomEvent
-
+    
     if randomEvent == EventID.StartFight or randomEvent == EventID.OnFight:
         
         locvars.curEventId = EventID.StartFight
         StartFight()
 
     CheckBuffs()
-    vars.step += 1
-    window.UpdateAll()
+    
+    window.UpdateAll("w")
 
 
 #TKINTER LOGIC
 
 def MinorEvent(eventName, actionName, screen, funcion):
+    CheckLocation()
     locvars.Scene = classes.Event(f'{eventName}',screen= screen,backColor= Colors.BLACK, textColor = Colors.WHITE , curentActions=[
                 classes.Action(f'{actionName}',icon= imgs.ring, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: funcion),
                 ])
     vars.step += 1
 
-    window.UpdateScneneGUI("w")
+    window.UpdateAll("w")
 
         
 
@@ -751,7 +751,7 @@ def ReturnToJourney():
     CheckBuffs()
     vars.step += 1
     tk ['bg']= Colors.PAPER
-    window.UpdateScneneGUI("w")
+    window.UpdateAll("w")
 
 
 
@@ -804,22 +804,22 @@ STORE_EVENTS = [
     classes.Event("вы пришли в лавку торговца",
                 screen= imgs.store,
                 backColor=Colors.BLACK,
-                textColor = Colors.GREEN ,
+                textColor = Colors.WHITE ,
                 curentActions=[
     classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин",icon= imgs.circle, backColor= Colors.DARK_GOLDEN, textColor = Colors.GOLDEN, function = lambda: ShowStore),
-    classes.Action("Осмотреть",icon= imgs.look, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: lambda: MinorEvent("Лавка торговца на колесиках - это странствующий торговец\nлибо он просто скиталец либо\nв бегах от чего то", "Назад",screen = imgs.none, funcion= ReturnToJourney)),
+    classes.Action("Осмотреть",icon= imgs.look, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: lambda: MinorEvent("Лавка торговца на колесиках - это странствующий торговец\nлибо он просто скиталец либо\nв бегах от чего то", "Назад",screen = imgs.none, funcion= SetNewScene)),
     classes.Action("Уйти",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
     
     ]),
     classes.Event("вы пришли в хижину торговца",
                 screen= imgs.store_1,
                 backColor=Colors.BLACK,
-                textColor = Colors.GREEN ,
+                textColor = Colors.WHITE ,
                 curentActions=[
     classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Магазин",icon= imgs.circle, backColor= Colors.DARK_GOLDEN, textColor = Colors.GOLDEN, function = lambda: ShowStore),
-    classes.Action("Осмотреть",icon= imgs.look, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: lambda: MinorEvent("Теплая уютная хижина, здесь пахнет дымом и пряностями\nНа прилавке множество ценных вещей", "Назад",screen = imgs.none, funcion= ReturnToJourney)),
+    classes.Action("Осмотреть",icon= imgs.look, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: lambda: MinorEvent("Теплая уютная хижина, здесь пахнет дымом и пряностями\nНа прилавке множество ценных вещей", "Назад",screen = imgs.none, funcion= SetNewScene)),
     classes.Action("Уйти",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
    
     ]),
@@ -1096,7 +1096,7 @@ SPIDER_FOREST_EVENTS = [
     curentActions=[
     classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Осмотреть",icon= imgs.look, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: lambda: MinorEvent("судя по виду трупу несколько дней, \nрядом лежит рюкзак с вещами", "Назад",screen = imgs.none, funcion= ReturnToJourney)),
-    classes.Action("Обыскать",icon= imgs.circle, backColor= Colors.GRAY, textColor = Colors.WHITE, function = lambda: lambda: TakeRandomItem(vars.TIER1_VILLAGE_items)),
+    classes.Action("Обыскать",icon= imgs.circle, backColor= Colors.GRAY, textColor = Colors.WHITE, function = lambda: lambda: TakeRandomItem(vars.TIER2_SPIDER_CORPSE)),
     classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
     classes.Action("Пойти в другую сторону", icon= imgs.arrowLeft, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
@@ -1109,7 +1109,7 @@ SPIDER_FOREST_EVENTS = [
     curentActions=[
     classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Осмотреть",icon= imgs.look, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: lambda: MinorEvent("некоторые коконы напоминают людей", "Назад",screen = imgs.none, funcion= ReturnToJourney)),
-    classes.Action("Обыскать",icon= imgs.circle, backColor= Colors.GRAY, textColor = Colors.WHITE, function = lambda: lambda: TakeRandomItem(vars.TIER1_VILLAGE_items)),
+    classes.Action("Обыскать",icon= imgs.circle, backColor= Colors.GRAY, textColor = Colors.WHITE, function = lambda: lambda: TakeRandomItem(vars.TIER2_SPIDER_CORPSE)),
     classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
     classes.Action("Пойти в другую сторону", icon= imgs.arrowLeft, backColor= Colors.DARK_PINK, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
     ]),
@@ -1134,7 +1134,6 @@ SPIDER_BOSS_EVENTS =[
     classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action(f'Атаковать врага',icon= imgs.attack, backColor= Colors.ORANGE, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага",icon= imgs.enemyStats, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
-    classes.Action("Сбежать",icon= imgs.arrowLeft, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
     ]),
     classes.Event(f'Королева пауков готовится нанести удар',
                 screen= imgs.F_fight,
@@ -1144,7 +1143,6 @@ SPIDER_BOSS_EVENTS =[
     classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action(f'Атаковать врага',icon= imgs.attack, backColor= Colors.ORANGE, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага",icon= imgs.enemyStats, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
-    classes.Action("Сбежать",icon= imgs.arrowLeft, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
     ]),
 ] 
 
@@ -1779,7 +1777,7 @@ class Game(Frame):
         # Иконки кнопок
         self.btnIcons = [PhotoImage(file=imgs.circle)]
 
-        #self.UpdateBtn =  Button(text="Update",bg=Colors.BLUE,font =('ImesNewRoman',18,'bold'),fg = Colors.WHITE, command= lambda: self.UpdateAll()).pack(side= TOP)
+        #self.UpdateBtn =  Button(text="Update",bg=Colors.BLUE,font =('ImesNewRoman',18,'bold'),fg = Colors.WHITE, command= lambda: self.UpdateAll("w")).pack(side= TOP)
 
 
         self.StartScreen()
@@ -1791,7 +1789,7 @@ class Game(Frame):
                 #classes.Action("получить стартовый набор предметов",backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: self.GiveStarterKit),
                 classes.Action("Об игре",backColor= Colors.PEACH,icon= imgs.look, textColor = Colors.BROWN, function = lambda: self.AboutGame),
                 ])
-        self.UpdateScneneGUI("w")
+        self.UpdateAll("w")
 
         #locvars.ZeroScene = funks.Elist[funks.EventID.Forest]
         #locvars.Scene = locvars.ZeroScene
@@ -1799,11 +1797,21 @@ class Game(Frame):
 
         #Развилка
         #SetLocation(WILD_FOREST_EVENTS, locvars.Locations.WildForest)
-        locvars.LOCATION = locvars.Locations.SpiderForest
+        #locvars.LOCATION = locvars.Locations.SpiderForest
         #vars.actStep = 32
 
 
-    def UpdateScneneGUI(self, BtnAnchor):
+  
+    def UpdateAll(self, BtnAnchor):
+        #time.sleep(0.03)
+        vars.step += 1
+        self.CheckGameOver()
+        
+        
+
+        if vars.ARMOR <= 0:
+                        vars.ARMOR = 0
+
         self.PrintStats()
         
 
@@ -1824,17 +1832,7 @@ class Game(Frame):
             btn.pack(anchor= BtnAnchor, ipadx = 10 ) #fill= X
             i += 1
 
-
-    def UpdateAll(self):
-        time.sleep(0.03)
-
-        self.CheckGameOver()
-
-        CheckLocation()
-        self.UpdateScneneGUI('w')
-
-        if vars.ARMOR <= 0:
-                        vars.ARMOR = 0
+        
 
 
         
@@ -1933,7 +1931,7 @@ class Game(Frame):
                 classes.Action("Назад",icon= imgs.ring, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: self.StartScreen),
                 ])
         
-        self.UpdateScneneGUI("c")
+        self.UpdateAll("c")
 
     
     

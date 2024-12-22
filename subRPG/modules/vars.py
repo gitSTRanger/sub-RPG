@@ -320,8 +320,6 @@ Endings = [
 Inventory: list[classes.Slot] = [
     classes.Slot(ItemList[ItemID.MySword], count = 1, equip=False),
     classes.Slot(ItemList[ItemID.SmallHealPotion], count = 2, equip=False),
-    classes.Slot(ItemList[ItemID.invisPotion], count = 5, equip=False),
-    classes.Slot(ItemList[ItemID.invisRing], count = 1, equip=False),
 ]
 
 StoreAssortment = [ classes.Item,]
@@ -382,8 +380,9 @@ ASSORTMENT_SPIDER = [
 
     ItemList[ItemID.SmallRegenPotion],
     ItemList[ItemID.MiddleRegenPotion],
+    
+    ItemList[ItemID.invisPotion],
 
-    ItemList[ItemID.HeroSword],
     ItemList[ItemID.MeteoriteSword],
 
     ItemList[ItemID.HeroBow],
@@ -533,6 +532,19 @@ TIER1_VILLAGE_items = [
     ItemList[ItemID.Empty],
 ]
 
+TIER2_SPIDER_CORPSE = [
+    ItemList[ItemID.Arrow],
+    ItemList[ItemID.SmallHealPotion],
+    ItemList[ItemID.MiddleHealPotion],
+    ItemList[ItemID.EmeraldNecklace],
+    ItemList[ItemID.TopazRing],
+    ItemList[ItemID.LeatherArmor],
+    ItemList[ItemID.HeroSword],
+    ItemList[ItemID.Bow],
+    ItemList[ItemID.invisPotion],
+
+    ItemList[ItemID.Empty],
+]
 
 TIER2_ARMOR_STAND = [
 ItemList[ItemID.SteelArmor],
@@ -549,6 +561,8 @@ TIER2_CHEST = [
     ItemList[ItemID.RubyNecklace],
     ItemList[ItemID.Diamond],
 ]
+
+
 
 TIER2_MOLTEN_CORPSE = [
     ItemList[ItemID.TopazRing],

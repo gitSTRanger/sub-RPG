@@ -1121,7 +1121,7 @@ SPIDER_FOREST_EVENTS = [
 
 SPIDER_BOSS_EVENTS =[
     classes.Event("вы набрели на логово твари",
-                screen= imgs.SF_bossFight,
+                screen= imgs.SF_forest,
                 backColor=Colors.BLACK,
                 textColor = Colors.RED ,
                 curentActions=[
@@ -1129,7 +1129,7 @@ SPIDER_BOSS_EVENTS =[
     classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: StartFight),
     ]),
     classes.Event("вы слышите пронзающий срекот, осмотревшись вы видите её",
-                screen= imgs.SF_bossFight,
+                screen= imgs.F_fight,
                 backColor=Colors.BLACK,
                 textColor = Colors.RED,
                 curentActions=[
@@ -1138,7 +1138,7 @@ SPIDER_BOSS_EVENTS =[
     classes.Action("Статы врага",icon= imgs.enemyStats, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
     ]),
     classes.Event(f'Королева пауков готовится нанести удар',
-                screen= imgs.SF_bossFight,
+                screen= imgs.F_fight,
                 backColor=Colors.BLACK,
                 textColor = Colors.RED,
                 curentActions=[
@@ -1800,7 +1800,7 @@ class Game(Frame):
         #Развилка
         #SetLocation(WILD_FOREST_EVENTS, locvars.Locations.WildForest)
         #locvars.LOCATION = locvars.Locations.SpiderForest
-        #vars.actStep = 49
+        #vars.actStep = 50
 
 
   

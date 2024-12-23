@@ -114,6 +114,8 @@ SF_possibleFight =   "Images/screens/SPIDER/possibleFight.png"
 SF_lamp =   "Images/screens/SPIDER/lamp.png"
 SF_corpse =   "Images/screens/SPIDER/corpse.png"
 SF_corpse_1 =   "Images/screens/SPIDER/corpse_1.png"
+SF_bossFight =   "Images/screens/SPIDER/bossFight.png"
+
 
 # CANDY LAND (datura realm)
 

@@ -282,8 +282,12 @@ GUI_ActionBar = [
 ]
 
 # Игрок
-HP = 100
-ARMOR = 35
+
+
+HP = 0
+startHP = 100
+ARMOR = 0
+startArmor = 35
 MONEY = 0
 
 statsLine: StringVar

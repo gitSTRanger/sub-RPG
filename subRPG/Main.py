@@ -461,9 +461,12 @@ def StartFight():
     endRange = 0
 
     if vars.curEnemy.name == vars.Bosses[vars.BossID.GiantTroll].name or vars.curEnemy.name == vars.Bosses[vars.BossID.SpiderQueen].name:
-        vars.actStep += 1
-        window.UpdateAll("w")
-        return
+        if vars.curEnemy.HP > 0:
+            vars.actStep += 1
+            window.UpdateAll("w")
+            return
+        
+        
     if locvars.LOCATION == locvars.Locations.Forest:
         startRange = 0
         endRange = vars.EnemyID.Ork
@@ -503,6 +506,7 @@ def TakeDamage(hit):
         
     vars.HP -= damage
 
+    window.CheckGameOver()
     
     return f'вы получили {damage} урона'
 
@@ -1786,6 +1790,10 @@ class Game(Frame):
 
     def StartScreen(self):
 
+        vars.HP = vars.startHP
+        vars.ARMOR = vars.startArmor
+        vars.MONEY = 0
+
         locvars.Scene = classes.Event("ДОБРО ПОЖАЛОВАТЬ В subRPG (*Tkinter)",screen= imgs.startScreenTitle, backColor= Colors.BLACK ,textColor = Colors.LIGHT_BLUE , curentActions=[
                 classes.Action("Нажмите, чтобы НАЧАТЬ играть", icon= imgs.circle,backColor= Colors.KHAKI, textColor = Colors.GREEN, function = lambda: SetNewScene),
                 #classes.Action("получить стартовый набор предметов",backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: self.GiveStarterKit),
@@ -1800,15 +1808,13 @@ class Game(Frame):
         #Развилка
         #SetLocation(WILD_FOREST_EVENTS, locvars.Locations.WildForest)
         #locvars.LOCATION = locvars.Locations.SpiderForest
-        #vars.actStep = 49
+        #vars.actStep = 50
 
 
   
     def UpdateAll(self, BtnAnchor):
         #time.sleep(0.03)
         vars.step += 1
-        self.CheckGameOver()
-        
         
 
         if vars.ARMOR <= 0:

@@ -404,8 +404,9 @@ def GoOtherWay():
 
 
 def Attack():
-
+    
     locvars.Scene = deepcopy(Elist[EventID.OnFight])
+    locvars.curEventId = EventID.OnFight
     locvars.Scene.name = f'вы атаковали {vars.curEnemy.name} на {vars.Weapon.item.damage} ед. урона'
 
 
@@ -423,6 +424,7 @@ def Attack():
         locvars.Scene.name += f'\n{vars.curEnemy.name} атакует вас {TakeDamage(hit= vars.curEnemy.damage)}'
     else:
         locvars.Scene.name += f'\n{vars.curEnemy.name} пытается атаковать, но промахивается'
+
     window.UpdateAll("w")
 
 
@@ -451,17 +453,17 @@ def TryRunAway():
 
 
 def StartFight():
+    CheckLocation()
     locvars.Scene = deepcopy(Elist[EventID.StartFight])
+    locvars.curEventId = EventID.StartFight
 
     startRange = 0
     endRange = 0
-    
 
-    if vars.curEnemy == vars.BossID.GiantTroll:
+    if vars.curEnemy.name == vars.Bosses[vars.BossID.GiantTroll].name or vars.curEnemy.name == vars.Bosses[vars.BossID.SpiderQueen].name:
         vars.actStep += 1
         window.UpdateAll("w")
         return
-
     if locvars.LOCATION == locvars.Locations.Forest:
         startRange = 0
         endRange = vars.EnemyID.Ork
@@ -590,6 +592,7 @@ def CheckLocation():
             vars.curEnemy = deepcopy(vars.Bosses[vars.BossID.GiantTroll])
             Elist = FOREST_BOSS_EVENTS
             locvars.Scene = deepcopy(Elist[EventID.PossibleFight])
+            locvars.curEventId = EventID.PossibleFight
             return ReturnToJourney()
 
         #if vars.actStep == 32:
@@ -606,6 +609,7 @@ def CheckLocation():
             vars.curEnemy = deepcopy(vars.Bosses[vars.BossID.SpiderQueen])
             Elist = SPIDER_BOSS_EVENTS
             locvars.Scene = deepcopy(Elist[EventID.PossibleFight])
+            locvars.curEventId = EventID.PossibleFight
             return ReturnToJourney()
         
         # дурман
@@ -1001,7 +1005,7 @@ FOREST_BOSS_EVENTS =[
                 textColor = Colors.GREEN ,
                 curentActions=[
     classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: lambda: SetEvent(EventID.StartFight)),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: StartFight),
     ]),
     classes.Event("вы слышите оглушающий рев, осмотревшись вы видите его",
                 screen= imgs.F_fight,
@@ -1011,7 +1015,6 @@ FOREST_BOSS_EVENTS =[
     classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action(f'Атаковать врага',icon= imgs.attack, backColor= Colors.ORANGE, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага",icon= imgs.enemyStats, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
-    classes.Action("Сбежать",icon= imgs.arrowLeft, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
     ]),
     classes.Event(f'Босс готовится нанести удар',
                 screen= imgs.F_fight,
@@ -1021,7 +1024,6 @@ FOREST_BOSS_EVENTS =[
     classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action(f'Атаковать врага',icon= imgs.attack, backColor= Colors.ORANGE, textColor = Colors.DARK_RED, function = lambda: Attack),
     classes.Action("Статы врага",icon= imgs.enemyStats, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
-    classes.Action("Сбежать",icon= imgs.arrowLeft, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: TryRunAway),
     ]),
 ] 
 
@@ -1124,7 +1126,7 @@ SPIDER_BOSS_EVENTS =[
                 textColor = Colors.RED ,
                 curentActions=[
     classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: lambda: SetEvent(EventID.StartFight)),
+    classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: StartFight),
     ]),
     classes.Event("вы слышите пронзающий срекот, осмотревшись вы видите её",
                 screen= imgs.F_fight,
@@ -1798,7 +1800,7 @@ class Game(Frame):
         #Развилка
         #SetLocation(WILD_FOREST_EVENTS, locvars.Locations.WildForest)
         #locvars.LOCATION = locvars.Locations.SpiderForest
-        #vars.actStep = 32
+        #vars.actStep = 50
 
 
   

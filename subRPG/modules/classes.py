@@ -1,12 +1,46 @@
 from tkinter import *
 
 class Item:
-    def __init__(self, name, icon ,  cost, stackCount, damage):
+    def __init__(self, name, icon ,  cost, stackCount):
+        self.name = name
+        self.icon = icon
+        self.cost = cost
+        self.stackCount = stackCount
+
+class Weapon(Item):
+    def __init__(self, name, icon ,  cost, stackCount , damage):
         self.name = name
         self.icon = icon
         self.cost = cost
         self.stackCount = stackCount
         self.damage = damage
+
+class Potion(Item):
+    def __init__(self, name, icon ,  cost, stackCount , effectAmount):
+        self.name = name
+        self.icon = icon
+        self.cost = cost
+        self.stackCount = stackCount
+        self.effectAmount = effectAmount
+
+
+class HealPotion(Item):
+    def __init__(self, name, icon ,  cost, stackCount , healAmount ,regenerationAmount):
+        self.name = name
+        self.icon = icon
+        self.cost = cost
+        self.stackCount = stackCount
+        self.healAmount = healAmount
+        self.regenerationAmount = regenerationAmount
+
+class Armor(Item):
+    def __init__(self, name, icon ,  cost, stackCount , armorAmount):
+        self.name = name
+        self.icon = icon
+        self.cost = cost
+        self.stackCount = stackCount
+        self.armorAmount = armorAmount
+
 
 
 class Slot:

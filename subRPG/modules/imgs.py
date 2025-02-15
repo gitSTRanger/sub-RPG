@@ -54,6 +54,7 @@ I_infiniteBow = "Images/Items/infiniteBow.png"
 I_flashBow =  "Images/Items/flashBow.png"
 I_taigaBow =  "Images/Items/taigaBow.png"
 I_etherialBow = "Images/Items/etherialBow.png"
+I_cyclonBow = "Images/Items/cyclon.png"
 
 I_sorcererStaff =   "Images/Items/sorcererStaff.png"
 I_meteoraStaff =   "Images/Items/meteoraStaff.png"
@@ -86,6 +87,8 @@ I_invisRing =   "Images/Items/invisRing.png"
 
 store =  "Images/screens/store.png"
 store_1 =  "Images/screens/store_1.png"
+questMan =  "Images/screens/store_1.png"
+
 
 startScreen =  "Images/screens/startScreen.png"
 startScreenTitle = "Images/screens/startScreenTitle.png"

@@ -51,8 +51,9 @@ class Slot:
 
 
 class Enemy:
-    def __init__(self, name, HP, damage, missChance):
+    def __init__(self, name, image, HP, damage, missChance):
         self.name = name
+        self.image = image
         self.HP = HP
         self.damage = damage
         self.missChance = missChance
@@ -83,5 +84,12 @@ class TkScene():
 
 
 
-
+class Quest():
+    def __init__(self, name , description, reward, condition: bool):
+        self.name = name
+        self.description = description
+        self.reward = reward
+        self.condition = condition
+        
+        
     

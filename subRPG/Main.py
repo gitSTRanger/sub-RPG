@@ -134,7 +134,7 @@ def SelectItem(slot: classes.Slot, forSale: bool):
         
         
 
-        if slot.item == vars.ItemList[vars.ItemID.invisRing]:
+        if slot.item == vars.ItemList.invisRing:
             locvars.Scene.curentActions.append(classes.Action(f'надеть кольцо',icon= imgs.circle, backColor= Colors.DARK_PURPLE, textColor = Colors.WHITE, function= lambda:lambda: UsePotion(slot)))
             vars.curEnemy.missChance = 90
     else:
@@ -170,7 +170,7 @@ def TakeItem(item = classes.Item, count = int):
 
     #vars.actStep += 1
 
-    if item == vars.ItemList[vars.ItemID.Empty]:
+    if item == vars.ItemList.empty:
         MinorEvent("Пусто...", "Далее", screen = imgs.none, funcion= SetNewScene)
         return
 
@@ -206,10 +206,10 @@ def UsePotion(potion: classes.Slot):
 
         potion_effect_amount = potionItem.effectAmount
 
-        if potion.item == vars.ItemList[vars.ItemID.invisPotion]:
+        if potion.item == vars.ItemList.invisPotion:
             vars.BUFF_invisibility += potion_effect_amount
 
-        if potion.item == vars.ItemList[vars.ItemID.invisRing]:
+        if potion.item == vars.ItemList.invisRing:
             if vars.BUFF_invisibility < 3:
                 vars.BUFF_invisibility = potion_effect_amount
             return ShowInventory()
@@ -233,7 +233,7 @@ def TakeArmor(slot: classes.Slot):
     armor_amount = armor_item.armorAmount
     slot.count -= 1
 
-    if slot.item == vars.ItemList[vars.ItemID.LeatherArmor]:
+    if slot.item == vars.ItemList.leatherArmor:
         vars.BUFF_warm += 10
        
 
@@ -365,6 +365,40 @@ def Buy(buyItem = classes.Item ,buyCount = int):
     return
 
 
+def ShowQuests():
+    locvars.Scene = classes.Event(f'Задания:',screen= imgs.questIcon,backColor= Colors.BLACK, textColor = Colors.WHITE , curentActions=[
+                classes.Action(f'Назад',icon= imgs.ring, backColor= Colors.PEACH, textColor = Colors.BROWN, function=lambda: ReturnToJourney),
+                ])
+    
+    for quest in vars.CurentQuestList:
+         selectQuestFn = \
+            lambda quest= quest: \
+            lambda: \
+                CheckQuest(quest)
+         locvars.Scene.curentActions.append(classes.Action(f'{quest.name}',icon= imgs.circle, backColor= Colors.GOLDEN, textColor = Colors.BROWN, function= selectQuestFn))
+    
+    window.UpdateAll("w")
+
+
+
+def CheckQuest(quest: classes.Quest):
+    locvars.Scene = classes.Event(f'{quest.description}',screen= quest.reward.icon ,backColor= Colors.BLACK, textColor = Colors.WHITE , curentActions=[
+                classes.Action(f'Назад',icon= imgs.ring, backColor= Colors.PEACH, textColor = Colors.BROWN, function=lambda: ReturnToJourney),
+                classes.Action(f'Сдать задание',icon= imgs.ring, backColor= Colors.GOLDEN, textColor = Colors.BROWN, function=lambda: lambda: TakeQuest(quest)),
+                ])
+    window.UpdateAll("w")
+
+def TakeQuest(quest: classes.Quest):
+    if quest.condition() == True:
+        vars.actStep -= 1
+        TakeItem(item=quest.reward, count=1)
+        vars.CurentQuestList.remove(quest)
+    else:
+        MinorEvent(f'возвращайтесь когда выполните задание!',"Назад",screen= imgs.questMan, funcion= ShowQuests)
+
+
+
+
 
 def MoveOn():
     #vars.actStep += 1
@@ -444,6 +478,8 @@ def StartFight():
     locvars.Scene = deepcopy(Elist[EventID.StartFight])
     locvars.curEventId = EventID.StartFight
 
+
+
     startRange = 0
     endRange = 0
 
@@ -482,6 +518,7 @@ def StartFight():
     if vars.BUFF_invisibility > 0:
         vars.curEnemy.missChance = 90
 
+    
     window.UpdateAll("w")
 
 
@@ -842,7 +879,7 @@ QUEST_EVENT = [
                 curentActions=[
     classes.Action("Инвентарь",icon= imgs.ring, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
     classes.Action("Поговорить",icon= imgs.look, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: lambda: StartDialog(QUEST_DIALOG_EVENTS, 0)),
-    classes.Action("Задания",icon= imgs.circle, backColor= Colors.GOLDEN, textColor = Colors.BROWN, function = lambda: ShowStore),
+    classes.Action("Задания",icon= imgs.circle, backColor= Colors.GOLDEN, textColor = Colors.BROWN, function = lambda: ShowQuests),
     classes.Action("Уйти",icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
     
     ]),
@@ -1039,7 +1076,7 @@ WILD_FOREST_EVENTS = [
     textColor = Colors.RED,
     curentActions=[
     classes.Action("Инвентарь",icon= imgs.circle, backColor= Colors.KHAKI, textColor = Colors.BROWN, function = lambda: ShowInventory),
-    classes.Action("Взять остывший камень под ногами",icon= imgs.circle, backColor= Colors.DARK_RED, textColor = Colors.WHITE, function = lambda: lambda: TakeItem(vars.ItemList[vars.ItemID.MeteoritePiece], 1)),
+    classes.Action("Взять остывший камень под ногами",icon= imgs.circle, backColor= Colors.DARK_RED, textColor = Colors.WHITE, function = lambda: lambda: TakeItem(vars.ItemList.meteoritePiece, 1)),
     classes.Action("Потрогать землю",icon= imgs.circle, backColor= Colors.DARK_RED, textColor = Colors.WHITE, function = lambda: lambda: MinorEvent(TakeDamage(100), "Назад",screen = imgs.none, funcion= ReturnToJourney)),
     classes.Action("Идти дальше",icon= imgs.arrowUp, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda:  MoveOn),
     classes.Action("Пойти в другую сторону", icon= imgs.arrowLeft, backColor= Colors.GREEN, textColor = Colors.LIGHT_GREEN, function = lambda: GoOtherWay),
@@ -1907,6 +1944,7 @@ class Game(Frame):
         self.screenImage = PhotoImage(file= screen).zoom(4,4)
         self.screen.config(image= self.screenImage)
 
+        
         self.TK_Scene.textArea.config(text= self.Counter, bg= locvars.Scene.backColor ,fg= locvars.Scene.textColor) #padx, pady
        
         self.ClearActionBar()

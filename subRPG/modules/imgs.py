@@ -20,6 +20,7 @@ arrowLeft = "Images/GUI/arrowLeft.png"
 
 inventoryIcon=  "Images/GUI/inventory.png"
 storeIcon =  "Images/GUI/store.png"
+questIcon =  "Images/GUI/quests.png"
 
 # I T E M S
 
@@ -83,11 +84,31 @@ I_diamondRing =   "Images/Items/diamondRing.png"
 I_invisPotion =   "Images/Items/invisPotion.png"
 I_invisRing =   "Images/Items/invisRing.png"
 
+
+# M O N S T E R S
+
+M_skeleton = "Images/monsters/skeleton.png"
+M_armoredSkeleton = "Images/monsters/armoredSkeleton.png"
+M_eviflover = "Images/monsters/eviflower.png"
+M_duster = "Images/monsters/duster.png"
+M_ork = "Images/monsters/ork.png"
+M_ghoul = "Images/monsters/ghoul.png"
+M_blindGhoul = "Images/monsters/blindGhoul.png"
+M_snakeThree = "Images/monsters/snakethree.png"
+M_troll = "Images/monsters/troll.png"
+    
+M_spidersSwarm = "Images/monsters/spiderSwarm.png"
+M_youngSpider = "Images/monsters/spider.png"
+M_adultSpider = "Images/monsters/adultSpider.png"
+
+Boss_Spider = "Images/monsters/bosses/spiderBoss.png"
+Boss_Troll = "Images/monsters/bosses/trollBoss.png"
+
 # L O C A T I O N S
 
 store =  "Images/screens/store.png"
 store_1 =  "Images/screens/store_1.png"
-questMan =  "Images/screens/store_1.png"
+questMan =  "Images/screens/questMan.png"
 
 
 startScreen =  "Images/screens/startScreen.png"

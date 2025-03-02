@@ -58,6 +58,9 @@ class Enemy:
         self.damage = damage
         self.missChance = missChance
 
+    def getImage(self):
+        return self.image
+
 class Action():
     def __init__(self, name, icon, backColor, textColor, function):
         self.name = name

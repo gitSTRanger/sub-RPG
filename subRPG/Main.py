@@ -167,13 +167,24 @@ def Equip(slot: classes.Slot):
 
 def TakeItem(item = classes.Item, count = int):
     print("Take Item")
-
+    rawCount = count
     #vars.actStep += 1
 
     if item == vars.ItemList.empty:
         MinorEvent("Пусто...", "Далее", screen = imgs.none, funcion= SetNewScene)
         return
-
+    '''
+    if rawCount > 0:
+        for slot in vars.Inventory:
+            i_count = 0
+            if slot.item == item and slot.count < slot.item.stackCount:
+                i_count = slot.item.stackCount - slot.count
+                slot.count += i_count
+                rawCount -= i_count
+        
+        vars.Inventory.append(classes.Slot(item, rawCount, False))
+    '''
+    
     vars.Inventory.append(classes.Slot(item, count, False))
     MinorEvent(f'Получено > {item.name} ({count}x)', "взять", screen = item.icon, funcion= SetNewScene)
 
@@ -1234,7 +1245,7 @@ SPIDER_BOSS_EVENTS =[
     classes.Action("Статы врага",icon= imgs.enemyStats, backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: ShowEnemyStats),
     ]),
     classes.Event(f'Королева пауков готовится нанести удар',
-                screen= imgs.SF_bossFight,
+                screen= imgs.F_fight,
                 backColor=Colors.BLACK,
                 textColor = Colors.RED,
                 curentActions=[
@@ -1914,8 +1925,10 @@ class Game(Frame):
 
         self.PrintStats()
         
-
-        self.screenImage = PhotoImage(file= locvars.Scene.screen).zoom(4,4)
+        if locvars.Scene.screen == imgs.F_fight:
+            self.screenImage = PhotoImage(file= vars.curEnemy.image).zoom(4,4)
+        else:
+            self.screenImage = PhotoImage(file= locvars.Scene.screen).zoom(4,4)
         self.screen.config(image= self.screenImage)
 
         self.TK_Scene.textArea.config(text=locvars.Scene.name, bg= locvars.Scene.backColor ,fg= locvars.Scene.textColor) #padx, pady
@@ -2022,7 +2035,7 @@ class Game(Frame):
       
     def AboutGame(self):
         #"Порт игры subRPG на Tkinter\nкроме переноса всего контента с оригинала, игра получит\nряд нового контента, что в значительной мере расширит игру"
-        textAbout = "Порт игры subRPG на Tkinter\nДоступны первые 2 локации Лес, Дикий лес\n и одна новая (эксклюзив)Паучий Лес\nПеренесен первый босс, и добавлена новая развилка\nНа будующую новую локацию\nПеренесены все предметы и торговля(улучшенная)\nИзменен баланс стоимости"
+        textAbout = "Порт игры subRPG на Tkinter\nДоступны первые 2 локации Лес, Дикий лес\n и одна новая (эксклюзив)Паучий Лес\nПеренесен первый босс, и добавлена новая развилка\nПеренесены все предметы и торговля(улучшенная)\nИзменен баланс стоимости\nДобавлены квесты"
 
         locvars.Scene = classes.Event(textAbout, 
                                     screen= imgs.startScreen,

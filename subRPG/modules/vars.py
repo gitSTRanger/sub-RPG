@@ -70,7 +70,7 @@ class ItemList:
     # Замок
     goldBar=classes.Item("Слиток Золота(Драгоценность)",icon= imgs.I_goldBar, cost = 50, stackCount = 3)
     # Огонь
-    meteoritePiece=classes.Item("Осколок Метеорита (Драгоценность)",icon= imgs.I_meteoritePiece, cost = 30, stackCount = 3)
+    meteoritePiece=classes.Item("Осколок Метеорита (Драгоценность)",icon= imgs.I_meteoritePiece, cost = 30, stackCount = 6)
 
     topazRing=classes.Item("Кольцо с топазом(Драгоценность)", icon= imgs.I_topazRing, cost = 40, stackCount = 1)
     topazNecklace=classes.Item("Ожерелье с топазом(Драгоценность)", icon= imgs.I_unknown,   cost = 70, stackCount = 1)

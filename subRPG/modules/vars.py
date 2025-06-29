@@ -263,7 +263,7 @@ Endings = [
 
 StarterPack = [
     classes.Slot(ItemList.mySword, count = 1, equip=False),
-    classes.Slot(ItemList.smallHealPotion, count = 2, equip=False),
+    classes.Slot(ItemList.smallHealPotion, count = 2, equip=False)
 ]
 
 
@@ -272,7 +272,6 @@ StoreAssortment = [ classes.Item,]
 
 
 Weapon: classes.Slot = Inventory[0]
-
 
 actStep = 1 #1 шаг = 1 игровое событие
 step = 0 #1 шаг = одно действие

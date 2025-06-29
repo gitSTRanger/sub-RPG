@@ -83,9 +83,7 @@ def ShowInventory():
         if Islot.count <= 0:
             return ShowInventory()
 
-        # NOTE: rewrite to your preferred coding style
-        # Lambdas do not properly capture the iterator values in `for` loops
-        # This can be fixed by manually providing an optional argument with a default preferred value
+
         selectItemFn = \
             lambda Islot=Islot: \
             lambda: \
@@ -94,10 +92,12 @@ def ShowInventory():
         if Islot.equip == True:
             locvars.Scene.curentActions.append(classes.Action(f'(Экирировано)\n{Islot.item.name}({Islot.count}x) урон:{Islot.item.damage} цена: {Islot.item.cost}$',icon= Islot.item.icon, backColor= Colors.OLIVE, textColor = Colors.WHITE, function=selectItemFn))
             continue
+        if isinstance(Islot.item, classes.Weapon):
+            locvars.Scene.curentActions.append(classes.Action(f'{Islot.item.name}({Islot.count}x) урон:{Islot.item.damage} цена: {Islot.item.cost}$',icon= Islot.item.icon, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=selectItemFn))
+            continue
         if isinstance(Islot.item, classes.Item):
             locvars.Scene.curentActions.append(classes.Action(f'{Islot.item.name}({Islot.count}x) цена: {Islot.item.cost}$',icon= Islot.item.icon, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=selectItemFn))
-        elif isinstance(Islot.item, classes.Weapon):
-            locvars.Scene.curentActions.append(classes.Action(f'{Islot.item.name}({Islot.count}x) урон:{Islot.item.damage} цена: {Islot.item.cost}$',icon= Islot.item.icon, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=selectItemFn))
+        
 
     window.ClearActionBar()
     window.UpdateAll("n")
@@ -347,11 +347,12 @@ def ShowShoppingMenu():
             lambda Islot=Purchase: \
             lambda: \
                 SelectPurchase(Islot)
-        
+        if isinstance(Purchase, classes.Weapon):
+            locvars.Scene.curentActions.append(classes.Action(f'{Purchase.name} урон:{Purchase.damage} ЦЕНА: {Purchase.cost}$',icon= Purchase.icon, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=selectItemFn))
+            continue
         if isinstance(Purchase, classes.Item):
             locvars.Scene.curentActions.append(classes.Action(f'{Purchase.name} ЦЕНА: {Purchase.cost}$',icon= Purchase.icon, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=selectItemFn))
-        elif isinstance(Purchase, classes.Weapon):
-            locvars.Scene.curentActions.append(classes.Action(f'{Purchase.name} урон:{Purchase.damage} ЦЕНА: {Purchase.cost}$',icon= Purchase.icon, backColor= Colors.DARK_GRAY, textColor = Colors.WHITE, function=selectItemFn))
+        
 
     window.ClearActionBar()
     window.UpdateAll("n")
@@ -1853,6 +1854,7 @@ def StartNewGame():
     vars.ARMOR = vars.startArmor
     vars.MONEY = 0
     vars.Inventory = deepcopy(vars.StarterPack)
+    vars.Weapon = vars.Inventory[0]
     vars.step = 1
     vars.actStep = 1
     SetLocation(FOREST_EVENTS, locvars.Locations.Forest)
@@ -1865,18 +1867,18 @@ class Game(Frame):
 
         # Кнопки для меню прибавления и вычитания
         self.Counter = 0 # counter number
-        self.AddBtn = Button(text="+",bg= Colors.PEACH,font =('ImesNewRoman',18,'bold'),fg = Colors.GREEN, command= lambda: self.ChangeCNumber(1))
-        self.SubtractBtn = Button(text="-",bg= Colors.PEACH,font =('ImesNewRoman',18,'bold'),fg = Colors.RED, command= lambda: self.ChangeCNumber(-1))
+        self.AddBtn = Button(text="+",bg= Colors.PEACH,font =('Segoe UI Symbol',18,'bold'),fg = Colors.GREEN, command= lambda: self.ChangeCNumber(1))
+        self.SubtractBtn = Button(text="-",bg= Colors.PEACH,font =('Segoe UI Symbol',18,'bold'),fg = Colors.RED, command= lambda: self.ChangeCNumber(-1))
         self.AddBtn.pack(anchor= "w", side= LEFT, ipadx = 30)
         self.SubtractBtn.pack(anchor= "w", side= LEFT,  ipadx = 30)
 
         # Вариант сцены для Tkinter
-        self.TK_Scene: classes.TkScene = classes.TkScene(Label(text="Вы пришли к тому что охраняло чудовище к табличке с направлениями",font = ('ImesNewRoman',25,'bold'),bg = '#000',fg = '#fff'), curentActionsBar=[
-            Button(text="Идти в (Замок)",bg='#F5DEB3',font =('ImesNewRoman',18,'bold'),fg = '#FFD700', command= lambda: print("пустое действие")),
+        self.TK_Scene: classes.TkScene = classes.TkScene(Label(text="Вы пришли к тому что охраняло чудовище к табличке с направлениями",font = ('Segoe UI Symbol',25,'bold'),bg = '#000',fg = '#fff'), curentActionsBar=[
+            Button(text="Идти в (Замок)",bg='#F5DEB3',font =('Segoe UI Symbol',18,'bold'),fg = '#FFD700', command= lambda: print("пустое действие")),
             ])
 
         # Коле статов
-        self.Stats_Area = Label(text=f'stats ',font = ('ImesNewRoman',20,'bold'),bg = '#000',fg = '#fff')
+        self.Stats_Area = Label(text=f'stats ',font = ('Segoe UI Symbol',20,'bold'),bg = '#000',fg = '#fff')
         self.Stats_Area.pack(anchor="w", fill= X) #padx, pady
 
         # Изображение локации
@@ -1885,14 +1887,14 @@ class Game(Frame):
         self.screen.pack(fill = X)
 
         # Описание локации
-        self.TK_Scene.textArea = Label(text=f'Event Name Text Area',font = ('ImesNewRoman',20,'bold'),bg = '#000',fg = '#fff')
+        self.TK_Scene.textArea = Label(text=f'Event Name Text Area',font = ('Segoe UI Symbol',20,'bold'),bg = '#000',fg = '#fff')
         self.TK_Scene.textArea.pack(anchor="w", fill= X) #padx, pady
 
         
         # Иконки кнопок
         self.btnIcons = [PhotoImage(file=imgs.circle)]
 
-        #self.UpdateBtn =  Button(text="Update",bg=Colors.BLUE,font =('ImesNewRoman',18,'bold'),fg = Colors.WHITE, command= lambda: self.UpdateAll("w")).pack(side= TOP)
+        #self.UpdateBtn =  Button(text="Update",bg=Colors.BLUE,font =('Segoe UI Symbol',18,'bold'),fg = Colors.WHITE, command= lambda: self.UpdateAll("w")).pack(side= TOP)
 
 
         self.StartScreen()
@@ -1945,7 +1947,7 @@ class Game(Frame):
         for action in locvars.Scene.curentActions:
             self.btnIcons.append(PhotoImage(file = action.icon))
 
-            btn = Button(text= f'{action.name}',bg= action.backColor, fg= action.textColor, font =('TimesNewRoman',21,'bold'), command= action.function(), image= self.btnIcons[i] ,compound="left")
+            btn = Button(text= f'{action.name}',bg= action.backColor, fg= action.textColor, font =('Segoe UI Symbol',18,'bold'), command= action.function(), image= self.btnIcons[i] ,compound="left")
             self.TK_Scene.curentActionsBar.append(btn)
             btn.pack(anchor= BtnAnchor, ipadx = 10 ) #fill= X
             i += 1
@@ -1967,8 +1969,8 @@ class Game(Frame):
        
         self.ClearActionBar()
 
-        self.AddBtn = Button(text="+",bg= Colors.PEACH,font =('ImesNewRoman',18,'bold'),fg = Colors.GREEN, command= lambda: self.ChangeCNumber(1))
-        self.SubtractBtn = Button(text="-",bg= Colors.PEACH,font =('ImesNewRoman',18,'bold'),fg = Colors.RED, command= lambda: self.ChangeCNumber(-1))
+        self.AddBtn = Button(text="+",bg= Colors.PEACH,font =('Segoe UI Symbol',18,'bold'),fg = Colors.GREEN, command= lambda: self.ChangeCNumber(1))
+        self.SubtractBtn = Button(text="-",bg= Colors.PEACH,font =('Segoe UI Symbol',18,'bold'),fg = Colors.RED, command= lambda: self.ChangeCNumber(-1))
         self.AddBtn.pack(anchor= "n", ipadx = 30)
         self.SubtractBtn.pack(anchor= "n",  ipadx = 30)
 
@@ -1977,7 +1979,7 @@ class Game(Frame):
         for action in locvars.Scene.curentActions:
             self.btnIcons.append(PhotoImage(file = action.icon))
 
-            btn = Button(text= f'{action.name}',bg= action.backColor, fg= action.textColor, font =('TimesNewRoman',21,'bold'), command= action.function(), image= self.btnIcons[i] ,compound="left")
+            btn = Button(text= f'{action.name}',bg= action.backColor, fg= action.textColor, font =('Segoe UI Symbol',21,'bold'), command= action.function(), image= self.btnIcons[i] ,compound="left")
             self.TK_Scene.curentActionsBar.append(btn)
             btn.pack(anchor= "w", ipadx = 10 ) #fill= X
             i += 1   

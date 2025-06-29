@@ -1,8 +1,10 @@
 from modules import classes
 from modules import imgs
 from enum import IntEnum
+from copy import deepcopy
 from tkinter import *
 import os
+
 
 clear = lambda: os.system('cls')
 
@@ -257,14 +259,15 @@ Endings = [
 ]
 '''
 
+# Starter Pack
 
-Inventory: list[classes.Slot] = [
+StarterPack = [
     classes.Slot(ItemList.mySword, count = 1, equip=False),
     classes.Slot(ItemList.smallHealPotion, count = 2, equip=False),
-    classes.Slot(ItemList.CyclonBow, count = 1, equip=False),
-    
 ]
 
+
+Inventory: list[classes.Slot] = deepcopy(StarterPack)
 StoreAssortment = [ classes.Item,]
 
 
@@ -279,20 +282,6 @@ curStep = -1
 
 #                        P O O L 's
 
-
-
-
-# Starter Pack
-
-StarterPack = [
-    ItemList.smallHealPotion,
-    ItemList.mediumHealPotion,
-    ItemList.smallRegenPotion,
-    ItemList.bow,
-    ItemList.arrow,
-    ItemList.leatherArmor,
-    ItemList.steelArmor,
-]
 
 #   S T O R E :
 ASSORTMENT_DEFAULT = [

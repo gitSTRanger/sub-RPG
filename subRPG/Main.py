@@ -1824,9 +1824,6 @@ ETHERIAL_SHORES_BOSS_EVENTS =[
 
 
 
-
-
-
 Elist: list[classes.Event] = deepcopy(FOREST_EVENTS) # текущие события (сцены)
 
 
@@ -1851,6 +1848,15 @@ FORK_EVENTS = [classes.Event("вы пришли к тому что охраня�
 '''
 
 
+def StartNewGame():
+    vars.HP = vars.startHP
+    vars.ARMOR = vars.startArmor
+    vars.MONEY = 0
+    vars.Inventory = deepcopy(vars.StarterPack)
+    vars.step = 1
+    vars.actStep = 1
+    SetLocation(FOREST_EVENTS, locvars.Locations.Forest)
+    SetNewScene()
 
 
 class Game(Frame):
@@ -1891,14 +1897,13 @@ class Game(Frame):
 
         self.StartScreen()
 
+   
+
+
     def StartScreen(self):
-
-        vars.HP = vars.startHP
-        vars.ARMOR = vars.startArmor
-        vars.MONEY = 0
-
+        
         locvars.Scene = classes.Event("ДОБРО ПОЖАЛОВАТЬ В subRPG (*Tkinter)",screen= imgs.startScreenTitle, backColor= Colors.BLACK ,textColor = Colors.LIGHT_BLUE , curentActions=[
-                classes.Action("Нажмите, чтобы НАЧАТЬ играть", icon= imgs.circle,backColor= Colors.KHAKI, textColor = Colors.GREEN, function = lambda: SetNewScene),
+                classes.Action("Нажмите, чтобы НАЧАТЬ играть", icon= imgs.circle,backColor= Colors.KHAKI, textColor = Colors.GREEN, function = lambda: StartNewGame),
                 #classes.Action("получить стартовый набор предметов",backColor= Colors.PEACH, textColor = Colors.BROWN, function = lambda: self.GiveStarterKit),
                 classes.Action("Об игре",backColor= Colors.PEACH,icon= imgs.look, textColor = Colors.BROWN, function = lambda: self.AboutGame),
                 ])
@@ -1998,6 +2003,7 @@ class Game(Frame):
         if vars.HP <= 0:
             MinorEvent(f'Игра Окончена\nВаше здоровье {vars.HP}', "Заново",screen= imgs.gameOverScreen, funcion = window.StartScreen)
 
+
     def PrintStats(self):
         vars.statsLine = f'step:{vars.step}    act:{vars.actStep}'
         vars.statsLine += f'\nЛокация: {locvars.stringLocation[locvars.LOCATION]}'
@@ -2023,12 +2029,6 @@ class Game(Frame):
     
     
         self.Stats_Area.config(text= vars.statsLine, bg= Colors.DARK_GRAY)
-
-    def GiveStarterKit(self):
-        TakeRandomItem(vars.StarterPack)
-        TakeRandomItem(vars.StarterPack)
-        TakeRandomItem(vars.StarterPack)
-        
     
 
     
